@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"  android:key="mainPreferences">
+	<PreferenceCategory android:title="Repository Preferences">
+		<EditTextPreference 
+			android:key="@string/cmis_repo_server_id"
+			android:title="URL" 
+			android:summary="The hostname an path of a CMIS repository."
+			android:defaultValue="http://cmis.alfresco.com/service/cmis" />
+		<EditTextPreference 
+			android:key="@string/cmis_repo_user_id"
+			android:title="User" 
+			android:summary="The user to login to the repository."
+			android:defaultValue="admin" />
+		<EditTextPreference 
+			android:key="@string/cmis_repo_password_id"
+			android:title="Password" 
+			android:summary="The password to login to the repository."
+			android:defaultValue="admin" />
+	</PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string name="app_name">CMIS Browser</string>
+<string name="main_no_items">No orders to display</string>
+<string name="error_file_does_not_exists">Downloaded file does not exist.</string>
+<string name="application_not_available">There is not application for this mime type.</string>
+<string name="error_downloading_content">Error downloading content from CMIS repository.</string>
+<string name="cmis_repo_server_id">cmisRepoServerId</string>
+<string name="cmis_repo_user_id">CmisRepoUserId</string>
+<string name="cmis_repo_password_id">CmisRepoPasswordId</string>
+</resources>
