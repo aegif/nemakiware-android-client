@@ -23,7 +23,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class CmisBrowser extends ListActivity {
+public class ListCmisFeed extends ListActivity {
 
 	private final Prefs prefs = new Prefs(this);
 
@@ -38,7 +38,18 @@ public class CmisBrowser extends ListActivity {
 		getListView().setClickable(true);
 		getListView().setOnItemClickListener(new CmisDocSelectedListener());
 
-		displayFeedInListView(null);
+		String feed = getFeedFromIntent();
+		displayFeedInListView(feed);
+	}
+
+	private String getFeedFromIntent() {
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			if (extras.get("feed") != null) {
+				return extras.get("feed").toString();
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -59,7 +70,6 @@ public class CmisBrowser extends ListActivity {
 	}
 
 	private void displayFeedInListView(final String feed) {
-
 		new FeedDisplayTask(this).execute(feed);
 	}
 
@@ -168,11 +178,17 @@ public class CmisBrowser extends ListActivity {
 			CmisDoc doc = (CmisDoc) parent.getItemAtPosition(position);
 
 			if (doc.hasChildren()) {
-				displayFeedInListView(doc.getLinkChildren());
+				openNewListViewActivity(doc);
 			} else {
 				openDocument(doc);
 			}
 		}
+	}
+
+	private void openNewListViewActivity(CmisDoc doc) {
+		Intent intent = new Intent(this, ListCmisFeed.class);
+		intent.putExtra("feed", doc.getLinkChildren());
+		startActivity(intent); 
 	}
 
 	@Override
