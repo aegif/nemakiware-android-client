@@ -9,6 +9,8 @@ import java.util.List;
 import org.dom4j.Document;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -70,6 +72,7 @@ public class ListCmisFeed extends ListActivity {
 	}
 
 	private void displayFeedInListView(final String feed) {
+		setTitle("loading...");
 		new FeedDisplayTask(this).execute(feed);
 	}
 
@@ -96,7 +99,7 @@ public class ListCmisFeed extends ListActivity {
 
 		@Override
 		protected void onPreExecute() {
-			 setProgressBarIndeterminateVisibility(true);
+			setProgressBarIndeterminateVisibility(true);
 		}
 
 		@Override
@@ -188,20 +191,29 @@ public class ListCmisFeed extends ListActivity {
 	private void openNewListViewActivity(CmisDoc doc) {
 		Intent intent = new Intent(this, ListCmisFeed.class);
 		intent.putExtra("feed", doc.getLinkChildren());
-		startActivity(intent); 
+		startActivity(intent);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		MenuItem item = menu.add(1, 1, 0, "Settings");
-
+		MenuItem settingsItem = menu.add(1, 1, 0, "Settings");
+		settingsItem.setIcon(android.R.drawable.ic_menu_edit);
+		MenuItem aboutItem = menu.add(1, 2, 0, "About");
+		aboutItem.setIcon(android.R.drawable.ic_menu_info_details);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		startActivity(new Intent(this, CmisPreferences.class));
-		return true;
+		switch (item.getItemId()) {
+		case 1:
+			startActivity(new Intent(this, CmisPreferences.class));
+			return true;
+		case 2:
+			Toast.makeText(this, "CMIS Browser by Florian Maul (2010)", 5).show();
+			return true;
+		}
+		return false;
 	}
 }
