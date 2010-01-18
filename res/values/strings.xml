@@ -9,4 +9,5 @@
 <string name="cmis_repo_server_id">cmisRepoServerId</string>
 <string name="cmis_repo_user_id">CmisRepoUserId</string>
 <string name="cmis_repo_password_id">CmisRepoPasswordId</string>
+<string name="search_label">CMIS Repository</string>
 </resources>

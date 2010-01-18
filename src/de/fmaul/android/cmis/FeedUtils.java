@@ -123,5 +123,9 @@ public class FeedUtils {
 		}
 		return "";
 	}
+	
+	public static String getSearchQueryFeed(String baseUrl, String query) {
+		return baseUrl + "/query?q=SELECT%20*%20FROM%20cmis:document%20WHERE%20contains%20(%27"+query+"%27)&amp;maxItems=50";
+	}
 
 }

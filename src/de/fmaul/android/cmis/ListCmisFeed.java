@@ -9,9 +9,8 @@ import java.util.List;
 import org.dom4j.Document;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -33,15 +32,36 @@ public class ListCmisFeed extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		initWindow();
+
+		if (activityIsCalledWithSearchAction()) {
+			doSearchWithIntent(getIntent());
+		} else {
+			String feed = getFeedFromIntent();
+			displayFeedInListView(feed);
+		}
+	}
+
+	private boolean activityIsCalledWithSearchAction() {
+		final String queryAction = getIntent().getAction();
+		return Intent.ACTION_SEARCH.equals(queryAction);
+	}
+
+	private void initWindow() {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
 		getListView().setTextFilterEnabled(true);
 		getListView().setItemsCanFocus(true);
 		getListView().setClickable(true);
 		getListView().setOnItemClickListener(new CmisDocSelectedListener());
+	}
 
-		String feed = getFeedFromIntent();
-		displayFeedInListView(feed);
+	private void doSearchWithIntent(final Intent queryIntent) {
+		final String queryString = queryIntent
+				.getStringExtra(SearchManager.QUERY);
+		String searchFeed = FeedUtils.getSearchQueryFeed(prefs.getUrl(),
+				queryString);
+		displayFeedInListView(searchFeed);
 	}
 
 	private String getFeedFromIntent() {
@@ -197,10 +217,13 @@ public class ListCmisFeed extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		MenuItem settingsItem = menu.add(1, 1, 0, "Settings");
+		MenuItem settingsItem = menu.add(Menu.NONE, 1, 0, "Settings");
 		settingsItem.setIcon(android.R.drawable.ic_menu_edit);
-		MenuItem aboutItem = menu.add(1, 2, 0, "About");
+		MenuItem aboutItem = menu.add(Menu.NONE, 2, 0, "About");
 		aboutItem.setIcon(android.R.drawable.ic_menu_info_details);
+		MenuItem searchItem = menu.add(Menu.NONE, 3, 0, "Search");
+		searchItem.setIcon(android.R.drawable.ic_menu_search);
+		searchItem.setAlphabeticShortcut(SearchManager.MENU_KEY);
 		return true;
 	}
 
@@ -211,9 +234,14 @@ public class ListCmisFeed extends ListActivity {
 			startActivity(new Intent(this, CmisPreferences.class));
 			return true;
 		case 2:
-			Toast.makeText(this, "CMIS Browser by Florian Maul (2010)", 5).show();
+			Toast.makeText(this, "CMIS Browser by Florian Maul (2010)", 5)
+					.show();
+			return true;
+		case 3:
+			onSearchRequested();
 			return true;
 		}
+
 		return false;
 	}
 }
