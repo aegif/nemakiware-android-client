@@ -2,6 +2,7 @@ package de.fmaul.android.cmis;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ import org.dom4j.Element;
 import org.dom4j.Namespace;
 import org.dom4j.QName;
 import org.dom4j.io.SAXReader;
+
+import android.text.TextUtils;
 
 public class FeedUtils {
 
@@ -125,7 +128,17 @@ public class FeedUtils {
 	}
 	
 	public static String getSearchQueryFeed(String baseUrl, String query) {
-		return baseUrl + "/query?q=SELECT%20*%20FROM%20cmis:document%20WHERE%20contains%20(%27"+query+"%27)&amp;maxItems=50";
+		String[] words = TextUtils.split(query.trim(), "\\s+");
+		
+		for (int i=0; i < words.length; i++) {
+			words[i] = "contains ('"+ words[i] + "')";
+		}
+		
+		String condition = TextUtils.join(" AND ", words);
+		
+		final String cmisQuery = URLEncoder.encode("SELECT * FROM cmis:document WHERE "+condition); 
+		final String url = baseUrl + "/query?q="+cmisQuery+"&maxItems=50";
+		return url;
 	}
 
 }
