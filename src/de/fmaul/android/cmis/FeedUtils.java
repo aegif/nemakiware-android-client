@@ -97,9 +97,8 @@ public class FeedUtils {
 		for (Element link : (List<Element>) entry.elements("link")) {
 			if ("down".equals(link.attribute("rel").getText())) {
 
-				String linkChildren = link.attribute("href").getText();
-				if (linkChildren.endsWith("/children")) {
-					linkChildrenFeed = linkChildren;
+				if (link.attribute("type").getText().startsWith("application/atom+xml")) {
+					linkChildrenFeed = link.attribute("href").getText();
 				}
 			}
 		}
