@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -27,6 +28,9 @@ import android.widget.AdapterView.OnItemClickListener;
 public class ListCmisFeed extends ListActivity {
 
 	private final Prefs prefs = new Prefs(this);
+	
+	QueryType queryType = QueryType.FULLTEXT;
+		
 
 	/** Called when the activity is first created. */
 	@Override
@@ -40,6 +44,15 @@ public class ListCmisFeed extends ListActivity {
 			String feed = getFeedFromIntent();
 			displayFeedInListView(feed);
 		}
+	}
+
+	private QueryType getQueryTypeFromIntent(Intent intent) {
+		Bundle appData = intent.getBundleExtra(SearchManager.APP_DATA);
+		if (appData != null) {
+			String queryType = appData.getString(QueryType.class.getName());
+			return QueryType.valueOf(queryType);
+		 }
+		return QueryType.FULLTEXT;
 	}
 
 	private boolean activityIsCalledWithSearchAction() {
@@ -59,7 +72,9 @@ public class ListCmisFeed extends ListActivity {
 	private void doSearchWithIntent(final Intent queryIntent) {
 		final String queryString = queryIntent
 				.getStringExtra(SearchManager.QUERY);
-		String searchFeed = FeedUtils.getSearchQueryFeed(prefs.getUrl(),
+		
+		QueryType queryType = getQueryTypeFromIntent(queryIntent);
+		String searchFeed = FeedUtils.getSearchQueryFeed(queryType, prefs.getUrl(),
 				queryString);
 		displayFeedInListView(searchFeed);
 	}
@@ -221,14 +236,23 @@ public class ListCmisFeed extends ListActivity {
 		settingsItem.setIcon(android.R.drawable.ic_menu_edit);
 		MenuItem aboutItem = menu.add(Menu.NONE, 2, 0, "About");
 		aboutItem.setIcon(android.R.drawable.ic_menu_info_details);
-		MenuItem searchItem = menu.add(Menu.NONE, 3, 0, "Search");
-		searchItem.setIcon(android.R.drawable.ic_menu_search);
-		searchItem.setAlphabeticShortcut(SearchManager.MENU_KEY);
+		//MenuItem searchItem = menu.add(Menu.NONE, 3, 0, "Search");
+
+		SubMenu searchMenu = menu.addSubMenu("Search");
+		searchMenu.setIcon(android.R.drawable.ic_menu_search);
+		searchMenu.getItem().setAlphabeticShortcut(SearchManager.MENU_KEY);
+
+		searchMenu.add(Menu.NONE, 4, 0, "Search by title");
+		searchMenu.add(Menu.NONE, 5, 0, "Fulltext search");
+		searchMenu.add(Menu.NONE, 6, 0, "CMIS query");
+
 		return true;
+
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
 		switch (item.getItemId()) {
 		case 1:
 			startActivity(new Intent(this, CmisPreferences.class));
@@ -237,11 +261,31 @@ public class ListCmisFeed extends ListActivity {
 			Toast.makeText(this, "CMIS Browser by Florian Maul (2010)", 5)
 					.show();
 			return true;
-		case 3:
+		case 4:
+			queryType = QueryType.TITLE;
 			onSearchRequested();
 			return true;
+		case 5:
+			queryType = QueryType.FULLTEXT;
+			onSearchRequested();
+			return true;
+		case 6:
+			queryType = QueryType.CMISQUERY;
+			onSearchRequested();
+			return true;
+		default:
+			Toast.makeText(this, "unknown menu item.", 5).show();
 		}
 
 		return false;
 	}
+	
+	 @Override
+	 public boolean onSearchRequested() {
+	     Bundle appData = new Bundle();
+	     appData.putString(QueryType.class.getName(), queryType.name());
+	     startSearch("", false, appData, false);
+	     return true;
+	 }
+
 }

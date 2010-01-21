@@ -97,7 +97,8 @@ public class FeedUtils {
 		for (Element link : (List<Element>) entry.elements("link")) {
 			if ("down".equals(link.attribute("rel").getText())) {
 
-				if (link.attribute("type").getText().startsWith("application/atom+xml")) {
+				if (link.attribute("type").getText().startsWith(
+						"application/atom+xml")) {
 					linkChildrenFeed = link.attribute("href").getText();
 				}
 			}
@@ -125,18 +126,42 @@ public class FeedUtils {
 		}
 		return "";
 	}
-	
-	public static String getSearchQueryFeed(String baseUrl, String query) {
-		String[] words = TextUtils.split(query.trim(), "\\s+");
-		
-		for (int i=0; i < words.length; i++) {
-			words[i] = "contains ('"+ words[i] + "')";
+
+	public static String getSearchQueryFeed(QueryType queryType,
+			String baseUrl, String query) {
+		switch (queryType) {
+		case TITLE:
+			return getSearchQueryFeedTitle(baseUrl, query);
+		case CMISQUERY:
+			return getSearchQueryFeedCmisQuery(baseUrl, query);
+		case FULLTEXT:
+		default:
+			return getSearchQueryFeedFullText(baseUrl, query);
 		}
-		
+	}
+
+	private static String getSearchQueryFeedTitle(String queryBaseUrl, String query) {
+
+		return getSearchQueryFeedCmisQuery(queryBaseUrl, "SELECT * FROM cmis:document WHERE cmis:name LIKE '%"+query+"%'");
+	}
+
+	private static String getSearchQueryFeedFullText(String baseUrl,
+			String query) {
+		String[] words = TextUtils.split(query.trim(), "\\s+");
+
+		for (int i = 0; i < words.length; i++) {
+			words[i] = "contains ('" + words[i] + "')";
+		}
+
 		String condition = TextUtils.join(" AND ", words);
-		
-		final String cmisQuery = URLEncoder.encode("SELECT * FROM cmis:document WHERE "+condition); 
-		final String url = baseUrl + "/query?q="+cmisQuery+"&maxItems=50";
+
+		return getSearchQueryFeedCmisQuery(baseUrl, "SELECT * FROM cmis:document WHERE " + condition);
+	}
+
+	private static String getSearchQueryFeedCmisQuery(String baseUrl, String cmisQuery) {
+		final String encodedCmisQuery = URLEncoder
+				.encode(cmisQuery);
+		final String url = baseUrl + "/query?q=" + encodedCmisQuery + "&maxItems=50";
 		return url;
 	}
 
