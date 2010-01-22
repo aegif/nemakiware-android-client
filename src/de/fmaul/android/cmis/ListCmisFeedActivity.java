@@ -155,11 +155,11 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * @param os
 	 * @param contentUrl
 	 */
-	private void downloadContent(OutputStream os, String contentUrl) {
+	private void downloadContent(OutputStream os, CmisItem item) {
 		try {
 			// FIXME this shouldn't be done on the UI thread, a AsyncTask is
 			// needed.
-			repository.fetchContent(contentUrl, os);
+			repository.fetchContent(item, os);
 			os.close();
 		} catch (Exception e) {
 			Toast.makeText(this, R.string.error_downloading_content,
@@ -170,27 +170,27 @@ public class ListCmisFeedActivity extends ListActivity {
 	/**
 	 * Opens a file by downloading it and starting the associated app.
 	 * 
-	 * @param doc
+	 * @param item
 	 */
-	private void openDocument(CmisItem doc) {
+	private void openDocument(CmisItem item) {
 		try {
-			OutputStream os = openFileOutput(doc.getTitle(),
+			OutputStream os = openFileOutput(item.getTitle(),
 					MODE_WORLD_READABLE);
 
-			downloadContent(os, doc.getContentUrl());
+			downloadContent(os, item);
 		} catch (FileNotFoundException fnfe) {
 			Toast.makeText(this, R.string.error_file_does_not_exists,
 					Toast.LENGTH_SHORT).show();
 		}
 
-		File tempFile = new File(getFilesDir(), doc.getTitle());
+		File tempFile = new File(getFilesDir(), item.getTitle());
 		if (!tempFile.exists()) {
 			Toast.makeText(this, R.string.error_file_does_not_exists,
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
 
-		viewFileInAssociatedApp(tempFile, doc.getMimeType());
+		viewFileInAssociatedApp(tempFile, item.getMimeType());
 	}
 
 	/**
