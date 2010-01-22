@@ -1,8 +1,4 @@
-/**
- * 
- */
 package de.fmaul.android.cmis;
-
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -17,17 +13,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import de.fmaul.android.cmis.R;
+import de.fmaul.android.cmis.repo.CmisItem;
+import de.fmaul.android.cmis.repo.CmisItemCollection;
 
-class CmisDocAdapter extends ArrayAdapter<CmisDoc> {
+public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 
-	private List<CmisDoc> items;
 	private final Context context;
 
-	public CmisDocAdapter(Context context, int textViewResourceId,
-			List<CmisDoc> items) {
-		super(context, textViewResourceId, items);
+	public CmisItemCollectionAdapter(Context context, int textViewResourceId,
+			CmisItemCollection itemCollection) {
+		super(context, textViewResourceId, itemCollection.getItems() );
 		this.context = context;
-		this.items = items;
 	}
 
 	@Override
@@ -37,22 +34,25 @@ class CmisDocAdapter extends ArrayAdapter<CmisDoc> {
 			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.row, null);
 		}
-		CmisDoc doc = items.get(position);
-		if (doc != null) {
+		
+		
+		
+		CmisItem item = getItem(position);
+		if (item != null) {
 			
 			TextView tt = (TextView) v.findViewById(R.id.toptext);
 			if (tt != null) {
-				tt.setText(doc.getTitle());
+				tt.setText(item.getTitle());
 			}
 
 			TextView bt = (TextView) v.findViewById(R.id.bottomtext);
 			if (bt != null) {
-				bt.setText(buildBottomText(doc));
+				bt.setText(buildBottomText(item));
 			}
 
 			ImageView icon = (ImageView) v.findViewById(R.id.icon);
 			if (icon != null) {
-				if (doc.hasChildren()) {
+				if (item.hasChildren()) {
 					icon.setImageDrawable(getContext().getResources().getDrawable(
 							R.drawable.folder));
 				} else {
@@ -64,7 +64,7 @@ class CmisDocAdapter extends ArrayAdapter<CmisDoc> {
 		return v;
 	}
 
-	private CharSequence buildBottomText(CmisDoc doc) {
+	private CharSequence buildBottomText(CmisItem doc) {
 		List<String> infos = new LinkedList<String>(); 
 
 		if (!TextUtils.isEmpty(doc.getAuthor())) {

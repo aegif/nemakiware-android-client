@@ -3,18 +3,12 @@ package de.fmaul.android.cmis;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.dom4j.Document;
-
-import android.app.Activity;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,10 +18,13 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import de.fmaul.android.cmis.repo.CmisItem;
+import de.fmaul.android.cmis.repo.CmisRepository;
+import de.fmaul.android.cmis.repo.QueryType;
 
-public class ListCmisFeed extends ListActivity {
+public class ListCmisFeedActivity extends ListActivity {
 
-	private final Prefs prefs = new Prefs(this);
+	CmisRepository repository;
 	
 	QueryType queryType = QueryType.FULLTEXT;
 		
@@ -38,6 +35,11 @@ public class ListCmisFeed extends ListActivity {
 		super.onCreate(savedInstanceState);
 		initWindow();
 
+		if (repository == null) {
+			Prefs prefs = new Prefs(this);
+			repository = CmisRepository.create(prefs); 
+		}
+		
 		if (activityIsCalledWithSearchAction()) {
 			doSearchWithIntent(getIntent());
 		} else {
@@ -74,8 +76,7 @@ public class ListCmisFeed extends ListActivity {
 				.getStringExtra(SearchManager.QUERY);
 		
 		QueryType queryType = getQueryTypeFromIntent(queryIntent);
-		String searchFeed = FeedUtils.getSearchQueryFeed(queryType, prefs.getUrl(),
-				queryString);
+		String searchFeed = repository.getSearchFeed(queryType, queryString);
 		displayFeedInListView(searchFeed);
 	}
 
@@ -95,85 +96,22 @@ public class ListCmisFeed extends ListActivity {
 		displayFeedInListView(null);
 	}
 
-	private final class TitleAndDocs {
-		final String title;
-		final List<CmisDoc> docs;
-
-		public TitleAndDocs(String title, List<CmisDoc> docs) {
-			super();
-			this.title = title;
-			this.docs = docs;
-		}
-	}
-
 	private void displayFeedInListView(final String feed) {
 		setTitle("loading...");
-		new FeedDisplayTask(this).execute(feed);
+		new FeedDisplayTask(this, repository).execute(feed);
 	}
 
 	private void downloadContent(OutputStream os, String contentUrl) {
 		try {
-			HttpUtils.getWebRessource(contentUrl, prefs.getUser(),
-					prefs.getPassword()).getEntity().writeTo(os);
+			repository.fetchContent(contentUrl, os);
 			os.close();
 		} catch (Exception e) {
 			Toast.makeText(this, R.string.error_downloading_content,
 					Toast.LENGTH_SHORT).show();
 		}
-
 	}
 
-	private class FeedDisplayTask extends AsyncTask<String, Void, TitleAndDocs> {
-
-		private final Activity activity;
-
-		public FeedDisplayTask(Activity activity) {
-			super();
-			this.activity = activity;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			setProgressBarIndeterminateVisibility(true);
-		}
-
-		@Override
-		protected TitleAndDocs doInBackground(String... params) {
-			try {
-				String feed = params[0];
-				if (feed == null) {
-					feed = FeedUtils.getRootFeedFromRepo(prefs.getUrl(), prefs
-							.getUser(), prefs.getPassword());
-				}
-
-				Document xmlDoc = FeedUtils.readAtomFeed(feed, prefs.getUser(),
-						prefs.getPassword());
-
-				return new TitleAndDocs(xmlDoc.getRootElement().elementText(
-						"title"), FeedUtils.readDocsFromFeed(xmlDoc));
-			} catch (FeedLoadException fle) {
-				return new TitleAndDocs(fle.getCause().getMessage(),
-						new ArrayList<CmisDoc>());
-			}
-
-		}
-
-		@Override
-		protected void onPostExecute(TitleAndDocs result) {
-			setListAdapter(new CmisDocAdapter(activity, R.layout.row,
-					result.docs));
-			getWindow().setTitle(result.title);
-			setProgressBarIndeterminateVisibility(false);
-
-		}
-
-		@Override
-		protected void onCancelled() {
-			setProgressBarIndeterminateVisibility(false);
-		}
-	}
-
-	private void openDocument(CmisDoc doc) {
+	private void openDocument(CmisItem doc) {
 		try {
 			OutputStream os = openFileOutput(doc.getTitle(),
 					MODE_WORLD_READABLE);
@@ -213,7 +151,7 @@ public class ListCmisFeed extends ListActivity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			CmisDoc doc = (CmisDoc) parent.getItemAtPosition(position);
+			CmisItem doc = (CmisItem) parent.getItemAtPosition(position);
 
 			if (doc.hasChildren()) {
 				openNewListViewActivity(doc);
@@ -223,9 +161,9 @@ public class ListCmisFeed extends ListActivity {
 		}
 	}
 
-	private void openNewListViewActivity(CmisDoc doc) {
-		Intent intent = new Intent(this, ListCmisFeed.class);
-		intent.putExtra("feed", doc.getLinkChildren());
+	private void openNewListViewActivity(CmisItem item) {
+		Intent intent = new Intent(this, ListCmisFeedActivity.class);
+		intent.putExtra("feed", item.getDownLink());
 		startActivity(intent);
 	}
 

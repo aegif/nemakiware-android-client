@@ -1,4 +1,4 @@
-package de.fmaul.android.cmis;
+package de.fmaul.android.cmis.utils;
 
 
 public class FeedLoadException extends RuntimeException {

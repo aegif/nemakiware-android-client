@@ -1,4 +1,4 @@
-package de.fmaul.android.cmis;
+package de.fmaul.android.cmis.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 public class HttpUtils {
 
-	static HttpResponse getWebRessource(String url, String user, String password) throws IOException,
+	public static HttpResponse getWebRessource(String url, String user, String password) throws IOException,
 			ClientProtocolException {
 		HttpGet get = new HttpGet(url);
 		HttpClient client = createClient(user, password);
