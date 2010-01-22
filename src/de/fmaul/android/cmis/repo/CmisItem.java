@@ -4,8 +4,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.dom4j.Element;
+
+import de.fmaul.android.cmis.utils.FeedUtils;
 
 public class CmisItem {
 
@@ -16,6 +19,8 @@ public class CmisItem {
 	private String id;
 	private String mimeType;
 	private Date modificationDate;
+	
+	private Map<String, CmisProperty> properties;
 
 	private CmisItem() {
 	}
@@ -70,7 +75,6 @@ public class CmisItem {
 		contentUrl = "";
 		mimeType = "";
 		author = entry.element("author").element("name").getText();
-
 		modificationDate = parseXmlDate(entry.element("updated").getText());
 
 		Element contentElement = entry.element("content");
@@ -88,6 +92,8 @@ public class CmisItem {
 				}
 			}
 		}
+		
+		properties = FeedUtils.getCmisPropertiesForEntry(entry);
 	}
 
 	private Date parseXmlDate(String date) {
@@ -111,5 +117,7 @@ public class CmisItem {
 		 cmisItem.contentUrl = null;
 		return cmisItem;
 	}
+	
+	
 
 }

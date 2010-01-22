@@ -3,7 +3,9 @@ package de.fmaul.android.cmis.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
 import org.dom4j.Document;
@@ -13,6 +15,8 @@ import org.dom4j.Namespace;
 import org.dom4j.QName;
 import org.dom4j.io.SAXReader;
 
+import de.fmaul.android.cmis.repo.CmisProperty;
+
 import android.text.TextUtils;
 
 public class FeedUtils {
@@ -21,14 +25,17 @@ public class FeedUtils {
 			.get("http://docs.oasis-open.org/ns/cmis/restatom/200908/");
 	private static final QName CMISRA_COLLECTION_TYPE = QName.get(
 			"collectionType", CMISRA);
-	private static final QName CMISRA_URI_TEMPLATE = QName.get(
-			"uritemplate", CMISRA);
-	private static final QName CMISRA_TYPE = QName.get(
-			"type", CMISRA);
-	private static final QName CMISRA_TEMPLATE = QName.get(
-			"template", CMISRA);
-	
-	
+	private static final QName CMISRA_URI_TEMPLATE = QName.get("uritemplate",
+			CMISRA);
+	private static final QName CMISRA_TYPE = QName.get("type", CMISRA);
+	private static final QName CMISRA_TEMPLATE = QName.get("template", CMISRA);
+	private static final QName CMISRA_OBJECT = QName.get("object", CMISRA);
+	private static final QName CMISRA_PROPERTIES = QName.get("properties",
+			CMISRA);
+	private static final QName CMISRA_PROPERTY_STRING = QName.get(
+			"propertyString", CMISRA);
+	private static final QName CMISRA_VALUE = QName.get("value", CMISRA);
+
 	public static Document readAtomFeed(final String feed, final String user,
 			final String password) throws FeedLoadException {
 		Document document = null;
@@ -48,7 +55,6 @@ public class FeedUtils {
 		return document;
 	}
 
-
 	public static String getRootFeedFromRepo(String url, String user,
 			String password) {
 
@@ -63,7 +69,8 @@ public class FeedUtils {
 			List<Element> collections = workspace.elements("collection");
 
 			for (Element collection : collections) {
-				String currentType = collection.elementText(CMISRA_COLLECTION_TYPE);
+				String currentType = collection
+						.elementText(CMISRA_COLLECTION_TYPE);
 				if (type.equals(currentType.toLowerCase())) {
 					return collection.attributeValue("href");
 				}
@@ -72,9 +79,12 @@ public class FeedUtils {
 		return "";
 	}
 
-	public static String getSearchQueryFeedTitle(String urlTemplate, String query) {
+	public static String getSearchQueryFeedTitle(String urlTemplate,
+			String query) {
 
-		return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:document WHERE cmis:name LIKE '%"+query+"%'");
+		return getSearchQueryFeedCmisQuery(urlTemplate,
+				"SELECT * FROM cmis:document WHERE cmis:name LIKE '%" + query
+						+ "%'");
 	}
 
 	public static String getSearchQueryFeedFullText(String urlTemplate,
@@ -87,23 +97,26 @@ public class FeedUtils {
 
 		String condition = TextUtils.join(" AND ", words);
 
-		return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:document WHERE " + condition);
+		return getSearchQueryFeedCmisQuery(urlTemplate,
+				"SELECT * FROM cmis:document WHERE " + condition);
 	}
 
-	public static String getSearchQueryFeedCmisQuery(String urlTemplate, String cmisQuery) {
-		final String encodedCmisQuery = URLEncoder
-				.encode(cmisQuery);
-		
-		final CharSequence feedUrl = TextUtils.replace(
-				urlTemplate, 
-				new String[] {"{q}","{searchAllVersions}","{maxItems}","{skipCount}","{includeAllowableActions}","{includeRelationships}"}, 
-				new String[] {encodedCmisQuery, "false", "50", "0", "false", "false"});
-		
+	public static String getSearchQueryFeedCmisQuery(String urlTemplate,
+			String cmisQuery) {
+		final String encodedCmisQuery = URLEncoder.encode(cmisQuery);
+
+		final CharSequence feedUrl = TextUtils.replace(urlTemplate,
+				new String[] { "{q}", "{searchAllVersions}", "{maxItems}",
+						"{skipCount}", "{includeAllowableActions}",
+						"{includeRelationships}" },
+				new String[] { encodedCmisQuery, "false", "50", "0", "false",
+						"false" });
+
 		return feedUrl.toString();
 	}
 
 	public static String getUriTemplateFromRepoFeed(Document doc, String type) {
-		
+
 		Element workspace = doc.getRootElement().element("workspace");
 
 		List<Element> templates = workspace.elements(CMISRA_URI_TEMPLATE);
@@ -117,5 +130,29 @@ public class FeedUtils {
 		return null;
 	}
 
+	public static Map<String, CmisProperty> getCmisPropertiesForEntry(
+			Element feedEntry) {
+		Map<String, CmisProperty> props = new HashMap<String, CmisProperty>();
+
+		Element objectElement = feedEntry.element(CMISRA_OBJECT);
+		if (objectElement != null) {
+			Element properitesElement = objectElement
+					.element(CMISRA_PROPERTIES);
+			if (properitesElement != null) {
+				List<Element> properties = properitesElement.elements();
+
+				for (Element property : properties) {
+					final String id = property
+							.attributeValue("propertyDefinitionId");
+
+					props.put(id, new CmisProperty(property.getName(), id,
+							property.attributeValue("localName"), property
+									.attributeValue("displayName"), property
+									.elementText(CMISRA_VALUE)));
+				}
+			}
+		}
+		return props;
+	}
 
 }
