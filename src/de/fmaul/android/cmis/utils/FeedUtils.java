@@ -21,7 +21,14 @@ public class FeedUtils {
 			.get("http://docs.oasis-open.org/ns/cmis/restatom/200908/");
 	private static final QName CMISRA_COLLECTION_TYPE = QName.get(
 			"collectionType", CMISRA);
-
+	private static final QName CMISRA_URI_TEMPLATE = QName.get(
+			"uritemplate", CMISRA);
+	private static final QName CMISRA_TYPE = QName.get(
+			"type", CMISRA);
+	private static final QName CMISRA_TEMPLATE = QName.get(
+			"template", CMISRA);
+	
+	
 	public static Document readAtomFeed(final String feed, final String user,
 			final String password) throws FeedLoadException {
 		Document document = null;
@@ -65,12 +72,12 @@ public class FeedUtils {
 		return "";
 	}
 
-	public static String getSearchQueryFeedTitle(String queryBaseUrl, String query) {
+	public static String getSearchQueryFeedTitle(String urlTemplate, String query) {
 
-		return getSearchQueryFeedCmisQuery(queryBaseUrl, "SELECT * FROM cmis:document WHERE cmis:name LIKE '%"+query+"%'");
+		return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:document WHERE cmis:name LIKE '%"+query+"%'");
 	}
 
-	public static String getSearchQueryFeedFullText(String baseUrl,
+	public static String getSearchQueryFeedFullText(String urlTemplate,
 			String query) {
 		String[] words = TextUtils.split(query.trim(), "\\s+");
 
@@ -80,14 +87,34 @@ public class FeedUtils {
 
 		String condition = TextUtils.join(" AND ", words);
 
-		return getSearchQueryFeedCmisQuery(baseUrl, "SELECT * FROM cmis:document WHERE " + condition);
+		return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:document WHERE " + condition);
 	}
 
-	public static String getSearchQueryFeedCmisQuery(String baseUrl, String cmisQuery) {
+	public static String getSearchQueryFeedCmisQuery(String urlTemplate, String cmisQuery) {
 		final String encodedCmisQuery = URLEncoder
 				.encode(cmisQuery);
-		final String url = baseUrl + "/query?q=" + encodedCmisQuery + "&maxItems=50";
-		return url;
+		
+		final CharSequence feedUrl = TextUtils.replace(
+				urlTemplate, 
+				new String[] {"{q}","{searchAllVersions}","{maxItems}","{skipCount}","{includeAllowableActions}","{includeRelationships}"}, 
+				new String[] {encodedCmisQuery, "false", "50", "0", "false", "false"});
+		
+		return feedUrl.toString();
+	}
+
+	public static String getUriTemplateFromRepoFeed(Document doc, String type) {
+		
+		Element workspace = doc.getRootElement().element("workspace");
+
+		List<Element> templates = workspace.elements(CMISRA_URI_TEMPLATE);
+
+		for (Element template : templates) {
+			String currentType = template.elementText(CMISRA_TYPE);
+			if (type.equals(currentType.toLowerCase())) {
+				return template.elementText(CMISRA_TEMPLATE);
+			}
+		}
+		return null;
 	}
 
 

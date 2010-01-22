@@ -35,8 +35,6 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 			v = vi.inflate(R.layout.row, null);
 		}
 		
-		
-		
 		CmisItem item = getItem(position);
 		if (item != null) {
 			

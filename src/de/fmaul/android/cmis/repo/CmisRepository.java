@@ -11,18 +11,21 @@ import de.fmaul.android.cmis.utils.FeedUtils;
 import de.fmaul.android.cmis.utils.HttpUtils;
 
 /**
- * NOT USED YET... Should contain all information about the repo
- * 
- * @author Florian
- * 
+ * @author Florian Maul
  */
 public class CmisRepository {
 
 	private final String feedRootCollection;
-	private final String feedQueryCollection;
+	private final String uriTemplateQuery;
 	private final String repositoryUser;
 	private final String repostoryPassword;
 
+	/**
+	 * Connects to a CMIS Repository with the given connection information
+	 * @param repositoryUrl
+	 * @param user
+	 * @param password
+	 */
 	private CmisRepository(String repositoryUrl, String user, String password) {
 		this.repositoryUser = user;
 		this.repostoryPassword = password;
@@ -31,7 +34,7 @@ public class CmisRepository {
 				repostoryPassword);
 		feedRootCollection = FeedUtils
 				.getCollectionUrlFromRepoFeed(doc, "root");
-		feedQueryCollection = FeedUtils.getCollectionUrlFromRepoFeed(doc,
+		uriTemplateQuery = FeedUtils.getUriTemplateFromRepoFeed(doc,
 				"query");
 	}
 
@@ -52,30 +55,21 @@ public class CmisRepository {
 		switch (queryType) {
 		case TITLE:
 			return FeedUtils
-					.getSearchQueryFeedTitle(feedQueryCollection, query);
+					.getSearchQueryFeedTitle(uriTemplateQuery, query);
 		case CMISQUERY:
-			return FeedUtils.getSearchQueryFeedCmisQuery(feedQueryCollection,
+			return FeedUtils.getSearchQueryFeedCmisQuery(uriTemplateQuery,
 					query);
 		case FULLTEXT:
 		default:
-			return FeedUtils.getSearchQueryFeedFullText(feedQueryCollection,
+			return FeedUtils.getSearchQueryFeedFullText(uriTemplateQuery,
 					query);
 		}
-
 	}
 
 	public CmisItemCollection getCollectionFromFeed(final String feedUrl) {
 		Document doc = FeedUtils.readAtomFeed(feedUrl, repositoryUser,
 				repostoryPassword);
 		return CmisItemCollection.createFromFeed(doc);
-	}
-
-	public String getFeedRootCollection() {
-		return feedRootCollection;
-	}
-
-	public String getFeedQueryCollection() {
-		return feedQueryCollection;
 	}
 
 	public void fetchContent(String contentUrl, OutputStream os)
