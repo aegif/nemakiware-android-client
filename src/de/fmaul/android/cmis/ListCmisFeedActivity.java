@@ -145,7 +145,7 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * @param feed
 	 */
 	private void displayFeedInListView(final String feed) {
-		setTitle("loading...");
+		setTitle(R.string.loading);
 		new FeedDisplayTask(this, repository).execute(feed);
 	}
 
@@ -248,19 +248,19 @@ public class ListCmisFeedActivity extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		MenuItem settingsItem = menu.add(Menu.NONE, 1, 0, "Settings");
+		MenuItem settingsItem = menu.add(Menu.NONE, 1, 0, R.string.menu_item_settings);
 		settingsItem.setIcon(android.R.drawable.ic_menu_edit);
-		MenuItem aboutItem = menu.add(Menu.NONE, 2, 0, "About");
+		MenuItem aboutItem = menu.add(Menu.NONE, 2, 0, R.string.menu_item_about);
 		aboutItem.setIcon(android.R.drawable.ic_menu_info_details);
 		// MenuItem searchItem = menu.add(Menu.NONE, 3, 0, "Search");
 
-		SubMenu searchMenu = menu.addSubMenu("Search");
+		SubMenu searchMenu = menu.addSubMenu(R.string.menu_item_search);
 		searchMenu.setIcon(android.R.drawable.ic_menu_search);
 		searchMenu.getItem().setAlphabeticShortcut(SearchManager.MENU_KEY);
 
-		searchMenu.add(Menu.NONE, 4, 0, "Search by title");
-		searchMenu.add(Menu.NONE, 5, 0, "Fulltext search");
-		searchMenu.add(Menu.NONE, 6, 0, "CMIS query");
+		searchMenu.add(Menu.NONE, 4, 0, R.string.menu_item_search_title);
+		searchMenu.add(Menu.NONE, 5, 0, R.string.menu_item_search_fulltext);
+		searchMenu.add(Menu.NONE, 6, 0, R.string.menu_item_search_cmis);
 
 		return true;
 
@@ -274,7 +274,7 @@ public class ListCmisFeedActivity extends ListActivity {
 			startActivity(new Intent(this, CmisPreferences.class));
 			return true;
 		case 2:
-			Toast.makeText(this, "CMIS Browser by Florian Maul (2010)", 5)
+			Toast.makeText(this, R.string.about_message, 5)
 					.show();
 			return true;
 		case 4:

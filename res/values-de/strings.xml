@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about_message">CMIS Browser von Florian Maul (2010)</string>
+    <string name="menu_item_search_cmis">CMIS Abfrage</string>
+    <string name="menu_item_search_fulltext">Volltextsuche</string>
+    <string name="menu_item_search_title">Suche nach Titel</string>
+    <string name="menu_item_search">Suchen</string>
+    <string name="menu_item_about">Über</string>
+    <string name="menu_item_settings">Einstellungen</string>
+    <string name="loading">lade...</string>
+
+	<string name="app_name">CMIS Browser</string>
+	<string name="main_no_items">Keine Dokumente vorhanden.</string>
+	<string name="error_file_does_not_exists">Die heruntergeladene Datei exisitert nicht.</string>
+	<string name="application_not_available">Es gibt keine Anwendung für diesen Dateityp.</string>
+	<string name="error_downloading_content">Fehler beim Herunterladen vom CMIS Repository</string>
+
+</resources>
