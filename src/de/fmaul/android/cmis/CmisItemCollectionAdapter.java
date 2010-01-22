@@ -16,6 +16,7 @@ import android.widget.TextView;
 import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisItemCollection;
+import de.fmaul.android.cmis.repo.CmisProperty;
 
 public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 
@@ -82,6 +83,12 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 				infos.add(modTime);	
 			}
 		}
+		
+		CmisProperty fileSize = doc.getProperties().get("cmis:contentStreamLength");
+		if (fileSize != null) {
+			infos.add(fileSize.getValue() + " Bytes");
+		}
+		
 		
 		return TextUtils.join(" | ", infos);
 	}

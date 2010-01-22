@@ -23,6 +23,10 @@ public class FeedUtils {
 
 	private static final Namespace CMISRA = Namespace
 			.get("http://docs.oasis-open.org/ns/cmis/restatom/200908/");
+	private static final Namespace CMIS = Namespace
+	.get("http://docs.oasis-open.org/ns/cmis/core/200908/");
+	
+	
 	private static final QName CMISRA_COLLECTION_TYPE = QName.get(
 			"collectionType", CMISRA);
 	private static final QName CMISRA_URI_TEMPLATE = QName.get("uritemplate",
@@ -30,11 +34,9 @@ public class FeedUtils {
 	private static final QName CMISRA_TYPE = QName.get("type", CMISRA);
 	private static final QName CMISRA_TEMPLATE = QName.get("template", CMISRA);
 	private static final QName CMISRA_OBJECT = QName.get("object", CMISRA);
-	private static final QName CMISRA_PROPERTIES = QName.get("properties",
-			CMISRA);
-	private static final QName CMISRA_PROPERTY_STRING = QName.get(
-			"propertyString", CMISRA);
-	private static final QName CMISRA_VALUE = QName.get("value", CMISRA);
+	private static final QName CMIS_PROPERTIES = QName.get("properties",
+			CMIS);
+	private static final QName CMIS_VALUE = QName.get("value", CMIS);
 
 	public static Document readAtomFeed(final String feed, final String user,
 			final String password) throws FeedLoadException {
@@ -137,7 +139,7 @@ public class FeedUtils {
 		Element objectElement = feedEntry.element(CMISRA_OBJECT);
 		if (objectElement != null) {
 			Element properitesElement = objectElement
-					.element(CMISRA_PROPERTIES);
+					.element(CMIS_PROPERTIES);
 			if (properitesElement != null) {
 				List<Element> properties = properitesElement.elements();
 
@@ -148,7 +150,7 @@ public class FeedUtils {
 					props.put(id, new CmisProperty(property.getName(), id,
 							property.attributeValue("localName"), property
 									.attributeValue("displayName"), property
-									.elementText(CMISRA_VALUE)));
+									.elementText(CMIS_VALUE)));
 				}
 			}
 		}

@@ -3,6 +3,7 @@ package de.fmaul.android.cmis.repo;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,10 @@ public class CmisItem {
 	private CmisItem() {
 	}
 
+	public Map<String, CmisProperty> getProperties() {
+		return properties;
+	}
+	
 	public String getTitle() {
 		return title;
 	}
@@ -115,6 +120,7 @@ public class CmisItem {
 		 cmisItem.id = "";
 		 cmisItem.author = "";
 		 cmisItem.contentUrl = null;
+		 cmisItem.properties = new HashMap<String, CmisProperty>();
 		return cmisItem;
 	}
 	
