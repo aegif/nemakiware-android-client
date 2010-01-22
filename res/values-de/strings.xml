@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="search_results_for">Ergebnisse für</string>
+
     <string name="about_message">CMIS Browser von Florian Maul (2010)</string>
     <string name="menu_item_search_cmis">CMIS Abfrage</string>
     <string name="menu_item_search_fulltext">Volltextsuche</string>

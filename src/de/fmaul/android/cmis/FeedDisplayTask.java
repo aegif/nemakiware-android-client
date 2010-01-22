@@ -10,11 +10,17 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 
 	private final ListActivity activity;
 	private final CmisRepository repository;
+	private final String title;
 
 	public FeedDisplayTask(ListActivity activity, CmisRepository repository) {
+		this(activity, repository, null);
+	}
+
+	public FeedDisplayTask(ListActivity activity, CmisRepository repository, String title) {
 		super();
 		this.activity = activity;
 		this.repository = repository;
+		this.title = title;
 	}
 
 	@Override
@@ -42,7 +48,12 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 	protected void onPostExecute(CmisItemCollection itemCollection) {
 		activity.setListAdapter(new CmisItemCollectionAdapter(activity, R.layout.row,
 				itemCollection));
-		activity.getWindow().setTitle(itemCollection.getTitle());
+		if (title == null) {
+			activity.getWindow().setTitle(itemCollection.getTitle());
+		}
+		else {
+			activity.getWindow().setTitle(title);
+		}
 		activity.setProgressBarIndeterminateVisibility(false);
 
 	}

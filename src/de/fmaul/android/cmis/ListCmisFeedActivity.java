@@ -51,7 +51,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		} else {
 			// display the feed that is passed in through the intent
 			String feed = getFeedFromIntent();
-			displayFeedInListView(feed);
+			displayFeedInListViewWithTitleFromFeed(feed);
 		}
 	}
 
@@ -105,7 +105,7 @@ public class ListCmisFeedActivity extends ListActivity {
 
 		QueryType queryType = getQueryTypeFromIntent(queryIntent);
 		String searchFeed = repository.getSearchFeed(queryType, queryString);
-		displayFeedInListView(searchFeed);
+		displayFeedInListView(searchFeed, getString(R.string.search_results_for)+" '"+queryString+"'");
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		super.onRestart();
 		Prefs prefs = new Prefs(this);
 		repository = CmisRepository.create(prefs);
-		displayFeedInListView(null);
+		displayFeedInListViewWithTitleFromFeed(null);
 	}
 
 	/**
@@ -144,11 +144,17 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * 
 	 * @param feed
 	 */
-	private void displayFeedInListView(final String feed) {
+	private void displayFeedInListView(final String feed, String title) {
+		setTitle(R.string.loading);
+		new FeedDisplayTask(this, repository, title).execute(feed);
+	}
+
+	private void displayFeedInListViewWithTitleFromFeed(final String feed) {
 		setTitle(R.string.loading);
 		new FeedDisplayTask(this, repository).execute(feed);
 	}
 
+	
 	/**
 	 * Downloads a file from an url to an {@link OutputStream}
 	 * 
