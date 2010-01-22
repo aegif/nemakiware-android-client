@@ -24,10 +24,16 @@ import de.fmaul.android.cmis.repo.QueryType;
 
 public class ListCmisFeedActivity extends ListActivity {
 
+	/**
+	 * Contains the current connection information and methods to access the
+	 * CMIS repository.
+	 */
 	CmisRepository repository;
-	
+
+	/**
+	 * The currently selected {@link QueryType}.
+	 */
 	QueryType queryType = QueryType.FULLTEXT;
-		
 
 	/** Called when the activity is first created. */
 	@Override
@@ -37,31 +43,47 @@ public class ListCmisFeedActivity extends ListActivity {
 
 		if (repository == null) {
 			Prefs prefs = new Prefs(this);
-			repository = CmisRepository.create(prefs); 
+			repository = CmisRepository.create(prefs);
 		}
-		
+
 		if (activityIsCalledWithSearchAction()) {
 			doSearchWithIntent(getIntent());
 		} else {
+			// display the feed that is passed in through the intent
 			String feed = getFeedFromIntent();
 			displayFeedInListView(feed);
 		}
 	}
 
+	/**
+	 * The type of the query is passed by the SearchManager through a bundle in
+	 * the search intent.
+	 * 
+	 * @param intent
+	 * @return
+	 */
 	private QueryType getQueryTypeFromIntent(Intent intent) {
 		Bundle appData = intent.getBundleExtra(SearchManager.APP_DATA);
 		if (appData != null) {
 			String queryType = appData.getString(QueryType.class.getName());
 			return QueryType.valueOf(queryType);
-		 }
+		}
 		return QueryType.FULLTEXT;
 	}
 
+	/**
+	 * Tests if this activity is called with a Search intent.
+	 * 
+	 * @return
+	 */
 	private boolean activityIsCalledWithSearchAction() {
 		final String queryAction = getIntent().getAction();
 		return Intent.ACTION_SEARCH.equals(queryAction);
 	}
 
+	/**
+	 * Initialze the window and the activity.
+	 */
 	private void initWindow() {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 
@@ -71,15 +93,27 @@ public class ListCmisFeedActivity extends ListActivity {
 		getListView().setOnItemClickListener(new CmisDocSelectedListener());
 	}
 
+	/**
+	 * Process the current intent as search intent, build a query url and
+	 * display the feed.
+	 * 
+	 * @param queryIntent
+	 */
 	private void doSearchWithIntent(final Intent queryIntent) {
 		final String queryString = queryIntent
 				.getStringExtra(SearchManager.QUERY);
-		
+
 		QueryType queryType = getQueryTypeFromIntent(queryIntent);
 		String searchFeed = repository.getSearchFeed(queryType, queryString);
 		displayFeedInListView(searchFeed);
 	}
 
+	/**
+	 * Retrieves the feed to display from a regular intent. This is passed by
+	 * the previous activity when a user selects a folder.
+	 * 
+	 * @return
+	 */
 	private String getFeedFromIntent() {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -90,19 +124,41 @@ public class ListCmisFeedActivity extends ListActivity {
 		return null;
 	}
 
+	/*
+	 * Is called when the user leaves the settings and possibly has changed the
+	 * url/user/pw. Reinitializing the repo connection. There might be a better
+	 * callback to listen for preference changes.
+	 * 
+	 * @see android.app.Activity#onRestart()
+	 */
 	@Override
 	protected void onRestart() {
 		super.onRestart();
+		Prefs prefs = new Prefs(this);
+		repository = CmisRepository.create(prefs);
 		displayFeedInListView(null);
 	}
 
+	/**
+	 * Displays the cmis feed given as in the list asynchronously
+	 * 
+	 * @param feed
+	 */
 	private void displayFeedInListView(final String feed) {
 		setTitle("loading...");
 		new FeedDisplayTask(this, repository).execute(feed);
 	}
 
+	/**
+	 * Downloads a file from an url to an {@link OutputStream}
+	 * 
+	 * @param os
+	 * @param contentUrl
+	 */
 	private void downloadContent(OutputStream os, String contentUrl) {
 		try {
+			// FIXME this shouldn't be done on the UI thread, a AsyncTask is
+			// needed.
 			repository.fetchContent(contentUrl, os);
 			os.close();
 		} catch (Exception e) {
@@ -111,6 +167,11 @@ public class ListCmisFeedActivity extends ListActivity {
 		}
 	}
 
+	/**
+	 * Opens a file by downloading it and starting the associated app.
+	 * 
+	 * @param doc
+	 */
 	private void openDocument(CmisItem doc) {
 		try {
 			OutputStream os = openFileOutput(doc.getTitle(),
@@ -132,6 +193,13 @@ public class ListCmisFeedActivity extends ListActivity {
 		viewFileInAssociatedApp(tempFile, doc.getMimeType());
 	}
 
+	/**
+	 * Displays a file on the local system with the associated app by calling
+	 * the ACTION_VIEW intent.
+	 * 
+	 * @param tempFile
+	 * @param mimeType
+	 */
 	private void viewFileInAssociatedApp(File tempFile, String mimeType) {
 		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
 		Uri data = Uri.fromFile(tempFile);
@@ -146,6 +214,10 @@ public class ListCmisFeedActivity extends ListActivity {
 		}
 	}
 
+	/**
+	 * Listener that is called whenever a user clicks on a file or folder in the
+	 * list.
+	 */
 	private class CmisDocSelectedListener implements OnItemClickListener {
 
 		@Override
@@ -161,6 +233,12 @@ public class ListCmisFeedActivity extends ListActivity {
 		}
 	}
 
+	/**
+	 * Opens a feed url in a new listview. This enables the user to use the
+	 * backbutton to get back to the previous list (usually the parent folder).
+	 * 
+	 * @param item
+	 */
 	private void openNewListViewActivity(CmisItem item) {
 		Intent intent = new Intent(this, ListCmisFeedActivity.class);
 		intent.putExtra("feed", item.getDownLink());
@@ -174,7 +252,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		settingsItem.setIcon(android.R.drawable.ic_menu_edit);
 		MenuItem aboutItem = menu.add(Menu.NONE, 2, 0, "About");
 		aboutItem.setIcon(android.R.drawable.ic_menu_info_details);
-		//MenuItem searchItem = menu.add(Menu.NONE, 3, 0, "Search");
+		// MenuItem searchItem = menu.add(Menu.NONE, 3, 0, "Search");
 
 		SubMenu searchMenu = menu.addSubMenu("Search");
 		searchMenu.setIcon(android.R.drawable.ic_menu_search);
@@ -217,13 +295,18 @@ public class ListCmisFeedActivity extends ListActivity {
 
 		return false;
 	}
-	
-	 @Override
-	 public boolean onSearchRequested() {
-	     Bundle appData = new Bundle();
-	     appData.putString(QueryType.class.getName(), queryType.name());
-	     startSearch("", false, appData, false);
-	     return true;
-	 }
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onSearchRequested()
+	 */
+	@Override
+	public boolean onSearchRequested() {
+		Bundle appData = new Bundle();
+		appData.putString(QueryType.class.getName(), queryType.name());
+		startSearch("", false, appData, false);
+		return true;
+	}
 
 }
