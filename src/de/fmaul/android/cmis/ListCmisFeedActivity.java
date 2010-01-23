@@ -12,11 +12,13 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -95,7 +97,45 @@ public class ListCmisFeedActivity extends ListActivity {
 		getListView().setItemsCanFocus(true);
 		getListView().setClickable(true);
 		getListView().setOnItemClickListener(new CmisDocSelectedListener());
-		getListView().setOnItemLongClickListener(new CmisDocLongClickListener());
+		getListView().setOnCreateContextMenuListener(this);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem menuItem) {
+
+		AdapterView.AdapterContextMenuInfo menuInfo;
+		try {
+			menuInfo = (AdapterView.AdapterContextMenuInfo) menuItem
+					.getMenuInfo();
+		} catch (ClassCastException e) {
+			return false;
+		}
+
+		CmisItem doc = (CmisItem) getListView()
+				.getItemAtPosition(menuInfo.position);
+
+		switch (menuItem.getItemId()) {
+		case 1:
+			if (doc != null) {
+				displayDocumentDetails(doc);
+			}
+			return true;
+		case 2:
+			if (doc != null) {
+				emailDocument(doc);
+			}
+			return true;
+
+		default:
+			return super.onContextItemSelected(menuItem);
+		}
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		menu.add(0, 1, Menu.NONE, "Display details");
+		menu.add(0, 2, Menu.NONE, "EMail Document");
 	}
 
 	/**
@@ -110,7 +150,9 @@ public class ListCmisFeedActivity extends ListActivity {
 
 		QueryType queryType = getQueryTypeFromIntent(queryIntent);
 		String searchFeed = repository.getSearchFeed(queryType, queryString);
-		displayFeedInListView(searchFeed, getString(R.string.search_results_for)+" '"+queryString+"'");
+		displayFeedInListView(searchFeed,
+				getString(R.string.search_results_for) + " '" + queryString
+						+ "'");
 	}
 
 	/**
@@ -159,7 +201,6 @@ public class ListCmisFeedActivity extends ListActivity {
 		new FeedDisplayTask(this, repository).execute(feed);
 	}
 
-	
 	/**
 	 * Downloads a file from an url to an {@link OutputStream}
 	 * 
@@ -243,23 +284,17 @@ public class ListCmisFeedActivity extends ListActivity {
 			}
 		}
 	}
-	
-	private class CmisDocLongClickListener implements OnItemLongClickListener {
-		@Override
-		public boolean onItemLongClick(AdapterView<?> parent, View view, int position,
-				long id) {
-				
-			CmisItem doc = (CmisItem) parent.getItemAtPosition(position);
-			Intent intent = new Intent(ListCmisFeedActivity.this, DocumentDetailsActivity.class);
 
-			ArrayList<CmisProperty> propList = new ArrayList<CmisProperty>(doc.getProperties().values());
-			
-			intent.putParcelableArrayListExtra("properties", propList);
-			startActivity(intent);			
-			return true;
-		}
+	private void displayDocumentDetails(CmisItem doc) {
+		Intent intent = new Intent(ListCmisFeedActivity.this,
+				DocumentDetailsActivity.class);
+
+		ArrayList<CmisProperty> propList = new ArrayList<CmisProperty>(doc
+				.getProperties().values());
+
+		intent.putParcelableArrayListExtra("properties", propList);
+		startActivity(intent);
 	}
-	
 
 	/**
 	 * Opens a feed url in a new listview. This enables the user to use the
@@ -273,12 +308,39 @@ public class ListCmisFeedActivity extends ListActivity {
 		startActivity(intent);
 	}
 
+	private void emailDocument(CmisItem item) {
+		try {
+			OutputStream os = openFileOutput(item.getTitle(),
+					MODE_WORLD_READABLE);
+
+			downloadContent(os, item);
+		} catch (FileNotFoundException fnfe) {
+			Toast.makeText(this, R.string.error_file_does_not_exists,
+					Toast.LENGTH_SHORT).show();
+		}
+
+		File tempFile = new File(getFilesDir(), item.getTitle());
+		if (!tempFile.exists()) {
+			Toast.makeText(this, R.string.error_file_does_not_exists,
+					Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		Intent i = new Intent(Intent.ACTION_SEND);
+		i.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
+		i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile));
+		i.setType(item.getMimeType());
+		startActivity(Intent.createChooser(i, "Email file"));
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		MenuItem settingsItem = menu.add(Menu.NONE, 1, 0, R.string.menu_item_settings);
+		MenuItem settingsItem = menu.add(Menu.NONE, 1, 0,
+				R.string.menu_item_settings);
 		settingsItem.setIcon(android.R.drawable.ic_menu_edit);
-		MenuItem aboutItem = menu.add(Menu.NONE, 2, 0, R.string.menu_item_about);
+		MenuItem aboutItem = menu
+				.add(Menu.NONE, 2, 0, R.string.menu_item_about);
 		aboutItem.setIcon(android.R.drawable.ic_menu_info_details);
 		// MenuItem searchItem = menu.add(Menu.NONE, 3, 0, "Search");
 
@@ -302,8 +364,7 @@ public class ListCmisFeedActivity extends ListActivity {
 			startActivity(new Intent(this, CmisPreferences.class));
 			return true;
 		case 2:
-			Toast.makeText(this, R.string.about_message, 5)
-					.show();
+			Toast.makeText(this, R.string.about_message, 5).show();
 			return true;
 		case 4:
 			queryType = QueryType.TITLE;
