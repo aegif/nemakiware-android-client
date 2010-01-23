@@ -3,6 +3,8 @@ package de.fmaul.android.cmis;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Map.Entry;
 
 import android.app.ListActivity;
 import android.app.SearchManager;
@@ -18,7 +20,9 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import de.fmaul.android.cmis.repo.CmisItem;
+import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.QueryType;
 
@@ -91,6 +95,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		getListView().setItemsCanFocus(true);
 		getListView().setClickable(true);
 		getListView().setOnItemClickListener(new CmisDocSelectedListener());
+		getListView().setOnItemLongClickListener(new CmisDocLongClickListener());
 	}
 
 	/**
@@ -238,6 +243,23 @@ public class ListCmisFeedActivity extends ListActivity {
 			}
 		}
 	}
+	
+	private class CmisDocLongClickListener implements OnItemLongClickListener {
+		@Override
+		public boolean onItemLongClick(AdapterView<?> parent, View view, int position,
+				long id) {
+				
+			CmisItem doc = (CmisItem) parent.getItemAtPosition(position);
+			Intent intent = new Intent(ListCmisFeedActivity.this, DocumentDetailsActivity.class);
+
+			ArrayList<CmisProperty> propList = new ArrayList<CmisProperty>(doc.getProperties().values());
+			
+			intent.putParcelableArrayListExtra("properties", propList);
+			startActivity(intent);			
+			return true;
+		}
+	}
+	
 
 	/**
 	 * Opens a feed url in a new listview. This enables the user to use the

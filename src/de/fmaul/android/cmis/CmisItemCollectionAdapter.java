@@ -33,7 +33,7 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 		View v = convertView;
 		if (v == null) {
 			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.row, null);
+			v = vi.inflate(R.layout.feed_list_row, null);
 		}
 		
 		CmisItem item = getItem(position);
