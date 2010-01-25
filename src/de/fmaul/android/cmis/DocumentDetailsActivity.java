@@ -17,23 +17,17 @@ public class DocumentDetailsActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.document_details_main);
+		displayPropertiesFromIntent();
+	}
 
-		ArrayList<CmisProperty> propList = getIntent().getParcelableArrayListExtra("properties"); 
-		
-		List<Map<String,?>> list = new ArrayList<Map<String,?>>();
-		for (CmisProperty cmisProperty : propList) {
-			String name = cmisProperty.getDisplayName();
-			if (TextUtils.isEmpty(name)) {
-				name = cmisProperty.getDefinitionId();
-			}
-			
-			list.add(createPair(name, cmisProperty.getValue()));
-		}
-		
-		list.add(createPair("testName", "testValue"));
-		
+	private void displayPropertiesFromIntent() {
+		List<CmisProperty> propList = getPropertiesFromIntent(); 
+		List<Map<String, ?>> list = buildListOfNameValueMaps(propList);
+		initListAdapter(list);
+	}
+
+	private void initListAdapter(List<Map<String, ?>> list) {
 		SimpleAdapter props = new SimpleAdapter(
 				this,
 				list,
@@ -43,14 +37,33 @@ public class DocumentDetailsActivity extends ListActivity {
 
 		setListAdapter(props);
 	}
-	
 
+	private List<Map<String, ?>> buildListOfNameValueMaps(
+			List<CmisProperty> propList) {
+		List<Map<String,?>> list = new ArrayList<Map<String,?>>();
+		for (CmisProperty cmisProperty : propList) {
+			list.add(createPair(getDisplayNameFromProperty(cmisProperty), cmisProperty.getValue()));
+		}
+		return list;
+	}
+
+	private String getDisplayNameFromProperty(CmisProperty cmisProperty) {
+		String name = cmisProperty.getDisplayName();
+		if (TextUtils.isEmpty(name)) {
+			name = cmisProperty.getDefinitionId().replaceAll("cmis:", "");
+		}
+		return name;
+	}
+
+	private ArrayList<CmisProperty> getPropertiesFromIntent() {
+		ArrayList<CmisProperty> propList = getIntent().getParcelableArrayListExtra("properties");
+		return propList;
+	}
+	
 	private Map<String, ?> createPair(String name, String value) {
 		HashMap<String, String> hashMap = new HashMap<String, String>();
 		hashMap.put("name", name);
 		hashMap.put("value", value);
 		return hashMap;
 	}
-
-	
 }
