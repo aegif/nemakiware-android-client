@@ -4,14 +4,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Map.Entry;
 
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,11 +24,11 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.QueryType;
+import de.fmaul.android.cmis.utils.FeedLoadException;
 
 public class ListCmisFeedActivity extends ListActivity {
 
@@ -46,18 +48,34 @@ public class ListCmisFeedActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initWindow();
+		initRepository();
+		processSearchOrDisplayIntent();
+	}
 
-		if (repository == null) {
-			Prefs prefs = new Prefs(this);
-			repository = CmisRepository.create(prefs);
+	private void initRepository() {
+		try {
+			if (repository == null) {
+				Prefs prefs = new Prefs(this);
+				repository = CmisRepository.create(prefs);
+			}
+		} catch (FeedLoadException fle) {
 		}
-
-		if (activityIsCalledWithSearchAction()) {
-			doSearchWithIntent(getIntent());
-		} else {
-			// display the feed that is passed in through the intent
-			String feed = getFeedFromIntent();
-			displayFeedInListViewWithTitleFromFeed(feed);
+	}
+	
+	private void processSearchOrDisplayIntent() {
+		if (repository != null) {
+			if (activityIsCalledWithSearchAction()) {
+				doSearchWithIntent(getIntent());
+			} else {
+				// display the feed that is passed in through the intent
+				String feed = getFeedFromIntent();
+				displayFeedInListViewWithTitleFromFeed(feed);
+			}
+		}
+		else {
+			Toast.makeText(this,
+					"Repositoy not set up correctly. Check the repository settings.",
+					5);
 		}
 	}
 
@@ -98,6 +116,27 @@ public class ListCmisFeedActivity extends ListActivity {
 		getListView().setClickable(true);
 		getListView().setOnItemClickListener(new CmisDocSelectedListener());
 		getListView().setOnCreateContextMenuListener(this);
+
+		registerPreferencesListener();
+	}
+
+	/**
+	 * Register a listener on Preferences changes that sets the repository to
+	 * null. When returning from the settings OnResume is called an creates a
+	 * new repository connection if it has been set to null by the listener.
+	 */
+	private void registerPreferencesListener() {
+		PreferenceManager.getDefaultSharedPreferences(this)
+				.registerOnSharedPreferenceChangeListener(
+						new OnSharedPreferenceChangeListener() {
+
+							@Override
+							public void onSharedPreferenceChanged(
+									SharedPreferences sharedPreferences,
+									String key) {
+								repository = null;
+							}
+						});
 	}
 
 	@Override
@@ -111,8 +150,8 @@ public class ListCmisFeedActivity extends ListActivity {
 			return false;
 		}
 
-		CmisItem doc = (CmisItem) getListView()
-				.getItemAtPosition(menuInfo.position);
+		CmisItem doc = (CmisItem) getListView().getItemAtPosition(
+				menuInfo.position);
 
 		switch (menuItem.getItemId()) {
 		case 1:
@@ -172,18 +211,15 @@ public class ListCmisFeedActivity extends ListActivity {
 	}
 
 	/*
-	 * Is called when the user leaves the settings and possibly has changed the
-	 * url/user/pw. Reinitializing the repo connection. There might be a better
-	 * callback to listen for preference changes.
-	 * 
 	 * @see android.app.Activity#onRestart()
 	 */
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		Prefs prefs = new Prefs(this);
-		repository = CmisRepository.create(prefs);
-		displayFeedInListViewWithTitleFromFeed(null);
+		if (repository == null) {
+			initRepository();
+			displayFeedInListViewWithTitleFromFeed(null);
+		}
 	}
 
 	/**
@@ -378,8 +414,6 @@ public class ListCmisFeedActivity extends ListActivity {
 			queryType = QueryType.CMISQUERY;
 			onSearchRequested();
 			return true;
-		default:
-			Toast.makeText(this, "unknown menu item.", 5).show();
 		}
 
 		return false;
