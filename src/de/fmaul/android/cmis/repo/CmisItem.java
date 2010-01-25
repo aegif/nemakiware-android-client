@@ -123,7 +123,5 @@ public class CmisItem {
 		 cmisItem.properties = new HashMap<String, CmisProperty>();
 		return cmisItem;
 	}
-	
-	
 
 }

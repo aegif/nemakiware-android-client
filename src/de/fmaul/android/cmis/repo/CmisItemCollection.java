@@ -9,10 +9,9 @@ import org.dom4j.Element;
 
 public class CmisItemCollection {
 
-	List<CmisItem> items = new ArrayList<CmisItem>(); 
-	
-	String upLink;
-	String title;
+	private List<CmisItem> items = new ArrayList<CmisItem>(); 
+	private String upLink;
+	private String title;
 	
 	private CmisItemCollection() {
 	}
@@ -28,7 +27,6 @@ public class CmisItemCollection {
 	public String getUpLink() {
 		return upLink;
 	}
-	
 	
 	public static CmisItemCollection createFromFeed(Document doc) {
 		CmisItemCollection cic = new CmisItemCollection();

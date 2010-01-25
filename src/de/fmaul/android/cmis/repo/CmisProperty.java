@@ -26,8 +26,6 @@ public class CmisProperty implements Parcelable {
 		localName = in.readString();
 		displayName = in.readString();
 		value = in.readString();
-		
-
 	}
 
 	public String getDefinitionId() {
@@ -52,7 +50,6 @@ public class CmisProperty implements Parcelable {
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -75,7 +72,5 @@ public class CmisProperty implements Parcelable {
 			return new CmisProperty[size];
 		}
 	};
-	
-	
 
 }

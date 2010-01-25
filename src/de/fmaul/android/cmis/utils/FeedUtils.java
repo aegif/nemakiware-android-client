@@ -26,7 +26,6 @@ public class FeedUtils {
 	private static final Namespace CMIS = Namespace
 	.get("http://docs.oasis-open.org/ns/cmis/core/200908/");
 	
-	
 	private static final QName CMISRA_COLLECTION_TYPE = QName.get(
 			"collectionType", CMISRA);
 	private static final QName CMISRA_URI_TEMPLATE = QName.get("uritemplate",

@@ -12,17 +12,25 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+/**
+ * Wrapper against commons http client which is included in android.
+ * Unfortunately it is an older version with an old syntax. Better encapsulate
+ * all everything here to support easier migration.
+ * 
+ * @author Florian Maul
+ * 
+ */
 public class HttpUtils {
 
-	public static HttpResponse getWebRessource(String url, String user, String password) throws IOException,
-			ClientProtocolException {
+	public static HttpResponse getWebRessource(String url, String user,
+			String password) throws IOException, ClientProtocolException {
 		HttpGet get = new HttpGet(url);
 		HttpClient client = createClient(user, password);
 		return client.execute(get);
 	}
 
-	static InputStream getWebRessourceAsStream(String url, String user, String password) throws IOException,
-			ClientProtocolException {
+	static InputStream getWebRessourceAsStream(String url, String user,
+			String password) throws IOException, ClientProtocolException {
 
 		return getWebRessource(url, user, password).getEntity().getContent();
 	}
@@ -31,7 +39,8 @@ public class HttpUtils {
 		DefaultHttpClient client = new DefaultHttpClient();
 
 		if (user != null && user.length() > 0) {
-			Credentials defaultcreds = new UsernamePasswordCredentials(user, password);
+			Credentials defaultcreds = new UsernamePasswordCredentials(user,
+					password);
 			client.getCredentialsProvider().setCredentials(AuthScope.ANY,
 					defaultcreds);
 		}
