@@ -51,7 +51,7 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * Contains the current connection information and methods to access the
 	 * CMIS repository.
 	 */
-	CmisRepository repository;
+
 
 	/**
 	 * The currently selected {@link QueryType}.
@@ -69,16 +69,16 @@ public class ListCmisFeedActivity extends ListActivity {
 
 	private void initRepository() {
 		try {
-			if (repository == null) {
+			if (getRepository() == null) {
 				Prefs prefs = new Prefs(this);
-				repository = CmisRepository.create(prefs);
+				setRepository(CmisRepository.create(prefs));
 			}
 		} catch (FeedLoadException fle) {
 		}
 	}
 	
 	private void processSearchOrDisplayIntent() {
-		if (repository != null) {
+		if (getRepository() != null) {
 			if (activityIsCalledWithSearchAction()) {
 				doSearchWithIntent(getIntent());
 			} else {
@@ -149,7 +149,7 @@ public class ListCmisFeedActivity extends ListActivity {
 							public void onSharedPreferenceChanged(
 									SharedPreferences sharedPreferences,
 									String key) {
-								repository = null;
+								setRepository(null);
 							}
 						});
 	}
@@ -203,7 +203,7 @@ public class ListCmisFeedActivity extends ListActivity {
 				.getStringExtra(SearchManager.QUERY);
 
 		QueryType queryType = getQueryTypeFromIntent(queryIntent);
-		String searchFeed = repository.getSearchFeed(queryType, queryString);
+		String searchFeed = getRepository().getSearchFeed(queryType, queryString);
 		displayFeedInListView(searchFeed,
 				getString(R.string.search_results_for) + " '" + queryString
 						+ "'");
@@ -231,7 +231,7 @@ public class ListCmisFeedActivity extends ListActivity {
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		if (repository == null) {
+		if (getRepository() == null) {
 			initRepository();
 			displayFeedInListViewWithTitleFromFeed(null);
 		}
@@ -244,12 +244,12 @@ public class ListCmisFeedActivity extends ListActivity {
 	 */
 	private void displayFeedInListView(final String feed, String title) {
 		setTitle(R.string.loading);
-		new FeedDisplayTask(this, repository, title).execute(feed);
+		new FeedDisplayTask(this, getRepository(), title).execute(feed);
 	}
 
 	private void displayFeedInListViewWithTitleFromFeed(final String feed) {
 		setTitle(R.string.loading);
-		new FeedDisplayTask(this, repository).execute(feed);
+		new FeedDisplayTask(this, getRepository()).execute(feed);
 	}
 
 	/**
@@ -262,7 +262,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		try {
 			// FIXME this shouldn't be done on the UI thread, a AsyncTask is
 			// needed.
-			repository.fetchContent(item, os);
+			getRepository().fetchContent(item, os);
 			os.close();
 		} catch (Exception e) {
 			Toast.makeText(this, R.string.error_downloading_content,
@@ -445,6 +445,14 @@ public class ListCmisFeedActivity extends ListActivity {
 		appData.putString(QueryType.class.getName(), queryType.name());
 		startSearch("", false, appData, false);
 		return true;
+	}
+	
+	CmisRepository getRepository() {
+		return ((CmisApp) getApplication()).getRepository();
+	}
+	
+	void setRepository(CmisRepository repo) {
+		((CmisApp) getApplication()).setRepository(repo);
 	}
 
 }
