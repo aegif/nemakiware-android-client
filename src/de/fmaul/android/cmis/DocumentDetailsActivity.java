@@ -33,7 +33,13 @@ public class DocumentDetailsActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.document_details_main);
+		setTitleFromIntent();
 		displayPropertiesFromIntent();
+	}
+
+	private void setTitleFromIntent() {
+		String title = getIntent().getStringExtra("title");
+		setTitle("Details for '"+title+"'");
 	}
 
 	private void displayPropertiesFromIntent() {
