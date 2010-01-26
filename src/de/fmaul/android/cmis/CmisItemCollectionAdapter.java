@@ -114,7 +114,30 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 		CmisProperty fileSize = doc.getProperties().get(
 				"cmis:contentStreamLength");
 		if (fileSize != null) {
-			infos.add(fileSize.getValue() + " Bytes");
+			infos.add(convertAndFormatSize(fileSize.getValue()));
+		}
+	}
+
+	private String convertAndFormatSize(String size) {
+		int sizeInByte = Integer.parseInt(size);
+		
+		if (sizeInByte < 1024) {
+			return String.valueOf(sizeInByte) + " bytes";
+		}
+		else {
+			int sizeInKB = sizeInByte / 1024;
+			if (sizeInKB < 1024) {
+				return String.valueOf(sizeInKB) + " KB";
+			}
+			else {
+				int sizeInMB = sizeInKB / 1024;
+				if (sizeInMB < 1024) {
+					return String.valueOf(sizeInMB) + " MB";
+				}		
+				else {
+					return String.valueOf(sizeInMB / 1024) + " GB";
+				}
+			}
 		}
 	}
 
