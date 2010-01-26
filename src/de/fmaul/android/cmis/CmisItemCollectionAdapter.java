@@ -37,30 +37,45 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 
 	private final Context context;
 
+	static private class ViewHolder {
+		TextView topText;
+		TextView bottomText;
+		ImageView icon;
+	}
+
 	public CmisItemCollectionAdapter(Context context, int textViewResourceId,
 			CmisItemCollection itemCollection) {
-		super(context, textViewResourceId, itemCollection.getItems() );
+		super(context, textViewResourceId, itemCollection.getItems());
 		this.context = context;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View v = getListRowView(convertView);
+		View v = recycleOrCreateView(convertView);
+		ViewHolder vh = (ViewHolder) v.getTag();
+		
 		CmisItem item = getItem(position);
-		updateControls(v, item);
+		updateControls(vh, item);
 		return v;
 	}
 
-	private View getListRowView(View convertView) {
-		View v = convertView;
+	private View recycleOrCreateView(View v) {
 		if (v == null) {
-			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
+					Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.feed_list_row, null);
+
+			ViewHolder vh = new ViewHolder();
+			vh.icon = (ImageView) v.findViewById(R.id.icon);
+			vh.topText = (TextView) v.findViewById(R.id.toptext);
+			vh.bottomText = (TextView) v.findViewById(R.id.bottomtext);
+
+			v.setTag(vh);
 		}
 		return v;
 	}
 
-	private void updateControls(View v, CmisItem item) {
+	private void updateControls(ViewHolder v, CmisItem item) {
 		if (item != null) {
 			updateControlTitle(v, item);
 			updateControlDescriptionText(v, item);
@@ -68,35 +83,27 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 		}
 	}
 
-	private void updateControlIcon(View v, CmisItem item) {
-		ImageView icon = (ImageView) v.findViewById(R.id.icon);
-		if (icon != null) {
-			if (item.hasChildren()) {
-				icon.setImageDrawable(getContext().getResources().getDrawable(
-						R.drawable.folder));
-			} else {
-				icon.setImageDrawable(getContext().getResources().getDrawable(
-						R.drawable.file));
-			}
+	private void updateControlIcon(ViewHolder vh, CmisItem item) {
+
+		if (item.hasChildren()) {
+			vh.icon.setImageDrawable(getContext().getResources().getDrawable(
+					R.drawable.folder));
+		} else {
+			vh.icon.setImageDrawable(getContext().getResources().getDrawable(
+					R.drawable.file));
 		}
 	}
 
-	private void updateControlDescriptionText(View v, CmisItem item) {
-		TextView bt = (TextView) v.findViewById(R.id.bottomtext);
-		if (bt != null) {
-			bt.setText(buildBottomText(item));
-		}
+	private void updateControlDescriptionText(ViewHolder vh, CmisItem item) {
+			vh.bottomText.setText(buildBottomText(item));
 	}
 
-	private void updateControlTitle(View v, CmisItem item) {
-		TextView tt = (TextView) v.findViewById(R.id.toptext);
-		if (tt != null) {
-			tt.setText(item.getTitle());
-		}
+	private void updateControlTitle(ViewHolder vh, CmisItem item) {
+		vh.topText.setText(item.getTitle());
 	}
 
 	private CharSequence buildBottomText(CmisItem doc) {
-		List<String> infos = new LinkedList<String>(); 
+		List<String> infos = new LinkedList<String>();
 		appendInfoAuthor(doc, infos);
 		appendInfoModificationDate(doc, infos);
 		appendInfoDocumentSize(doc, infos);
@@ -104,7 +111,8 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 	}
 
 	private void appendInfoDocumentSize(CmisItem doc, List<String> infos) {
-		CmisProperty fileSize = doc.getProperties().get("cmis:contentStreamLength");
+		CmisProperty fileSize = doc.getProperties().get(
+				"cmis:contentStreamLength");
 		if (fileSize != null) {
 			infos.add(fileSize.getValue() + " Bytes");
 		}
@@ -121,13 +129,15 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 		String modDate = "";
 		String modTime = "";
 		if (modificationDate != null) {
-			modDate = DateFormat.getDateFormat(context).format(modificationDate);
-			modTime = DateFormat.getTimeFormat(context).format(modificationDate);
+			modDate = DateFormat.getDateFormat(context)
+					.format(modificationDate);
+			modTime = DateFormat.getTimeFormat(context)
+					.format(modificationDate);
 			if (!TextUtils.isEmpty(modDate)) {
 				infos.add(modDate);
 			}
 			if (!TextUtils.isEmpty(modTime)) {
-				infos.add(modTime);	
+				infos.add(modTime);
 			}
 		}
 	}
