@@ -21,6 +21,8 @@ import java.io.OutputStream;
 import org.apache.http.client.ClientProtocolException;
 import org.dom4j.Document;
 
+import android.text.TextUtils;
+
 import de.fmaul.android.cmis.Prefs;
 import de.fmaul.android.cmis.utils.FeedUtils;
 import de.fmaul.android.cmis.utils.HttpUtils;
@@ -31,7 +33,9 @@ import de.fmaul.android.cmis.utils.HttpUtils;
 public class CmisRepository {
 
 	private final String feedRootCollection;
+	private final String feedTypesCollection;
 	private final String uriTemplateQuery;
+	private final String uriTemplateTypeById;
 	private final String repositoryUser;
 	private final String repostoryPassword;
 
@@ -53,7 +57,14 @@ public class CmisRepository {
 				repostoryPassword);
 		feedRootCollection = FeedUtils
 				.getCollectionUrlFromRepoFeed(doc, "root");
+		feedTypesCollection = FeedUtils
+		.getCollectionUrlFromRepoFeed(doc, "types");
+		
 		uriTemplateQuery = FeedUtils.getUriTemplateFromRepoFeed(doc, "query");
+		uriTemplateTypeById = FeedUtils.getUriTemplateFromRepoFeed(doc, "typebyid");
+		
+		// Testing...
+		//CmisTypeDefinition typeDefinition = getTypeDefinition("cmis:document");
 	}
 
 	/**
@@ -124,4 +135,11 @@ public class CmisRepository {
 				.getEntity().writeTo(os);
 	}
 
+	public CmisTypeDefinition getTypeDefinition(String documentTypeId) {
+		String url = uriTemplateTypeById.replace("{id}", documentTypeId);
+		Document doc = FeedUtils.readAtomFeed(url, repositoryUser,
+				repostoryPassword);
+		return CmisTypeDefinition.createFromFeed(doc);
+	}
+	
 }

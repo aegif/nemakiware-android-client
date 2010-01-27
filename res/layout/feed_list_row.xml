@@ -6,7 +6,7 @@
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:src="@drawable/icon" android:layout_marginRight="4dip"/>
+        android:src="@drawable/icon" android:layout_marginRight="4dip" android:layout_gravity="top"/>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dip"
