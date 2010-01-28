@@ -1,12 +1,15 @@
 package de.fmaul.android.cmis.repo;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.Namespace;
 import org.dom4j.QName;
+
+import android.text.TextUtils;
 
 public class CmisTypeDefinition {
 
@@ -27,7 +30,7 @@ public class CmisTypeDefinition {
 	private boolean versionable;
 	private String contentStreamAllowed;
 
-	List<CmisPropertyTypeDefinition> propertyDefinition = new ArrayList<CmisPropertyTypeDefinition>();
+	Map<String, CmisPropertyTypeDefinition> propertyDefinition = new HashMap<String, CmisPropertyTypeDefinition>();
 
 	public static CmisTypeDefinition createFromFeed(Document doc) {
 		CmisTypeDefinition td = new CmisTypeDefinition();
@@ -58,7 +61,8 @@ public class CmisTypeDefinition {
 		List<Element> allElements = doc.getRootElement().element(CMISRA_TYPE).elements();
 		for (Element element : allElements) {
 			if (element.getName().startsWith("property")) {
-				td.propertyDefinition.add(CmisPropertyTypeDefinition.createFromElement(element));
+				CmisPropertyTypeDefinition propTypeDef = CmisPropertyTypeDefinition.createFromElement(element);
+				td.propertyDefinition.put(propTypeDef.getId(), propTypeDef);
 			}
 		}
 		
@@ -129,9 +133,22 @@ public class CmisTypeDefinition {
 		return contentStreamAllowed;
 	}
 
-	public List<CmisPropertyTypeDefinition> getPropertyDefinition() {
+	public Map<String, CmisPropertyTypeDefinition> getPropertyDefinition() {
 		return propertyDefinition;
 	}
+
+	private CmisPropertyTypeDefinition getTypeDefinitionForProperty(CmisProperty property) {
+		return getPropertyDefinition().get(property.getDefinitionId());	
+	}
+
 	
+	public String getDisplayNameForProperty(CmisProperty property) {
+		CmisPropertyTypeDefinition propTypeDef = getTypeDefinitionForProperty(property); 
+		
+		if (propTypeDef != null) {
+			return propTypeDef.getDisplayName();
+		}
+		return "";
+	}
 	
 }

@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 import de.fmaul.android.cmis.repo.CmisProperty;
+import de.fmaul.android.cmis.repo.CmisPropertyTypeDefinition;
+import de.fmaul.android.cmis.repo.CmisRepository;
+import de.fmaul.android.cmis.repo.CmisTypeDefinition;
 
 import android.app.ListActivity;
 import android.os.Bundle;
@@ -43,9 +46,15 @@ public class DocumentDetailsActivity extends ListActivity {
 	}
 
 	private void displayPropertiesFromIntent() {
-		List<CmisProperty> propList = getPropertiesFromIntent(); 
-		List<Map<String, ?>> list = buildListOfNameValueMaps(propList);
+		List<CmisProperty> propList = getPropertiesFromIntent();
+		String objectTypeId  = getObjectTypeIdFromIntent();
+		CmisTypeDefinition typeDefinition = getRepository().getTypeDefinition(objectTypeId);
+		List<Map<String, ?>> list = buildListOfNameValueMaps(propList, typeDefinition);
 		initListAdapter(list);
+	}
+
+	private String getObjectTypeIdFromIntent() {
+		return getIntent().getStringExtra("objectTypeId");
 	}
 
 	private void initListAdapter(List<Map<String, ?>> list) {
@@ -60,18 +69,23 @@ public class DocumentDetailsActivity extends ListActivity {
 	}
 
 	private List<Map<String, ?>> buildListOfNameValueMaps(
-			List<CmisProperty> propList) {
+			List<CmisProperty> propList, CmisTypeDefinition typeDefinition) {
 		List<Map<String,?>> list = new ArrayList<Map<String,?>>();
 		for (CmisProperty cmisProperty : propList) {
-			list.add(createPair(getDisplayNameFromProperty(cmisProperty), cmisProperty.getValue()));
+			list.add(createPair(getDisplayNameFromProperty(cmisProperty, typeDefinition), cmisProperty.getValue()));
 		}
 		return list;
 	}
 
-	private String getDisplayNameFromProperty(CmisProperty cmisProperty) {
-		String name = cmisProperty.getDisplayName();
+	private String getDisplayNameFromProperty(CmisProperty property,
+			CmisTypeDefinition typeDefinition) {
+		String name = property.getDisplayName();
+		
 		if (TextUtils.isEmpty(name)) {
-			name = cmisProperty.getDefinitionId().replaceAll("cmis:", "");
+		}	name = typeDefinition.getDisplayNameForProperty(property);
+		
+		if (TextUtils.isEmpty(name)) {
+			name = property.getDefinitionId().replaceAll("cmis:", ""); 
 		}
 		return name;
 	}
@@ -87,4 +101,9 @@ public class DocumentDetailsActivity extends ListActivity {
 		hashMap.put("value", value);
 		return hashMap;
 	}
+	
+	CmisRepository getRepository() {
+		return ((CmisApp) getApplication()).getRepository();
+	}
+	
 }

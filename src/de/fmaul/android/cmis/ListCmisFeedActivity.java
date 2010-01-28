@@ -345,6 +345,7 @@ public class ListCmisFeedActivity extends ListActivity {
 
 		intent.putParcelableArrayListExtra("properties", propList);
 		intent.putExtra("title", doc.getTitle());
+		intent.putExtra("objectTypeId", doc.getProperties().get("cmis:objectTypeId").getValue());
 		startActivity(intent);
 	}
 

@@ -62,9 +62,6 @@ public class CmisRepository {
 		
 		uriTemplateQuery = FeedUtils.getUriTemplateFromRepoFeed(doc, "query");
 		uriTemplateTypeById = FeedUtils.getUriTemplateFromRepoFeed(doc, "typebyid");
-		
-		// Testing...
-		//CmisTypeDefinition typeDefinition = getTypeDefinition("cmis:document");
 	}
 
 	/**
