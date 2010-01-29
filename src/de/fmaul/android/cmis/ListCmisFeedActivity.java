@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- package de.fmaul.android.cmis;
+package de.fmaul.android.cmis;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
@@ -28,6 +33,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -52,7 +58,6 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * CMIS repository.
 	 */
 
-
 	/**
 	 * The currently selected {@link QueryType}.
 	 */
@@ -76,7 +81,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		} catch (FeedLoadException fle) {
 		}
 	}
-	
+
 	private void processSearchOrDisplayIntent() {
 		if (getRepository() != null) {
 			if (activityIsCalledWithSearchAction()) {
@@ -86,11 +91,12 @@ public class ListCmisFeedActivity extends ListActivity {
 				String feed = getFeedFromIntent();
 				displayFeedInListViewWithTitleFromFeed(feed);
 			}
-		}
-		else {
-			Toast.makeText(this,
-					"Repositoy not set up correctly. Check the repository settings.",
-					5);
+		} else {
+			Toast
+					.makeText(
+							this,
+							"Repositoy not set up correctly. Check the repository settings.",
+							5);
 		}
 	}
 
@@ -203,7 +209,8 @@ public class ListCmisFeedActivity extends ListActivity {
 				.getStringExtra(SearchManager.QUERY);
 
 		QueryType queryType = getQueryTypeFromIntent(queryIntent);
-		String searchFeed = getRepository().getSearchFeed(queryType, queryString);
+		String searchFeed = getRepository().getSearchFeed(queryType,
+				queryString);
 		displayFeedInListView(searchFeed,
 				getString(R.string.search_results_for) + " '" + queryString
 						+ "'");
@@ -276,24 +283,33 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * @param item
 	 */
 	private void openDocument(CmisItem item) {
+
+		String filePath = Environment.getExternalStorageDirectory() + "/"
+				+ getApplication().getPackageName() + "/"
+				+ item.getId().replaceAll(":", "_")+item.getTitle();
+
+		File contentFile = new File(filePath);
+
 		try {
-			OutputStream os = openFileOutput(item.getTitle(),
-					MODE_WORLD_READABLE);
+			contentFile.getParentFile().mkdirs();
+			contentFile.createNewFile();
+			OutputStream os = new BufferedOutputStream(new FileOutputStream(
+					contentFile));
 
 			downloadContent(os, item);
-		} catch (FileNotFoundException fnfe) {
+
+		} catch (IOException fnfe) {
 			Toast.makeText(this, R.string.error_file_does_not_exists,
 					Toast.LENGTH_SHORT).show();
 		}
 
-		File tempFile = new File(getFilesDir(), item.getTitle());
-		if (!tempFile.exists()) {
+		if (!contentFile.exists()) {
 			Toast.makeText(this, R.string.error_file_does_not_exists,
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
 
-		viewFileInAssociatedApp(tempFile, item.getMimeType());
+		viewFileInAssociatedApp(contentFile, item.getMimeType());
 	}
 
 	/**
@@ -345,7 +361,8 @@ public class ListCmisFeedActivity extends ListActivity {
 
 		intent.putParcelableArrayListExtra("properties", propList);
 		intent.putExtra("title", doc.getTitle());
-		intent.putExtra("objectTypeId", doc.getProperties().get("cmis:objectTypeId").getValue());
+		intent.putExtra("objectTypeId", doc.getProperties().get(
+				"cmis:objectTypeId").getValue());
 		startActivity(intent);
 	}
 
@@ -362,18 +379,25 @@ public class ListCmisFeedActivity extends ListActivity {
 	}
 
 	private void emailDocument(CmisItem item) {
+
+		String filePath = Environment.getExternalStorageDirectory() + "/"
+				+ getApplication().getPackageName() + "/"
+				+ item.getId().replaceAll(":", "_")+item.getTitle();
+		File contentFile = new File(filePath);
+
 		try {
-			OutputStream os = openFileOutput(item.getTitle(),
-					MODE_WORLD_READABLE);
+			contentFile.getParentFile().mkdirs();
+			contentFile.createNewFile();
+			OutputStream os = new BufferedOutputStream(new FileOutputStream(
+					contentFile));
 
 			downloadContent(os, item);
-		} catch (FileNotFoundException fnfe) {
+		} catch (IOException fnfe) {
 			Toast.makeText(this, R.string.error_file_does_not_exists,
 					Toast.LENGTH_SHORT).show();
 		}
 
-		File tempFile = new File(getFilesDir(), item.getTitle());
-		if (!tempFile.exists()) {
+		if (!contentFile.exists()) {
 			Toast.makeText(this, R.string.error_file_does_not_exists,
 					Toast.LENGTH_SHORT).show();
 			return;
@@ -381,7 +405,8 @@ public class ListCmisFeedActivity extends ListActivity {
 
 		Intent i = new Intent(Intent.ACTION_SEND);
 		i.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
-		i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile));
+		i.putExtra(Intent.EXTRA_TEXT, item.getContentUrl());
+		i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(contentFile));
 		i.setType(item.getMimeType());
 		startActivity(Intent.createChooser(i, "Email file"));
 	}
@@ -395,18 +420,24 @@ public class ListCmisFeedActivity extends ListActivity {
 		MenuItem aboutItem = menu
 				.add(Menu.NONE, 2, 0, R.string.menu_item_about);
 		aboutItem.setIcon(android.R.drawable.ic_menu_info_details);
-		// MenuItem searchItem = menu.add(Menu.NONE, 3, 0, "Search");
+		
+		MenuItem reloadItem = menu.add(Menu.NONE, 3, 0, "Reload");
+		reloadItem.setIcon(android.R.drawable.ic_menu_rotate);
 
+		createSearchMenu(menu);
+		return true;
+
+	}
+
+	private void createSearchMenu(Menu menu) {
 		SubMenu searchMenu = menu.addSubMenu(R.string.menu_item_search);
 		searchMenu.setIcon(android.R.drawable.ic_menu_search);
 		searchMenu.getItem().setAlphabeticShortcut(SearchManager.MENU_KEY);
+		searchMenu.setHeaderIcon(android.R.drawable.ic_menu_info_details);
 
 		searchMenu.add(Menu.NONE, 4, 0, R.string.menu_item_search_title);
 		searchMenu.add(Menu.NONE, 5, 0, R.string.menu_item_search_fulltext);
 		searchMenu.add(Menu.NONE, 6, 0, R.string.menu_item_search_cmis);
-
-		return true;
-
 	}
 
 	@Override
@@ -418,6 +449,10 @@ public class ListCmisFeedActivity extends ListActivity {
 			return true;
 		case 2:
 			Toast.makeText(this, R.string.about_message, 5).show();
+			return true;
+		case 3:
+			setRepository(null);
+			onRestart();
 			return true;
 		case 4:
 			queryType = QueryType.TITLE;
@@ -448,11 +483,11 @@ public class ListCmisFeedActivity extends ListActivity {
 		startSearch("", false, appData, false);
 		return true;
 	}
-	
+
 	CmisRepository getRepository() {
 		return ((CmisApp) getApplication()).getRepository();
 	}
-	
+
 	void setRepository(CmisRepository repo) {
 		((CmisApp) getApplication()).setRepository(repo);
 	}

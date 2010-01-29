@@ -21,8 +21,6 @@ import java.io.OutputStream;
 import org.apache.http.client.ClientProtocolException;
 import org.dom4j.Document;
 
-import android.text.TextUtils;
-
 import de.fmaul.android.cmis.Prefs;
 import de.fmaul.android.cmis.utils.FeedUtils;
 import de.fmaul.android.cmis.utils.HttpUtils;
