@@ -50,6 +50,7 @@ import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.QueryType;
 import de.fmaul.android.cmis.utils.FeedLoadException;
+import de.fmaul.android.cmis.utils.StorageUtils;
 
 public class ListCmisFeedActivity extends ListActivity {
 
@@ -284,12 +285,8 @@ public class ListCmisFeedActivity extends ListActivity {
 	 */
 	private void openDocument(CmisItem item) {
 
-		String filePath = Environment.getExternalStorageDirectory() + "/"
-				+ getApplication().getPackageName() + "/"
-				+ item.getId().replaceAll(":", "_")+item.getTitle();
-
-		File contentFile = new File(filePath);
-
+		File contentFile = StorageUtils.getStorageFile(getApplication(), StorageUtils.DUMMYREPO, StorageUtils.TYPE_CACHE, item.getId(), item.getTitle());
+		
 		try {
 			contentFile.getParentFile().mkdirs();
 			contentFile.createNewFile();
@@ -380,10 +377,7 @@ public class ListCmisFeedActivity extends ListActivity {
 
 	private void emailDocument(CmisItem item) {
 
-		String filePath = Environment.getExternalStorageDirectory() + "/"
-				+ getApplication().getPackageName() + "/"
-				+ item.getId().replaceAll(":", "_")+item.getTitle();
-		File contentFile = new File(filePath);
+		File contentFile = StorageUtils.getStorageFile(getApplication(), StorageUtils.DUMMYREPO, StorageUtils.TYPE_CACHE, item.getId(), item.getTitle());
 
 		try {
 			contentFile.getParentFile().mkdirs();

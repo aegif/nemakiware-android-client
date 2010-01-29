@@ -17,13 +17,18 @@ package de.fmaul.android.cmis.repo;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.dom4j.Document;
 
+import android.app.Application;
+
 import de.fmaul.android.cmis.Prefs;
 import de.fmaul.android.cmis.utils.FeedUtils;
 import de.fmaul.android.cmis.utils.HttpUtils;
+import de.fmaul.android.cmis.utils.StorageUtils;
 
 /**
  * @author Florian Maul
@@ -78,8 +83,8 @@ public class CmisRepository {
 	 * 
 	 * @return
 	 */
-	public CmisItemCollection getRootCollection() {
-		return getCollectionFromFeed(feedRootCollection);
+	public CmisItemCollection getRootCollection(Application app) {
+		return getCollectionFromFeed(app, feedRootCollection);
 	}
 
 	/**
@@ -113,12 +118,24 @@ public class CmisRepository {
 	 * @param feedUrl
 	 * @return
 	 */
-	public CmisItemCollection getCollectionFromFeed(final String feedUrl) {
-		Document doc = FeedUtils.readAtomFeed(feedUrl, repositoryUser,
+	public CmisItemCollection getCollectionFromFeed(Application app, final String feedUrl) {
+		Document doc;
+		
+		if (StorageUtils.isFeedInCache(app, feedUrl)) {
+			doc = StorageUtils.getFeedFromCache(app, feedUrl);
+		}
+		else {
+			doc = FeedUtils.readAtomFeed(feedUrl, repositoryUser,
 				repostoryPassword);
+			if (doc != null) {
+				StorageUtils.storeFeedInCache(app, feedUrl, doc);
+			}
+		}
 		return CmisItemCollection.createFromFeed(doc);
 	}
 
+
+	
 	/**
 	 * Fetches the contents from the CMIS repository for the given {@link CmisItem}.
 
