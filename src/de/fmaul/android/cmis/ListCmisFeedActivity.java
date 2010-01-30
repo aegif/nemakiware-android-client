@@ -78,6 +78,7 @@ public class ListCmisFeedActivity extends ListActivity {
 			if (getRepository() == null) {
 				Prefs prefs = new Prefs(this);
 				setRepository(CmisRepository.create(prefs));
+				getRepository().clearCache(getApplication());
 			}
 		} catch (FeedLoadException fle) {
 		}
@@ -261,52 +262,21 @@ public class ListCmisFeedActivity extends ListActivity {
 	}
 
 	/**
-	 * Downloads a file from an url to an {@link OutputStream}
-	 * 
-	 * @param os
-	 * @param contentUrl
-	 */
-	private void downloadContent(OutputStream os, CmisItem item) {
-		try {
-			// FIXME this shouldn't be done on the UI thread, a AsyncTask is
-			// needed.
-			getRepository().fetchContent(item, os);
-			os.close();
-		} catch (Exception e) {
-			Toast.makeText(this, R.string.error_downloading_content,
-					Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	/**
 	 * Opens a file by downloading it and starting the associated app.
 	 * 
 	 * @param item
 	 */
 	private void openDocument(CmisItem item) {
 
-		File contentFile = StorageUtils.getStorageFile(getApplication(), StorageUtils.DUMMYREPO, StorageUtils.TYPE_CACHE, item.getId(), item.getTitle());
+		File contentFile = getRepository().retreiveContent(getApplication(), item);
 		
-		try {
-			contentFile.getParentFile().mkdirs();
-			contentFile.createNewFile();
-			OutputStream os = new BufferedOutputStream(new FileOutputStream(
-					contentFile));
-
-			downloadContent(os, item);
-
-		} catch (IOException fnfe) {
+		if (contentFile != null && contentFile.exists()) {
+			viewFileInAssociatedApp(contentFile, item.getMimeType());
+		}
+		else {
 			Toast.makeText(this, R.string.error_file_does_not_exists,
 					Toast.LENGTH_SHORT).show();
 		}
-
-		if (!contentFile.exists()) {
-			Toast.makeText(this, R.string.error_file_does_not_exists,
-					Toast.LENGTH_SHORT).show();
-			return;
-		}
-
-		viewFileInAssociatedApp(contentFile, item.getMimeType());
 	}
 
 	/**
@@ -377,32 +347,21 @@ public class ListCmisFeedActivity extends ListActivity {
 
 	private void emailDocument(CmisItem item) {
 
-		File contentFile = StorageUtils.getStorageFile(getApplication(), StorageUtils.DUMMYREPO, StorageUtils.TYPE_CACHE, item.getId(), item.getTitle());
+		File contentFile = getRepository().retreiveContent(getApplication(),
+				item);
 
-		try {
-			contentFile.getParentFile().mkdirs();
-			contentFile.createNewFile();
-			OutputStream os = new BufferedOutputStream(new FileOutputStream(
-					contentFile));
-
-			downloadContent(os, item);
-		} catch (IOException fnfe) {
+		if (contentFile != null && contentFile.exists()) {
+			Intent i = new Intent(Intent.ACTION_SEND);
+			i.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
+			i.putExtra(Intent.EXTRA_TEXT, item.getContentUrl());
+			i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(contentFile));
+			i.setType(item.getMimeType());
+			startActivity(Intent.createChooser(i, "Email file"));
+		} else {
 			Toast.makeText(this, R.string.error_file_does_not_exists,
 					Toast.LENGTH_SHORT).show();
-		}
 
-		if (!contentFile.exists()) {
-			Toast.makeText(this, R.string.error_file_does_not_exists,
-					Toast.LENGTH_SHORT).show();
-			return;
 		}
-
-		Intent i = new Intent(Intent.ACTION_SEND);
-		i.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
-		i.putExtra(Intent.EXTRA_TEXT, item.getContentUrl());
-		i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(contentFile));
-		i.setType(item.getMimeType());
-		startActivity(Intent.createChooser(i, "Email file"));
 	}
 
 	@Override
@@ -414,7 +373,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		MenuItem aboutItem = menu
 				.add(Menu.NONE, 2, 0, R.string.menu_item_about);
 		aboutItem.setIcon(android.R.drawable.ic_menu_info_details);
-		
+
 		MenuItem reloadItem = menu.add(Menu.NONE, 3, 0, "Reload");
 		reloadItem.setIcon(android.R.drawable.ic_menu_rotate);
 

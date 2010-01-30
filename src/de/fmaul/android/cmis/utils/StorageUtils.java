@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.commons.io.FileUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
@@ -18,7 +19,8 @@ import android.os.Environment;
 
 public class StorageUtils {
 
-	public static final String TYPE_CACHE = "cache";
+	public static final String TYPE_FEEDS = "feeds";
+	public static final String TYPE_CONTENT = "content";
 	public static String DUMMYREPO = "repo1";
 
 	public static boolean isFeedInCache(Application app, String url) {
@@ -42,7 +44,7 @@ public class StorageUtils {
 
 	private static File getFeedFile(Application app, String repoId,
 			String feedHash) {
-		return getStorageFile(app, repoId, TYPE_CACHE, feedHash, "entries.xml");
+		return getStorageFile(app, repoId, TYPE_FEEDS, null, feedHash + ".xml");
 	}
 
 	public static void storeFeedInCache(Application app, String url,
@@ -74,12 +76,18 @@ public class StorageUtils {
 		builder.append(app.getPackageName());
 		builder.append("/");
 		builder.append(repoId);
-		builder.append("/");
-		builder.append(storageType);
-		builder.append("/");
-		builder.append(itemId.replaceAll(":", "_"));
-		builder.append("/");
-		builder.append(filename);
+		if (storageType != null) {
+			builder.append("/");
+			builder.append(storageType);
+		}
+		if (itemId != null) {
+			builder.append("/");
+			builder.append(itemId.replaceAll(":", "_"));
+		}
+		if (filename != null) {
+			builder.append("/");
+			builder.append(filename);
+		}
 		return new File(builder.toString());
 	}
 
@@ -120,4 +128,27 @@ public class StorageUtils {
 		}
 		return "";
 	}
+
+	public static boolean deleteRepositoryFiles(Application app, String repoId) {
+		File repoDir = getStorageFile(app, repoId, null, null, null);
+		try {
+			FileUtils.deleteDirectory(repoDir);
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	public static boolean deleteRepositoryCacheFiles(Application app, String repoId) {
+		File contentDir = getStorageFile(app, repoId, TYPE_CONTENT, null, null);
+		File feedsDir = getStorageFile(app, repoId, TYPE_FEEDS, null, null);
+		try {
+			FileUtils.deleteDirectory(contentDir);
+			FileUtils.deleteDirectory(feedsDir);
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
 }
