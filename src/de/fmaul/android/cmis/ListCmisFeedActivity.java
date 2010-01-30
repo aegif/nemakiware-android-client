@@ -15,14 +15,7 @@
  */
 package de.fmaul.android.cmis;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
@@ -33,7 +26,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -50,7 +42,6 @@ import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.QueryType;
 import de.fmaul.android.cmis.utils.FeedLoadException;
-import de.fmaul.android.cmis.utils.StorageUtils;
 
 public class ListCmisFeedActivity extends ListActivity {
 
@@ -58,11 +49,6 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * Contains the current connection information and methods to access the
 	 * CMIS repository.
 	 */
-
-	/**
-	 * The currently selected {@link QueryType}.
-	 */
-	QueryType queryType = QueryType.FULLTEXT;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -408,16 +394,13 @@ public class ListCmisFeedActivity extends ListActivity {
 			onRestart();
 			return true;
 		case 4:
-			queryType = QueryType.TITLE;
-			onSearchRequested();
+			onSearchRequested(QueryType.TITLE);
 			return true;
 		case 5:
-			queryType = QueryType.FULLTEXT;
-			onSearchRequested();
+			onSearchRequested(QueryType.FULLTEXT);
 			return true;
 		case 6:
-			queryType = QueryType.CMISQUERY;
-			onSearchRequested();
+			onSearchRequested(QueryType.CMISQUERY);
 			return true;
 		}
 
@@ -429,8 +412,7 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * 
 	 * @see android.app.Activity#onSearchRequested()
 	 */
-	@Override
-	public boolean onSearchRequested() {
+	public boolean onSearchRequested(QueryType queryType) {
 		Bundle appData = new Bundle();
 		appData.putString(QueryType.class.getName(), queryType.name());
 		startSearch("", false, appData, false);
