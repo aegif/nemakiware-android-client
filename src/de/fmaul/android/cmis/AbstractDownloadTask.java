@@ -3,6 +3,7 @@ package de.fmaul.android.cmis;
 import java.io.File;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisRepository;
@@ -11,6 +12,7 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItem, Void, Fil
 
 	private final CmisRepository repository;
 	private final Activity activity;
+	private ProgressDialog progressDialog;
 
 	public AbstractDownloadTask(CmisRepository repository, Activity activity) {
 		this.repository = repository;
@@ -20,7 +22,7 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItem, Void, Fil
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		activity.setProgressBarIndeterminateVisibility(true);
+		progressDialog = ProgressDialog.show(activity, "Downloading", "Downloading content...", true);
 		
 	}
 	
@@ -34,8 +36,13 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItem, Void, Fil
 	}
 	
 	protected void onPostExecute(File result) {
-		activity.setProgressBarIndeterminateVisibility(false);	
+		progressDialog.dismiss();	
 		onDownloadFinished(result);
+	}
+	
+	@Override
+	protected void onCancelled() {
+		progressDialog.cancel();
 	}
 	
 	public abstract void onDownloadFinished(File result);
