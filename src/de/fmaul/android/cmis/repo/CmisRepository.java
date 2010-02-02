@@ -43,6 +43,7 @@ public class CmisRepository {
 	private final String uriTemplateTypeById;
 	private final String repositoryUser;
 	private final String repostoryPassword;
+	private final Application application;
 
 	/**
 	 * Connects to a CMIS Repository with the given connection information
@@ -55,7 +56,8 @@ public class CmisRepository {
 	 * @param password
 	 *            The password to login to the repository
 	 */
-	private CmisRepository(String repositoryUrl, String user, String password) {
+	private CmisRepository(Application application, String repositoryUrl, String user, String password) {
+		this.application = application;
 		this.repositoryUser = user;
 		this.repostoryPassword = password;
 
@@ -76,8 +78,8 @@ public class CmisRepository {
 	 * @param prefs
 	 * @return
 	 */
-	public static CmisRepository create(final Prefs prefs) {
-		return new CmisRepository(prefs.getUrl(), prefs.getUser(), prefs
+	public static CmisRepository create(Application app, final Prefs prefs) {
+		return new CmisRepository(app, prefs.getUrl(), prefs.getUser(), prefs
 				.getPassword());
 	}
 
@@ -86,8 +88,8 @@ public class CmisRepository {
 	 * 
 	 * @return
 	 */
-	public CmisItemCollection getRootCollection(Application app) {
-		return getCollectionFromFeed(app, feedRootCollection);
+	public CmisItemCollection getRootCollection() {
+		return getCollectionFromFeed(feedRootCollection);
 	}
 
 	/**
@@ -121,17 +123,17 @@ public class CmisRepository {
 	 * @param feedUrl
 	 * @return
 	 */
-	public CmisItemCollection getCollectionFromFeed(Application app, final String feedUrl) {
+	public CmisItemCollection getCollectionFromFeed(final String feedUrl) {
 		Document doc;
 		
-		if (StorageUtils.isFeedInCache(app, feedUrl)) {
-			doc = StorageUtils.getFeedFromCache(app, feedUrl);
+		if (StorageUtils.isFeedInCache(application, feedUrl)) {
+			doc = StorageUtils.getFeedFromCache(application, feedUrl);
 		}
 		else {
 			doc = FeedUtils.readAtomFeed(feedUrl, repositoryUser,
 				repostoryPassword);
 			if (doc != null) {
-				StorageUtils.storeFeedInCache(app, feedUrl, doc);
+				StorageUtils.storeFeedInCache(application, feedUrl, doc);
 			}
 		}
 		return CmisItemCollection.createFromFeed(doc);
@@ -145,8 +147,8 @@ public class CmisRepository {
 		return CmisTypeDefinition.createFromFeed(doc);
 	}
 
-	public File retreiveContent(Application app, CmisItem item) {
-		File contentFile = StorageUtils.getStorageFile(app, StorageUtils.DUMMYREPO, StorageUtils.TYPE_CONTENT, item.getId(), item.getTitle());
+	public File retreiveContent(CmisItem item) {
+		File contentFile = StorageUtils.getStorageFile(application, StorageUtils.DUMMYREPO, StorageUtils.TYPE_CONTENT, item.getId(), item.getTitle());
 
 		try {
 			contentFile.getParentFile().mkdirs();
@@ -174,8 +176,8 @@ public class CmisRepository {
 				.getEntity().writeTo(os);
 	}	
 	
-	public void clearCache(Application app) {
-		StorageUtils.deleteRepositoryFiles(app, StorageUtils.DUMMYREPO);
+	public void clearCache() {
+		StorageUtils.deleteRepositoryFiles(application, StorageUtils.DUMMYREPO);
 	}
 	
 }

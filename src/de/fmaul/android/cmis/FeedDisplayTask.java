@@ -48,14 +48,13 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 		try {
 			String feed = params[0];
 			if (feed == null) {
-				return repository.getRootCollection(activity.getApplication());
+				return repository.getRootCollection();
 			}
 			else {
-				return repository.getCollectionFromFeed(activity.getApplication(), feed);
+				return repository.getCollectionFromFeed(feed);
 			}
 		} catch (FeedLoadException fle) {
 			return CmisItemCollection.emptyCollection();
-			//FIXME eror handling
 		}
 	}
 

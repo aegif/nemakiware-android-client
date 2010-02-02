@@ -63,8 +63,8 @@ public class ListCmisFeedActivity extends ListActivity {
 		try {
 			if (getRepository() == null) {
 				Prefs prefs = new Prefs(this);
-				setRepository(CmisRepository.create(prefs));
-				getRepository().clearCache(getApplication());
+				setRepository(CmisRepository.create(getApplication(), prefs));
+				getRepository().clearCache();
 			}
 		} catch (FeedLoadException fle) {
 		}
@@ -247,22 +247,30 @@ public class ListCmisFeedActivity extends ListActivity {
 		new FeedDisplayTask(this, getRepository()).execute(feed);
 	}
 
+	private void displayError(int messageId) {
+		Toast.makeText(this, messageId,
+				Toast.LENGTH_SHORT).show();
+	}
+	
 	/**
 	 * Opens a file by downloading it and starting the associated app.
 	 * 
 	 * @param item
 	 */
-	private void openDocument(CmisItem item) {
+	private void openDocument(final CmisItem item) {
 
-		File contentFile = getRepository().retreiveContent(getApplication(), item);
+		new AbstractDownloadTask(getRepository(), this) {
+			@Override
+			public void onDownloadFinished(File contentFile) {
+				if (contentFile != null && contentFile.exists()) {
+					viewFileInAssociatedApp(contentFile, item.getMimeType());
+				}
+				else {
+					displayError(R.string.error_file_does_not_exists);
+				}
+			}
+		}.execute(item);
 		
-		if (contentFile != null && contentFile.exists()) {
-			viewFileInAssociatedApp(contentFile, item.getMimeType());
-		}
-		else {
-			Toast.makeText(this, R.string.error_file_does_not_exists,
-					Toast.LENGTH_SHORT).show();
-		}
 	}
 
 	/**
@@ -331,23 +339,23 @@ public class ListCmisFeedActivity extends ListActivity {
 		startActivity(intent);
 	}
 
-	private void emailDocument(CmisItem item) {
+	private void emailDocument(final CmisItem item) {
 
-		File contentFile = getRepository().retreiveContent(getApplication(),
-				item);
-
-		if (contentFile != null && contentFile.exists()) {
-			Intent i = new Intent(Intent.ACTION_SEND);
-			i.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
-			i.putExtra(Intent.EXTRA_TEXT, item.getContentUrl());
-			i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(contentFile));
-			i.setType(item.getMimeType());
-			startActivity(Intent.createChooser(i, "Email file"));
-		} else {
-			Toast.makeText(this, R.string.error_file_does_not_exists,
-					Toast.LENGTH_SHORT).show();
-
-		}
+		new AbstractDownloadTask(getRepository(), this) {
+			@Override
+			public void onDownloadFinished(File contentFile) {
+				if (contentFile != null && contentFile.exists()) {
+					Intent i = new Intent(Intent.ACTION_SEND);
+					i.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
+					i.putExtra(Intent.EXTRA_TEXT, item.getContentUrl());
+					i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(contentFile));
+					i.setType(item.getMimeType());
+					startActivity(Intent.createChooser(i, "Email file"));
+				} else {
+					displayError(R.string.error_file_does_not_exists);
+				}
+			}
+		}.execute(item);
 	}
 
 	@Override
