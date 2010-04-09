@@ -42,14 +42,16 @@ public class DocumentDetailsActivity extends ListActivity {
 
 	private void setTitleFromIntent() {
 		String title = getIntent().getStringExtra("title");
-		setTitle("Details for '"+title+"'");
+		setTitle("Details for '" + title + "'");
 	}
 
 	private void displayPropertiesFromIntent() {
 		List<CmisProperty> propList = getPropertiesFromIntent();
-		String objectTypeId  = getObjectTypeIdFromIntent();
-		CmisTypeDefinition typeDefinition = getRepository().getTypeDefinition(objectTypeId);
-		List<Map<String, ?>> list = buildListOfNameValueMaps(propList, typeDefinition);
+		String objectTypeId = getObjectTypeIdFromIntent();
+		CmisTypeDefinition typeDefinition = getRepository().getTypeDefinition(
+				objectTypeId);
+		List<Map<String, ?>> list = buildListOfNameValueMaps(propList,
+				typeDefinition);
 		initListAdapter(list);
 	}
 
@@ -58,21 +60,22 @@ public class DocumentDetailsActivity extends ListActivity {
 	}
 
 	private void initListAdapter(List<Map<String, ?>> list) {
-		SimpleAdapter props = new SimpleAdapter(
-				this,
-				list,
+		SimpleAdapter props = new SimpleAdapter(this, list,
 				R.layout.document_details_row,
-				new String[] { "name","value" },
-				new int[] { R.id.propertyName, R.id.propertyValue } );
+				new String[] { "name", "value" }, new int[] {
+						R.id.propertyName, R.id.propertyValue });
 
 		setListAdapter(props);
 	}
 
 	private List<Map<String, ?>> buildListOfNameValueMaps(
 			List<CmisProperty> propList, CmisTypeDefinition typeDefinition) {
-		List<Map<String,?>> list = new ArrayList<Map<String,?>>();
+		List<Map<String, ?>> list = new ArrayList<Map<String, ?>>();
 		for (CmisProperty cmisProperty : propList) {
-			list.add(createPair(getDisplayNameFromProperty(cmisProperty, typeDefinition), cmisProperty.getValue()));
+			if (cmisProperty.getDefinitionId() != null) {
+				list.add(createPair(getDisplayNameFromProperty(cmisProperty,
+						typeDefinition), cmisProperty.getValue()));
+			}
 		}
 		return list;
 	}
@@ -80,30 +83,32 @@ public class DocumentDetailsActivity extends ListActivity {
 	private String getDisplayNameFromProperty(CmisProperty property,
 			CmisTypeDefinition typeDefinition) {
 		String name = property.getDisplayName();
-		
+
 		if (TextUtils.isEmpty(name)) {
-		}	name = typeDefinition.getDisplayNameForProperty(property);
-		
+		}
+		name = typeDefinition.getDisplayNameForProperty(property);
+
 		if (TextUtils.isEmpty(name)) {
-			name = property.getDefinitionId().replaceAll("cmis:", ""); 
+			name = property.getDefinitionId().replaceAll("cmis:", "");
 		}
 		return name;
 	}
 
 	private ArrayList<CmisProperty> getPropertiesFromIntent() {
-		ArrayList<CmisProperty> propList = getIntent().getParcelableArrayListExtra("properties");
+		ArrayList<CmisProperty> propList = getIntent()
+				.getParcelableArrayListExtra("properties");
 		return propList;
 	}
-	
+
 	private Map<String, ?> createPair(String name, String value) {
 		HashMap<String, String> hashMap = new HashMap<String, String>();
 		hashMap.put("name", name);
 		hashMap.put("value", value);
 		return hashMap;
 	}
-	
+
 	CmisRepository getRepository() {
 		return ((CmisApp) getApplication()).getRepository();
 	}
-	
+
 }
