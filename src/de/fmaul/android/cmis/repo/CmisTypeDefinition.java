@@ -9,8 +9,6 @@ import org.dom4j.Element;
 import org.dom4j.Namespace;
 import org.dom4j.QName;
 
-import android.text.TextUtils;
-
 public class CmisTypeDefinition {
 
 	private String id;

@@ -25,9 +25,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.dom4j.Document;
 
 import android.app.Application;
-import android.widget.Toast;
 import de.fmaul.android.cmis.Prefs;
-import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.utils.FeedUtils;
 import de.fmaul.android.cmis.utils.HttpUtils;
 import de.fmaul.android.cmis.utils.StorageUtils;

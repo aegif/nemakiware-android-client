@@ -30,9 +30,8 @@ import org.dom4j.Namespace;
 import org.dom4j.QName;
 import org.dom4j.io.SAXReader;
 
-import de.fmaul.android.cmis.repo.CmisProperty;
-
 import android.text.TextUtils;
+import de.fmaul.android.cmis.repo.CmisProperty;
 
 public class FeedUtils {
 

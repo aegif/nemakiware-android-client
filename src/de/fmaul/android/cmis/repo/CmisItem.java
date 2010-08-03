@@ -27,7 +27,7 @@ import org.dom4j.Element;
 
 import de.fmaul.android.cmis.utils.FeedUtils;
 
-public class CmisItem  implements Serializable {
+public class CmisItem implements Serializable {
 
 	private String title;
 	private String downLink;
@@ -112,7 +112,7 @@ public class CmisItem  implements Serializable {
 				}
 			}
 		}
-
+		
 		properties = FeedUtils.getCmisPropertiesForEntry(entry);
 	}
 

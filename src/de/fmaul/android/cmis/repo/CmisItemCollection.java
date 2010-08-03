@@ -49,6 +49,7 @@ public class CmisItemCollection {
 		return cic;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void parseEntries(Document doc) {
 		List<Element> entries = doc.getRootElement().elements("entry");
 		for (Element entry : entries) {
@@ -57,6 +58,7 @@ public class CmisItemCollection {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void parseFeed(Document doc) {
 		List<Element> feedLinks = doc.getRootElement().elements("link");
 		for (Element link : feedLinks) {
