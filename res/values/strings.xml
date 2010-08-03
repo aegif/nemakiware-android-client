@@ -51,10 +51,10 @@
 	<string name="title_details">Details for</string>
 	<string name="title_children">EMail Document</string>
 	
-	<string name="download">Downloading</string>
+	<string name="download">Download</string>
 	<string name="download_progress">Downloading content...</string>
 	
-	<string name="error_settings">Repositoy not set up correctly. Check the repository settings.</string>
+	<string name="error_settings">Repository not set up correctly. Check the repository settings.</string>
 	<string name="menu_item_exit">exit</string>
 	
 	<string name="button_accept">Accept</string>

@@ -135,9 +135,10 @@ public class DocumentDetailsActivity extends ListActivity {
 		name = typeDefinition.getDisplayNameForProperty(property);
 
 		if (TextUtils.isEmpty(name)) {
-			name = property.getDefinitionId().replaceAll("cmis:", "");
+			name = property.getDefinitionId();
 		}
-		return name;
+		
+		return name.replaceAll("cmis:", "");
 	}
 
 	private ArrayList<CmisProperty> getPropertiesFromIntent() {
