@@ -1,0 +1,62 @@
+package de.fmaul.android.cmis.repo;
+
+import java.io.Serializable;
+
+public class Server implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
+	private long id;
+    private String name;
+    private String url;
+	private String username;
+	private String password;
+	
+	public Server(long id, String name, String url, String username, String password) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.url = url;
+		this.username = username;
+		this.password = password;
+	}
+	
+	
+	public Server() {
+	}
+
+
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getName() {
+		return name;
+	}
+	
+	
+
+}

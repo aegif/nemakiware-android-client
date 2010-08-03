@@ -15,6 +15,7 @@
  */
 package de.fmaul.android.cmis.repo;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +27,7 @@ import org.dom4j.Element;
 
 import de.fmaul.android.cmis.utils.FeedUtils;
 
-public class CmisItem {
+public class CmisItem  implements Serializable {
 
 	private String title;
 	private String downLink;
@@ -35,7 +36,7 @@ public class CmisItem {
 	private String id;
 	private String mimeType;
 	private Date modificationDate;
-	
+
 	private Map<String, CmisProperty> properties;
 
 	private CmisItem() {
@@ -44,7 +45,7 @@ public class CmisItem {
 	public Map<String, CmisProperty> getProperties() {
 		return properties;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -65,7 +66,7 @@ public class CmisItem {
 	public String getDownLink() {
 		return downLink;
 	}
-	
+
 	public String getContentUrl() {
 		return contentUrl;
 	}
@@ -106,13 +107,12 @@ public class CmisItem {
 		for (Element link : (List<Element>) entry.elements("link")) {
 			if ("down".equals(link.attribute("rel").getText())) {
 
-				if (link.attribute("type").getText().startsWith(
-						"application/atom+xml")) {
+				if (link.attribute("type").getText().startsWith("application/atom+xml")) {
 					downLink = link.attribute("href").getText();
 				}
 			}
 		}
-		
+
 		properties = FeedUtils.getCmisPropertiesForEntry(entry);
 	}
 
@@ -129,13 +129,23 @@ public class CmisItem {
 	}
 
 	public static CmisItem create(String title, String upLink) {
-		 CmisItem cmisItem = new CmisItem();
-		 cmisItem.title = title;
-		 cmisItem.downLink = upLink;
-		 cmisItem.id = "";
-		 cmisItem.author = "";
-		 cmisItem.contentUrl = null;
-		 cmisItem.properties = new HashMap<String, CmisProperty>();
+		CmisItem cmisItem = new CmisItem();
+		cmisItem.title = title;
+		cmisItem.downLink = upLink;
+		cmisItem.id = "";
+		cmisItem.author = "";
+		cmisItem.contentUrl = null;
+		cmisItem.properties = new HashMap<String, CmisProperty>();
+		return cmisItem;
+	}
+	
+	public static CmisItem create(String title, String id,  String mimeType, String contentUrl) {
+		CmisItem cmisItem = new CmisItem();
+		cmisItem.title = title;
+		cmisItem.id = id;
+		cmisItem.mimeType = mimeType;
+		cmisItem.contentUrl = contentUrl;
+		cmisItem.properties = new HashMap<String, CmisProperty>();
 		return cmisItem;
 	}
 

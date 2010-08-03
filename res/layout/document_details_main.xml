@@ -1,4 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ListView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/android:list" android:layout_width="wrap_content" android:layout_height="wrap_content">
-</ListView>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+   android:orientation="vertical"
+   android:layout_width="fill_parent"
+   android:layout_height="wrap_content"
+   >
+
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" 
+		android:layout_weight="1"
+		android:layout_height="0px"
+		>
+		
+		<ListView 
+			xmlns:android="http://schemas.android.com/apk/res/android" 
+			android:id="@+id/android:list" 
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"
+			/>
+			
+		<TextView android:id="@+id/android:empty"
+			android:layout_width="fill_parent" 
+			android:layout_height="wrap_content"
+			android:textSize="20sp" 
+			android:text="No data!" />
+		
+	</LinearLayout>
+	
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" 
+		android:layout_height="1sp"
+		android:background="#ffffff"
+		/>
+	
+	<HorizontalScrollView 
+        android:id="@+id/my_scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none" 
+		>
+
+            <LinearLayout android:id="@+id/my_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
+                    >
+
+            <Button
+				android:id="@+id/download"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:drawableTop="@drawable/download"
+				android:clickable="true"
+				android:text="Download"
+				android:textSize="10sp"
+				android:layout_marginRight="20dip"
+				/>
+				
+			<Button
+				android:id="@+id/share"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:drawableTop="@drawable/share"
+				android:clickable="true"
+				android:text="Share"
+				android:textSize="10sp"
+				android:layout_marginRight="20dip"
+				/>
+				
+			<Button
+				android:id="@+id/editmetadata"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:drawableTop="@drawable/editmetada"
+				android:clickable="false"
+				android:text="Edit"
+				android:textSize="10sp"
+				android:layout_marginRight="20dip"
+				/>
+				
+			<Button
+				android:id="@+id/delete"
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:drawableTop="@drawable/delete"
+				android:clickable="false"
+				android:text="Delete"
+				android:textSize="10sp"
+				android:layout_marginRight="20dip"
+				/>
+
+        </LinearLayout>
+	</HorizontalScrollView>
+</LinearLayout>

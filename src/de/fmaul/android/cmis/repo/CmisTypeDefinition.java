@@ -34,13 +34,12 @@ public class CmisTypeDefinition {
 
 	public static CmisTypeDefinition createFromFeed(Document doc) {
 		CmisTypeDefinition td = new CmisTypeDefinition();
-		
-		final  Namespace CMISRA = Namespace
-		.get("http://docs.oasis-open.org/ns/cmis/restatom/200908/");
 
-  		final QName CMISRA_TYPE = QName.get("type", CMISRA);
+		final Namespace CMISRA = Namespace.get("http://docs.oasis-open.org/ns/cmis/restatom/200908/");
+
+		final QName CMISRA_TYPE = QName.get("type", CMISRA);
 		Element type = doc.getRootElement().element(CMISRA_TYPE);
-		
+
 		td.id = type.elementTextTrim("id");
 		td.localName = type.elementTextTrim("localName");
 		td.localNamespace = type.elementTextTrim("localNamespace");
@@ -57,7 +56,7 @@ public class CmisTypeDefinition {
 		td.controllableACL = Boolean.valueOf(type.elementTextTrim("controllableACL"));
 		td.versionable = Boolean.valueOf(type.elementTextTrim("versionable"));
 		td.contentStreamAllowed = type.elementTextTrim("contentStreamAllowed");
-		
+
 		List<Element> allElements = doc.getRootElement().element(CMISRA_TYPE).elements();
 		for (Element element : allElements) {
 			if (element.getName().startsWith("property")) {
@@ -65,7 +64,7 @@ public class CmisTypeDefinition {
 				td.propertyDefinition.put(propTypeDef.getId(), propTypeDef);
 			}
 		}
-		
+
 		return td;
 	}
 
@@ -138,17 +137,16 @@ public class CmisTypeDefinition {
 	}
 
 	private CmisPropertyTypeDefinition getTypeDefinitionForProperty(CmisProperty property) {
-		return getPropertyDefinition().get(property.getDefinitionId());	
+		return getPropertyDefinition().get(property.getDefinitionId());
 	}
 
-	
 	public String getDisplayNameForProperty(CmisProperty property) {
-		CmisPropertyTypeDefinition propTypeDef = getTypeDefinitionForProperty(property); 
-		
+		CmisPropertyTypeDefinition propTypeDef = getTypeDefinitionForProperty(property);
+
 		if (propTypeDef != null) {
 			return propTypeDef.getDisplayName();
 		}
 		return "";
 	}
-	
+
 }

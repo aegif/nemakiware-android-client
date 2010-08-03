@@ -36,28 +36,21 @@ import android.text.TextUtils;
 
 public class FeedUtils {
 
-	private static final Namespace CMISRA = Namespace
-			.get("http://docs.oasis-open.org/ns/cmis/restatom/200908/");
-	private static final Namespace CMIS = Namespace
-	.get("http://docs.oasis-open.org/ns/cmis/core/200908/");
-	
-	private static final QName CMISRA_COLLECTION_TYPE = QName.get(
-			"collectionType", CMISRA);
-	private static final QName CMISRA_URI_TEMPLATE = QName.get("uritemplate",
-			CMISRA);
+	private static final Namespace CMISRA = Namespace.get("http://docs.oasis-open.org/ns/cmis/restatom/200908/");
+	private static final Namespace CMIS = Namespace.get("http://docs.oasis-open.org/ns/cmis/core/200908/");
+
+	private static final QName CMISRA_COLLECTION_TYPE = QName.get("collectionType", CMISRA);
+	private static final QName CMISRA_URI_TEMPLATE = QName.get("uritemplate", CMISRA);
 	private static final QName CMISRA_TYPE = QName.get("type", CMISRA);
 	private static final QName CMISRA_TEMPLATE = QName.get("template", CMISRA);
 	private static final QName CMISRA_OBJECT = QName.get("object", CMISRA);
-	private static final QName CMIS_PROPERTIES = QName.get("properties",
-			CMIS);
+	private static final QName CMIS_PROPERTIES = QName.get("properties", CMIS);
 	private static final QName CMIS_VALUE = QName.get("value", CMIS);
 
-	public static Document readAtomFeed(final String feed, final String user,
-			final String password) throws FeedLoadException {
+	public static Document readAtomFeed(final String feed, final String user, final String password) throws FeedLoadException {
 		Document document = null;
 		try {
-			InputStream is = HttpUtils.getWebRessourceAsStream(feed, user,
-					password);
+			InputStream is = HttpUtils.getWebRessourceAsStream(feed, user, password);
 			SAXReader reader = new SAXReader(); // dom4j SAXReader
 			document = reader.read(is); // dom4j Document
 
@@ -71,8 +64,7 @@ public class FeedUtils {
 		return document;
 	}
 
-	public static String getRootFeedFromRepo(String url, String user,
-			String password) {
+	public static String getRootFeedFromRepo(String url, String user, String password) {
 
 		Document doc = readAtomFeed(url, user, password);
 		return getCollectionUrlFromRepoFeed(doc, "root");
@@ -85,8 +77,7 @@ public class FeedUtils {
 			List<Element> collections = workspace.elements("collection");
 
 			for (Element collection : collections) {
-				String currentType = collection
-						.elementText(CMISRA_COLLECTION_TYPE);
+				String currentType = collection.elementText(CMISRA_COLLECTION_TYPE);
 				if (type.equals(currentType.toLowerCase())) {
 					return collection.attributeValue("href");
 				}
@@ -95,16 +86,12 @@ public class FeedUtils {
 		return "";
 	}
 
-	public static String getSearchQueryFeedTitle(String urlTemplate,
-			String query) {
+	public static String getSearchQueryFeedTitle(String urlTemplate, String query) {
 
-		return getSearchQueryFeedCmisQuery(urlTemplate,
-				"SELECT * FROM cmis:document WHERE cmis:name LIKE '%" + query
-						+ "%'");
+		return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:document WHERE cmis:name LIKE '%" + query + "%'");
 	}
 
-	public static String getSearchQueryFeedFullText(String urlTemplate,
-			String query) {
+	public static String getSearchQueryFeedFullText(String urlTemplate, String query) {
 		String[] words = TextUtils.split(query.trim(), "\\s+");
 
 		for (int i = 0; i < words.length; i++) {
@@ -113,20 +100,14 @@ public class FeedUtils {
 
 		String condition = TextUtils.join(" AND ", words);
 
-		return getSearchQueryFeedCmisQuery(urlTemplate,
-				"SELECT * FROM cmis:document WHERE " + condition);
+		return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:document WHERE " + condition);
 	}
 
-	public static String getSearchQueryFeedCmisQuery(String urlTemplate,
-			String cmisQuery) {
+	public static String getSearchQueryFeedCmisQuery(String urlTemplate, String cmisQuery) {
 		final String encodedCmisQuery = URLEncoder.encode(cmisQuery);
 
-		final CharSequence feedUrl = TextUtils.replace(urlTemplate,
-				new String[] { "{q}", "{searchAllVersions}", "{maxItems}",
-						"{skipCount}", "{includeAllowableActions}",
-						"{includeRelationships}" },
-				new String[] { encodedCmisQuery, "false", "50", "0", "false",
-						"false" });
+		final CharSequence feedUrl = TextUtils.replace(urlTemplate, new String[] { "{q}", "{searchAllVersions}", "{maxItems}", "{skipCount}",
+				"{includeAllowableActions}", "{includeRelationships}" }, new String[] { encodedCmisQuery, "false", "50", "0", "false", "false" });
 
 		return feedUrl.toString();
 	}
@@ -146,25 +127,21 @@ public class FeedUtils {
 		return null;
 	}
 
-	public static Map<String, CmisProperty> getCmisPropertiesForEntry(
-			Element feedEntry) {
+	public static Map<String, CmisProperty> getCmisPropertiesForEntry(Element feedEntry) {
 		Map<String, CmisProperty> props = new HashMap<String, CmisProperty>();
 
 		Element objectElement = feedEntry.element(CMISRA_OBJECT);
 		if (objectElement != null) {
-			Element properitesElement = objectElement
-					.element(CMIS_PROPERTIES);
+			Element properitesElement = objectElement.element(CMIS_PROPERTIES);
 			if (properitesElement != null) {
 				List<Element> properties = properitesElement.elements();
 
 				for (Element property : properties) {
-					final String id = property
-							.attributeValue("propertyDefinitionId");
+					final String id = property.attributeValue("propertyDefinitionId");
 
-					props.put(id, new CmisProperty(property.getName(), id,
-							property.attributeValue("localName"), property
-									.attributeValue("displayName"), property
-									.elementText(CMIS_VALUE)));
+					props.put(id,
+							new CmisProperty(property.getName(), id, property.attributeValue("localName"), property.attributeValue("displayName"),
+									property.elementText(CMIS_VALUE)));
 				}
 			}
 		}

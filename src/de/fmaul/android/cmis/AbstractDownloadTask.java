@@ -18,33 +18,33 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItem, Void, Fil
 		this.repository = repository;
 		this.activity = activity;
 	}
-	
+
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		progressDialog = ProgressDialog.show(activity, "Downloading", "Downloading content...", true);
-		
+		progressDialog = ProgressDialog.show(activity, this.activity.getText(R.string.download), this.activity.getText(R.string.download_progress),
+				true);
 	}
-	
+
 	@Override
 	protected File doInBackground(CmisItem... params) {
 		CmisItem item = params[0];
-		if (item != null){
+		if (item != null) {
 			return repository.retreiveContent(item);
 		}
 		return null;
 	}
-	
+
 	protected void onPostExecute(File result) {
-		progressDialog.dismiss();	
+		progressDialog.dismiss();
 		onDownloadFinished(result);
 	}
-	
+
 	@Override
 	protected void onCancelled() {
 		progressDialog.cancel();
 	}
-	
+
 	public abstract void onDownloadFinished(File result);
-	
+
 }

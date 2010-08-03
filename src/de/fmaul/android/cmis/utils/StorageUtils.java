@@ -42,13 +42,11 @@ public class StorageUtils {
 		return document;
 	}
 
-	private static File getFeedFile(Application app, String repoId,
-			String feedHash) {
+	private static File getFeedFile(Application app, String repoId, String feedHash) {
 		return getStorageFile(app, repoId, TYPE_FEEDS, null, feedHash + ".xml");
 	}
 
-	public static void storeFeedInCache(Application app, String url,
-			Document doc) {
+	public static void storeFeedInCache(Application app, String url, Document doc) {
 		File cacheFile = getFeedFile(app, DUMMYREPO, md5(url));
 		ensureOrCreatePathAndFile(cacheFile);
 
@@ -68,8 +66,7 @@ public class StorageUtils {
 
 	}
 
-	public static File getStorageFile(Application app, String repoId,
-			String storageType, String itemId, String filename) {
+	public static File getStorageFile(Application app, String repoId, String storageType, String itemId, String filename) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(Environment.getExternalStorageDirectory());
 		builder.append("/");
@@ -91,11 +88,9 @@ public class StorageUtils {
 		return new File(builder.toString());
 	}
 
-	public static File createStorageFile(Application app, String repoId,
-			String storageType, String itemId, String filename) {
+	public static File createStorageFile(Application app, String repoId, String storageType, String itemId, String filename) {
 
-		File contentFile = getStorageFile(app, repoId, storageType, itemId,
-				filename);
+		File contentFile = getStorageFile(app, repoId, storageType, itemId, filename);
 		ensureOrCreatePathAndFile(contentFile);
 		return contentFile;
 	}
@@ -112,8 +107,7 @@ public class StorageUtils {
 	public static String md5(String s) {
 		try {
 			// Create MD5 Hash
-			MessageDigest digest = java.security.MessageDigest
-					.getInstance("MD5");
+			MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
 			digest.update(s.getBytes());
 			byte messageDigest[] = digest.digest();
 

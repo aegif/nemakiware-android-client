@@ -31,16 +31,11 @@ public class CmisPropertyTypeDefinition {
 		cpd.propertyType = propElement.elementText("propertyType");
 		cpd.cardinality = propElement.elementText("cardinality");
 		cpd.updatability = propElement.elementText("updatability");
-		cpd.inherited = Boolean.parseBoolean(propElement
-				.elementText("inherited"));
-		cpd.required = Boolean
-				.parseBoolean(propElement.elementText("required"));
-		cpd.queryable = Boolean.parseBoolean(propElement
-				.elementText("queryable"));
-		cpd.orderable = Boolean.parseBoolean(propElement
-				.elementText("orderable"));
-		cpd.openChoice = Boolean.parseBoolean(propElement
-				.elementText("openChoice"));
+		cpd.inherited = Boolean.parseBoolean(propElement.elementText("inherited"));
+		cpd.required = Boolean.parseBoolean(propElement.elementText("required"));
+		cpd.queryable = Boolean.parseBoolean(propElement.elementText("queryable"));
+		cpd.orderable = Boolean.parseBoolean(propElement.elementText("orderable"));
+		cpd.openChoice = Boolean.parseBoolean(propElement.elementText("openChoice"));
 
 		return cpd;
 	}

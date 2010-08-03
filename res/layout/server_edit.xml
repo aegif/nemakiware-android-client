@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal" 
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	>
+
+	<!-- SERVER NAME -->
+	<TextView android:id="@+id/alias_serverName" 
+		android:text="@string/cmis_repo_server_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_centerHorizontal = "true"
+		/>
+
+	<EditText android:id="@+id/cmis_repo_server_name" 
+		android:layout_height="40dp"
+		android:layout_width="fill_parent"
+		android:layout_margin="5dp"
+		android:layout_below="@+id/alias_serverName"
+		android:singleLine="true" 
+		android:layout_centerHorizontal = "true"
+		/>
+		
+	<!-- URL -->
+	<TextView android:id="@+id/alias_url" 
+		android:text="@string/cmis_repo_server_url"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_centerHorizontal = "true"
+		android:layout_below="@+id/cmis_repo_server_name"
+		/>
+
+	<EditText android:id="@+id/cmis_repo_url_id" 
+		android:layout_height="40dp"
+		android:layout_width="fill_parent"
+		android:layout_margin="5dp"
+		android:layout_below="@+id/alias_url"
+		android:singleLine="true" 
+		android:layout_centerHorizontal = "true"
+		/>
+		
+	<!-- USER NAME -->
+	<TextView android:id="@+id/alias_user" 
+		android:text="@string/cmis_repo_user"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_centerHorizontal = "true"
+		android:layout_below="@+id/cmis_repo_url_id"
+		/>
+
+	<EditText android:id="@+id/cmis_repo_user_id" 
+		android:layout_height="40dp"
+		android:layout_width="fill_parent"
+		android:layout_margin="5dp"
+		android:layout_below="@+id/alias_user"
+		android:singleLine="true" 
+		android:layout_centerHorizontal = "true"
+		/>
+		
+	<!-- PASSWORD -->
+	<TextView android:id="@+id/alias_password" 
+		android:text="@string/cmis_repo_password"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_centerHorizontal = "true"
+		 android:layout_below="@+id/cmis_repo_user_id"
+		/>
+
+	<EditText android:id="@+id/cmis_repo_password_id" 
+		android:layout_height="40dp"
+		android:layout_width="fill_parent"
+		android:layout_margin="5dp"
+		android:layout_below="@+id/alias_password"
+		android:singleLine="true" 
+		android:layout_centerHorizontal = "true"
+		android:password="true"
+		/>
+		
+	<!-- VALIDATION -->
+	<Button android:id="@+id/validation_button" 
+		android:text="@string/button_accept"
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true" 
+		android:layout_below="@+id/cmis_repo_password_id" />
+		
+</RelativeLayout> 

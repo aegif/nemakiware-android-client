@@ -15,22 +15,36 @@
  */
 package de.fmaul.android.cmis;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisPropertyTypeDefinition;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.CmisTypeDefinition;
 
 import android.app.ListActivity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 public class DocumentDetailsActivity extends ListActivity {
+
+	private CmisItem item;
+	private Button download, share, edit, delete;
+	private String objectTypeId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,50 +52,85 @@ public class DocumentDetailsActivity extends ListActivity {
 		setContentView(R.layout.document_details_main);
 		setTitleFromIntent();
 		displayPropertiesFromIntent();
+		displayActionIcons();
+	}
+	
+	private void displayActionIcons(){
+		
+		item = CmisItem.create(getIntent().getStringExtra("title"), null, getIntent().getStringExtra("mimetype"), getIntent().getStringExtra("contentUrl"));
+		
+		download = (Button) findViewById(R.id.download);
+		share = (Button) findViewById(R.id.share);
+		edit = (Button) findViewById(R.id.editmetadata);
+		delete = (Button) findViewById(R.id.delete);
+		
+		//File
+		if (item != null && getBaseTypeIdFromIntent().equals("cmis:folder") == false){
+			download.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					openDocument();
+				}
+			});
+			
+			share.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					emailDocument();
+				}
+			});
+			
+			edit.setVisibility(8);
+			delete.setVisibility(8);
+			
+		} else {
+			//FOLDER
+			download.setVisibility(8);
+			edit.setVisibility(8);
+			share.setVisibility(8);
+			delete.setVisibility(8);
+		}
 	}
 
 	private void setTitleFromIntent() {
 		String title = getIntent().getStringExtra("title");
-		setTitle("Details for '" + title + "'");
+		setTitle(getString(R.string.title_details) + " '" + title + "'");
 	}
 
 	private void displayPropertiesFromIntent() {
 		List<CmisProperty> propList = getPropertiesFromIntent();
-		String objectTypeId = getObjectTypeIdFromIntent();
-		CmisTypeDefinition typeDefinition = getRepository().getTypeDefinition(
-				objectTypeId);
-		List<Map<String, ?>> list = buildListOfNameValueMaps(propList,
-				typeDefinition);
+		objectTypeId = getObjectTypeIdFromIntent();
+		CmisTypeDefinition typeDefinition = getRepository().getTypeDefinition(objectTypeId);
+		List<Map<String, ?>> list = buildListOfNameValueMaps(propList, typeDefinition);
 		initListAdapter(list);
 	}
 
 	private String getObjectTypeIdFromIntent() {
 		return getIntent().getStringExtra("objectTypeId");
 	}
+	
+	private String getBaseTypeIdFromIntent() {
+		return getIntent().getStringExtra("baseTypeId");
+	}
 
 	private void initListAdapter(List<Map<String, ?>> list) {
-		SimpleAdapter props = new SimpleAdapter(this, list,
-				R.layout.document_details_row,
-				new String[] { "name", "value" }, new int[] {
-						R.id.propertyName, R.id.propertyValue });
+		SimpleAdapter props = new SimpleAdapter(this, list, R.layout.document_details_row, new String[] { "name", "value" }, new int[] {
+				R.id.propertyName, R.id.propertyValue });
 
 		setListAdapter(props);
 	}
 
-	private List<Map<String, ?>> buildListOfNameValueMaps(
-			List<CmisProperty> propList, CmisTypeDefinition typeDefinition) {
+	private List<Map<String, ?>> buildListOfNameValueMaps(List<CmisProperty> propList, CmisTypeDefinition typeDefinition) {
 		List<Map<String, ?>> list = new ArrayList<Map<String, ?>>();
 		for (CmisProperty cmisProperty : propList) {
 			if (cmisProperty.getDefinitionId() != null) {
-				list.add(createPair(getDisplayNameFromProperty(cmisProperty,
-						typeDefinition), cmisProperty.getValue()));
+				list.add(createPair(getDisplayNameFromProperty(cmisProperty, typeDefinition), cmisProperty.getValue()));
 			}
 		}
 		return list;
 	}
 
-	private String getDisplayNameFromProperty(CmisProperty property,
-			CmisTypeDefinition typeDefinition) {
+	private String getDisplayNameFromProperty(CmisProperty property, CmisTypeDefinition typeDefinition) {
 		String name = property.getDisplayName();
 
 		if (TextUtils.isEmpty(name)) {
@@ -95,8 +144,7 @@ public class DocumentDetailsActivity extends ListActivity {
 	}
 
 	private ArrayList<CmisProperty> getPropertiesFromIntent() {
-		ArrayList<CmisProperty> propList = getIntent()
-				.getParcelableArrayListExtra("properties");
+		ArrayList<CmisProperty> propList = getIntent().getParcelableArrayListExtra("properties");
 		return propList;
 	}
 
@@ -109,6 +157,69 @@ public class DocumentDetailsActivity extends ListActivity {
 
 	CmisRepository getRepository() {
 		return ((CmisApp) getApplication()).getRepository();
+	}
+	
+	/**
+	 * Opens a file by downloading it and starting the associated app.
+	 * 
+	 * @param item
+	 */
+	private void openDocument() {
+
+		
+		new AbstractDownloadTask(getRepository(), this) {
+			@Override
+			public void onDownloadFinished(File contentFile) {
+				if (contentFile != null && contentFile.exists()) {
+					viewFileInAssociatedApp(contentFile, item.getMimeType());
+				} else {
+					displayError(R.string.error_file_does_not_exists);
+				}
+			}
+		}.execute(item);
+	}
+
+	private void displayError(int messageId) {
+		Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show();
+	}
+	
+	/**
+	 * Displays a file on the local system with the associated app by calling
+	 * the ACTION_VIEW intent.
+	 * 
+	 * @param tempFile
+	 * @param mimeType
+	 */
+	private void viewFileInAssociatedApp(File tempFile, String mimeType) {
+		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
+		Uri data = Uri.fromFile(tempFile);
+		viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		viewIntent.setDataAndType(data, mimeType.toLowerCase());
+
+		try {
+			startActivity(viewIntent);
+		} catch (ActivityNotFoundException e) {
+			Toast.makeText(this, R.string.application_not_available, Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	private void emailDocument() {
+		
+		new AbstractDownloadTask(getRepository(), this) {
+			@Override
+			public void onDownloadFinished(File contentFile) {
+				if (contentFile != null && contentFile.exists()) {
+					Intent i = new Intent(Intent.ACTION_SEND);
+					i.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
+					i.putExtra(Intent.EXTRA_TEXT, item.getContentUrl());
+					i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(contentFile));
+					i.setType(item.getMimeType());
+					startActivity(Intent.createChooser(i, "Email file"));
+				} else {
+					displayError(R.string.error_file_does_not_exists);
+				}
+			}
+		}.execute(item);
 	}
 
 }

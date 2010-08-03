@@ -28,15 +28,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
@@ -65,11 +65,18 @@ public class ListCmisFeedActivity extends ListActivity {
 				Prefs prefs = new Prefs(this);
 				setRepository(CmisRepository.create(getApplication(), prefs));
 				getRepository().clearCache();
+			} else {
+				Bundle extra = this.getIntent().getExtras();
+				if (extra != null && extra.getBoolean("isFirstStart")){
+					Prefs prefs = new Prefs(this);
+					setRepository(CmisRepository.create(getApplication(), prefs));
+					getRepository().clearCache();
+				}
 			}
 		} catch (FeedLoadException fle) {
 		}
 	}
-
+	
 	private void processSearchOrDisplayIntent() {
 		if (getRepository() != null) {
 			if (activityIsCalledWithSearchAction()) {
@@ -80,11 +87,7 @@ public class ListCmisFeedActivity extends ListActivity {
 				displayFeedInListViewWithTitleFromFeed(feed);
 			}
 		} else {
-			Toast
-					.makeText(
-							this,
-							"Repositoy not set up correctly. Check the repository settings.",
-							5);
+			Toast.makeText(this, getText(R.string.error_settings), 5);
 		}
 	}
 
@@ -125,27 +128,6 @@ public class ListCmisFeedActivity extends ListActivity {
 		getListView().setClickable(true);
 		getListView().setOnItemClickListener(new CmisDocSelectedListener());
 		getListView().setOnCreateContextMenuListener(this);
-
-		registerPreferencesListener();
-	}
-
-	/**
-	 * Register a listener on Preferences changes that sets the repository to
-	 * null. When returning from the settings OnResume is called an creates a
-	 * new repository connection if it has been set to null by the listener.
-	 */
-	private void registerPreferencesListener() {
-		PreferenceManager.getDefaultSharedPreferences(this)
-				.registerOnSharedPreferenceChangeListener(
-						new OnSharedPreferenceChangeListener() {
-
-							@Override
-							public void onSharedPreferenceChanged(
-									SharedPreferences sharedPreferences,
-									String key) {
-								setRepository(null);
-							}
-						});
 	}
 
 	@Override
@@ -153,37 +135,50 @@ public class ListCmisFeedActivity extends ListActivity {
 
 		AdapterView.AdapterContextMenuInfo menuInfo;
 		try {
-			menuInfo = (AdapterView.AdapterContextMenuInfo) menuItem
-					.getMenuInfo();
+			menuInfo = (AdapterView.AdapterContextMenuInfo) menuItem.getMenuInfo();
 		} catch (ClassCastException e) {
 			return false;
 		}
 
-		CmisItem doc = (CmisItem) getListView().getItemAtPosition(
-				menuInfo.position);
+		CmisItem doc = (CmisItem) getListView().getItemAtPosition(menuInfo.position);
 
 		switch (menuItem.getItemId()) {
 		case 1:
-			if (doc != null) {
-				displayDocumentDetails(doc);
+			if (doc != null && doc.hasChildren() == false) {
+				openDocument(doc);
 			}
 			return true;
 		case 2:
 			if (doc != null) {
+				displayDocumentDetails(doc);
+			}
+			return true;
+		case 3:
+			if (doc != null) {
 				emailDocument(doc);
 			}
 			return true;
-
 		default:
 			return super.onContextItemSelected(menuItem);
 		}
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		menu.add(0, 1, Menu.NONE, "Display details");
-		menu.add(0, 2, Menu.NONE, "EMail Document");
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		menu.setHeaderIcon(android.R.drawable.ic_menu_more);
+		menu.setHeaderTitle(this.getString(R.string.feed_menu_title));
+		
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+
+		CmisItem doc = (CmisItem) getListView().getItemAtPosition(info.position);
+		
+		menu.add(0, 2, Menu.NONE, getString(R.string.menu_item_details));
+		
+		if (doc != null && doc.hasChildren() == false){
+			menu.add(0, 1, Menu.NONE, getString(R.string.download));
+			menu.add(0, 3, Menu.NONE, getString(R.string.menu_item_email));
+		}
+		
 	}
 
 	/**
@@ -193,15 +188,11 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * @param queryIntent
 	 */
 	private void doSearchWithIntent(final Intent queryIntent) {
-		final String queryString = queryIntent
-				.getStringExtra(SearchManager.QUERY);
+		final String queryString = queryIntent.getStringExtra(SearchManager.QUERY);
 
 		QueryType queryType = getQueryTypeFromIntent(queryIntent);
-		String searchFeed = getRepository().getSearchFeed(queryType,
-				queryString);
-		displayFeedInListView(searchFeed,
-				getString(R.string.search_results_for) + " '" + queryString
-						+ "'");
+		String searchFeed = getRepository().getSearchFeed(queryType, queryString);
+		displayFeedInListView(searchFeed, getString(R.string.search_results_for) + " '" + queryString + "'");
 	}
 
 	/**
@@ -248,10 +239,9 @@ public class ListCmisFeedActivity extends ListActivity {
 	}
 
 	private void displayError(int messageId) {
-		Toast.makeText(this, messageId,
-				Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show();
 	}
-	
+
 	/**
 	 * Opens a file by downloading it and starting the associated app.
 	 * 
@@ -264,13 +254,12 @@ public class ListCmisFeedActivity extends ListActivity {
 			public void onDownloadFinished(File contentFile) {
 				if (contentFile != null && contentFile.exists()) {
 					viewFileInAssociatedApp(contentFile, item.getMimeType());
-				}
-				else {
+				} else {
 					displayError(R.string.error_file_does_not_exists);
 				}
 			}
 		}.execute(item);
-		
+
 	}
 
 	/**
@@ -289,8 +278,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		try {
 			startActivity(viewIntent);
 		} catch (ActivityNotFoundException e) {
-			Toast.makeText(this, R.string.application_not_available,
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.application_not_available, Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -301,29 +289,29 @@ public class ListCmisFeedActivity extends ListActivity {
 	private class CmisDocSelectedListener implements OnItemClickListener {
 
 		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			CmisItem doc = (CmisItem) parent.getItemAtPosition(position);
 
 			if (doc.hasChildren()) {
 				openNewListViewActivity(doc);
 			} else {
-				openDocument(doc);
+				//openDocument(doc);
+				displayDocumentDetails(doc);
 			}
 		}
 	}
 
 	private void displayDocumentDetails(CmisItem doc) {
-		Intent intent = new Intent(ListCmisFeedActivity.this,
-				DocumentDetailsActivity.class);
+		Intent intent = new Intent(ListCmisFeedActivity.this, DocumentDetailsActivity.class);
 
-		ArrayList<CmisProperty> propList = new ArrayList<CmisProperty>(doc
-				.getProperties().values());
+		ArrayList<CmisProperty> propList = new ArrayList<CmisProperty>(doc.getProperties().values());
 
 		intent.putParcelableArrayListExtra("properties", propList);
 		intent.putExtra("title", doc.getTitle());
-		intent.putExtra("objectTypeId", doc.getProperties().get(
-				"cmis:objectTypeId").getValue());
+		intent.putExtra("mimetype", doc.getMimeType());
+		intent.putExtra("objectTypeId", doc.getProperties().get("cmis:objectTypeId").getValue());
+		intent.putExtra("baseTypeId", doc.getProperties().get("cmis:baseTypeId").getValue());
+		intent.putExtra("contentUrl", doc.getContentUrl());
 		startActivity(intent);
 	}
 
@@ -361,15 +349,15 @@ public class ListCmisFeedActivity extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		MenuItem settingsItem = menu.add(Menu.NONE, 1, 0,
-				R.string.menu_item_settings);
-		settingsItem.setIcon(android.R.drawable.ic_menu_edit);
-		MenuItem aboutItem = menu
-				.add(Menu.NONE, 2, 0, R.string.menu_item_about);
-		aboutItem.setIcon(android.R.drawable.ic_menu_info_details);
+		
+		MenuItem settingsItem = menu.add(Menu.NONE, 1, 0, R.string.menu_item_settings);
+		settingsItem.setIcon(R.drawable.repository);
+		
+		MenuItem aboutItem = menu.add(Menu.NONE, 2, 0, R.string.menu_item_about);
+		aboutItem.setIcon(R.drawable.cmisexplorer);
 
-		MenuItem reloadItem = menu.add(Menu.NONE, 3, 0, "Reload");
-		reloadItem.setIcon(android.R.drawable.ic_menu_rotate);
+		MenuItem reloadItem = menu.add(Menu.NONE, 3, 0, R.string.menu_item_reload);
+		reloadItem.setIcon(R.drawable.reload);
 
 		createSearchMenu(menu);
 		return true;
@@ -378,7 +366,7 @@ public class ListCmisFeedActivity extends ListActivity {
 
 	private void createSearchMenu(Menu menu) {
 		SubMenu searchMenu = menu.addSubMenu(R.string.menu_item_search);
-		searchMenu.setIcon(android.R.drawable.ic_menu_search);
+		searchMenu.setIcon(R.drawable.search);
 		searchMenu.getItem().setAlphabeticShortcut(SearchManager.MENU_KEY);
 		searchMenu.setHeaderIcon(android.R.drawable.ic_menu_info_details);
 
@@ -392,10 +380,11 @@ public class ListCmisFeedActivity extends ListActivity {
 
 		switch (item.getItemId()) {
 		case 1:
-			startActivity(new Intent(this, CmisPreferences.class));
+			startActivity(new Intent(this, ServerActivity.class));
 			return true;
 		case 2:
-			Toast.makeText(this, R.string.about_message, 5).show();
+			//Toast.makeText(this, R.string.about_message, 5).show();
+			startActivity(new Intent(this, AboutActivity.class));
 			return true;
 		case 3:
 			setRepository(null);

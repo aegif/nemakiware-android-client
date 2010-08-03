@@ -6,7 +6,9 @@
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:src="@drawable/icon" android:layout_marginRight="4dip" android:layout_gravity="top"/>
+        android:src="@drawable/icon" 
+        android:layout_marginRight="4dip" 
+        android:layout_gravity="top"/>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="0dip"
@@ -16,12 +18,18 @@
             android:id="@+id/toptext"
             android:layout_width="fill_parent"
             android:layout_height="0dip"
-            android:gravity="center_vertical" android:layout_weight="0.6" android:textSize="20sp"/>
+            android:gravity="center_vertical" 
+            android:layout_weight="0.6" 
+            android:textSize="20sp"/>
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:id="@+id/bottomtext"
             android:singleLine="true"
-            android:ellipsize="marquee" android:textSize="12sp" android:paddingTop="2dip" android:paddingBottom="2dip" android:layout_weight="0.4"/>
+            android:ellipsize="marquee" 
+            android:textSize="12sp" 
+            android:paddingTop="2dip" 
+            android:paddingBottom="2dip" 
+            android:layout_weight="0.4"/>
     </LinearLayout>
 </LinearLayout>

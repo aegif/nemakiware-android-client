@@ -37,15 +37,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
  */
 public class HttpUtils {
 
-	public static HttpResponse getWebRessource(String url, String user,
-			String password) throws IOException, ClientProtocolException {
+	public static HttpResponse getWebRessource(String url, String user, String password) throws IOException, ClientProtocolException {
 		HttpGet get = new HttpGet(url);
 		HttpClient client = createClient(user, password);
 		return client.execute(get);
 	}
 
-	static InputStream getWebRessourceAsStream(String url, String user,
-			String password) throws IOException, ClientProtocolException {
+	static InputStream getWebRessourceAsStream(String url, String user, String password) throws IOException, ClientProtocolException {
 
 		return getWebRessource(url, user, password).getEntity().getContent();
 	}
@@ -54,10 +52,8 @@ public class HttpUtils {
 		DefaultHttpClient client = new DefaultHttpClient();
 
 		if (user != null && user.length() > 0) {
-			Credentials defaultcreds = new UsernamePasswordCredentials(user,
-					password);
-			client.getCredentialsProvider().setCredentials(AuthScope.ANY,
-					defaultcreds);
+			Credentials defaultcreds = new UsernamePasswordCredentials(user, password);
+			client.getCredentialsProvider().setCredentials(AuthScope.ANY, defaultcreds);
 		}
 
 		return client;

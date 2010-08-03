@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+
+	<LinearLayout
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:gravity="center_vertical|center_horizontal" 
+	    android:layout_height="150sp">
+	    
+	    <TextView
+	    	android:id="@+id/app_name"
+	        android:text="@string/app_name"
+	        android:textSize="30sp"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        />
+	        
+	</LinearLayout>
+    
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical"
+    	android:padding="10sp"
+    	>
+
+    <Button
+   	 	android:id="@+id/repository"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="@string/home_menu_repository" 
+        android:textSize="25sp" 
+        android:drawableLeft="@drawable/repository"
+        android:drawablePadding="10sp"
+        android:layout_marginBottom="15sp"
+        />
+        
+    <Button
+    	android:id="@+id/about"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="@string/home_menu_about" 
+        android:textSize="25sp" 
+        android:drawableLeft="@drawable/cmisexplorer"
+        android:drawablePadding="10sp"
+        android:layout_marginBottom="15sp"
+        />
+
+	</LinearLayout>
+
+
+
+<HorizontalScrollView 
+        android:id="@+id/my_scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" 
+        android:scrollbars="none"
+        android:layout_gravity="bottom"
+        >
+
+            <LinearLayout android:id="@+id/my_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal">
+
+            <ImageView
+		        android:id="@+id/icon"
+		        android:layout_width="wrap_content"
+		        android:layout_height="fill_parent"
+		        android:layout_alignParentTop="true"
+		        android:layout_alignParentBottom="true"
+		        android:layout_marginRight="50dip"
+		        android:src="@drawable/cmisexplorer" />
+		        
+		    <ImageView
+		        android:id="@+id/icon"
+		        android:layout_width="wrap_content"
+		        android:layout_height="fill_parent"
+		        android:layout_alignParentTop="true"
+		        android:layout_alignParentBottom="true"
+		        android:layout_marginRight="50dip"
+		        android:src="@drawable/cmisexplorer" />
+		        
+		        <ImageView
+		        android:id="@+id/icon"
+		        android:layout_width="wrap_content"
+		        android:layout_height="fill_parent"
+		        android:layout_alignParentTop="true"
+		        android:layout_alignParentBottom="true"
+		        android:layout_marginRight="50dip"
+		        android:src="@drawable/cmisexplorer" />
+		        
+		        <ImageView
+		        android:id="@+id/icon"
+		        android:layout_width="wrap_content"
+		        android:layout_height="fill_parent"
+		        android:layout_alignParentTop="true"
+		        android:layout_alignParentBottom="true"
+		        android:layout_marginRight="50dip"
+		        android:src="@drawable/cmisexplorer" />
+		        
+		        <ImageView
+		        android:id="@+id/icon"
+		        android:layout_width="wrap_content"
+		        android:layout_height="fill_parent"
+		        android:layout_alignParentTop="true"
+		        android:layout_alignParentBottom="true"
+		        android:layout_marginRight="50dip"
+		        android:src="@drawable/cmisexplorer" />
+
+        </LinearLayout>
+
+</HorizontalScrollView>
+
+</LinearLayout>

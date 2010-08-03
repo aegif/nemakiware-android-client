@@ -21,28 +21,27 @@ import java.util.List;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
-
 public class CmisItemCollection {
 
-	private List<CmisItem> items = new ArrayList<CmisItem>(); 
+	private List<CmisItem> items = new ArrayList<CmisItem>();
 	private String upLink;
 	private String title;
-	
+
 	private CmisItemCollection() {
 	}
-	
+
 	public List<CmisItem> getItems() {
 		return items;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
-	
+
 	public String getUpLink() {
 		return upLink;
 	}
-	
+
 	public static CmisItemCollection createFromFeed(Document doc) {
 		CmisItemCollection cic = new CmisItemCollection();
 		cic.parseFeed(doc);
@@ -55,7 +54,7 @@ public class CmisItemCollection {
 		for (Element entry : entries) {
 			items.add(CmisItem.createFromFeed(entry));
 		}
-		
+
 	}
 
 	private void parseFeed(Document doc) {
@@ -72,7 +71,7 @@ public class CmisItemCollection {
 	public static CmisItemCollection emptyCollection() {
 		CmisItemCollection cmi = new CmisItemCollection();
 		cmi.title = "";
-		cmi.upLink  = "";
+		cmi.upLink = "";
 		return cmi;
 	}
 

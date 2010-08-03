@@ -43,8 +43,7 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 		ImageView icon;
 	}
 
-	public CmisItemCollectionAdapter(Context context, int textViewResourceId,
-			CmisItemCollection itemCollection) {
+	public CmisItemCollectionAdapter(Context context, int textViewResourceId, CmisItemCollection itemCollection) {
 		super(context, textViewResourceId, itemCollection.getItems());
 		this.context = context;
 	}
@@ -53,7 +52,7 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = recycleOrCreateView(convertView);
 		ViewHolder vh = (ViewHolder) v.getTag();
-		
+
 		CmisItem item = getItem(position);
 		updateControls(vh, item);
 		return v;
@@ -61,8 +60,7 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 
 	private View recycleOrCreateView(View v) {
 		if (v == null) {
-			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
-					Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			v = vi.inflate(R.layout.feed_list_row, null);
 
 			ViewHolder vh = new ViewHolder();
@@ -86,16 +84,31 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 	private void updateControlIcon(ViewHolder vh, CmisItem item) {
 
 		if (item.hasChildren()) {
-			vh.icon.setImageDrawable(getContext().getResources().getDrawable(
-					R.drawable.folder));
+			vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.folderopen));
 		} else {
-			vh.icon.setImageDrawable(getContext().getResources().getDrawable(
-					R.drawable.file));
+			String mimetype = item.getMimeType();
+			if(mimetype.contains("image")){
+				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.image));
+			} else if(mimetype.contains("pdf")) {
+				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.pdf));
+			} else if(mimetype.contains("msword")) {
+				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.msword));
+			} else if(mimetype.contains("excel")) {
+				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.msexcel));
+			} else if(mimetype.contains("point")) {
+				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.mspowerpoint));
+			} else if(mimetype.contains("html")) {
+				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.html));
+			} else if(mimetype.contains("video")) {
+				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.video));
+			} else {
+				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.text));
+			}
 		}
 	}
 
 	private void updateControlDescriptionText(ViewHolder vh, CmisItem item) {
-			vh.bottomText.setText(buildBottomText(item));
+		vh.bottomText.setText(buildBottomText(item));
 	}
 
 	private void updateControlTitle(ViewHolder vh, CmisItem item) {
@@ -111,8 +124,7 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 	}
 
 	private void appendInfoDocumentSize(CmisItem doc, List<String> infos) {
-		CmisProperty fileSize = doc.getProperties().get(
-				"cmis:contentStreamLength");
+		CmisProperty fileSize = doc.getProperties().get("cmis:contentStreamLength");
 		if (fileSize != null) {
 			infos.add(convertAndFormatSize(fileSize.getValue()));
 		}
@@ -120,21 +132,18 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 
 	private String convertAndFormatSize(String size) {
 		int sizeInByte = Integer.parseInt(size);
-		
+
 		if (sizeInByte < 1024) {
 			return String.valueOf(sizeInByte) + " bytes";
-		}
-		else {
+		} else {
 			int sizeInKB = sizeInByte / 1024;
 			if (sizeInKB < 1024) {
 				return String.valueOf(sizeInKB) + " KB";
-			}
-			else {
+			} else {
 				int sizeInMB = sizeInKB / 1024;
 				if (sizeInMB < 1024) {
 					return String.valueOf(sizeInMB) + " MB";
-				}		
-				else {
+				} else {
 					return String.valueOf(sizeInMB / 1024) + " GB";
 				}
 			}
@@ -152,10 +161,8 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 		String modDate = "";
 		String modTime = "";
 		if (modificationDate != null) {
-			modDate = DateFormat.getDateFormat(context)
-					.format(modificationDate);
-			modTime = DateFormat.getTimeFormat(context)
-					.format(modificationDate);
+			modDate = DateFormat.getDateFormat(context).format(modificationDate);
+			modTime = DateFormat.getTimeFormat(context).format(modificationDate);
 			if (!TextUtils.isEmpty(modDate)) {
 				infos.add(modDate);
 			}

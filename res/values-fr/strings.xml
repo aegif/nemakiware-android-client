@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_results_for">results for</string>
+    <string name="about_message">CMIS Browser by Florian Maul (2010)</string>
+    <string name="menu_item_search_cmis">CMIS query</string>
+    <string name="menu_item_search_fulltext">Recherche plein texte</string>
+    <string name="menu_item_search_title">Recherche par titre</string>
+    <string name="menu_item_search">Recherche</string>
+    <string name="menu_item_about">A propos</string>
+    <string name="menu_item_settings">Paramètres</string>
+    <string name="menu_item_reload">Recharger</string>
+    <string name="loading">Chargement...</string>
+
+	<string name="app_name">CMIS Navigateur</string>
+	<string name="main_no_items">Aucun document à afficher</string>
+	<string name="error_file_does_not_exists">Le fichier ne peut être téléchargé.</string>
+	<string name="application_not_available">Il n\'y a pas d\'application pour lire ce type de fichier.</string>
+	<string name="error_downloading_content">Erreur lors du téléchargement du contenu.</string>
+	<string name="cmis_repo_server_id">cmisRepoServerId</string>
+	<string name="cmis_repo_user_id">CmisRepoUserId</string>
+	<string name="cmis_repo_password_id">CmisRepoPasswordId</string>
+	<string name="search_label">CMIS Repository</string>
+	
+	<string name="cmis_repo_server_url">URL</string>
+	<string name="cmis_repo_server_summary">L\'adresse vers l\'entrepot de données CMIS.</string>
+	<string name="cmis_repo_server_default">http://cmis.alfresco.com/service/cmis</string>
+	
+	<string name="cmis_repo_user">Utilisateur</string>
+	<string name="cmis_repo_user_summary">L\'utilisateur avec lequel on souhaite se connecter à l\'entrepôt de données.</string>
+	<string name="cmis_repo_user_default">admin</string>
+	
+	<string name="cmis_repo_password">Mot de Passe</string>
+	<string name="cmis_repo_password_summary">Le mot de passe associé à l\'utlisateur.</string>
+	<string name="cmis_repo_password_default">admin</string>
+	
+	<string name="menu_item_details">Afficher le détail</string>
+	<string name="menu_item_email">Envoyer par E-mail</string>
+	
+	<string name="title_details">Details de</string>
+	<string name="title_children">EMail Document</string>
+	
+	<string name="download">Téléchargement</string>
+	<string name="download_progress">Téléchargement en cours...</string>
+	
+	<string name="error_settings">Impossible de se connecter. Vérifiez les paramètres de l\'entrepôt.</string>
+	
+</resources>

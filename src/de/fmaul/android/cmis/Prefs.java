@@ -21,26 +21,26 @@ import android.preference.PreferenceManager;
 
 public class Prefs {
 
-	private final Activity activity; 
-	
+	private final Activity activity;
+
 	public Prefs(Activity activity) {
 		this.activity = activity;
 	}
-	
+
 	public String getUrl() {
-		return getPrefs().getString(activity.getString(R.string.cmis_repo_server_id), "http://cmis.alfresco.com/service/cmis");
+		return getPrefs().getString("serverURL", "vide");
 	}
 
 	public String getUser() {
-		return getPrefs().getString(activity.getString(R.string.cmis_repo_user_id), "admin");
+		return getPrefs().getString("username", "vide");
 	}
 
 	public String getPassword() {
-		return getPrefs().getString(activity.getString(R.string.cmis_repo_password_id), "admin");
+		return getPrefs().getString("password", "vide");
 	}
 
 	private SharedPreferences getPrefs() {
+		PreferenceManager.setDefaultValues(activity, R.xml.preferences, false); 
 		return PreferenceManager.getDefaultSharedPreferences(activity);
 	}
-	
 }

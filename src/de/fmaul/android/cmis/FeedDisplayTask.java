@@ -49,8 +49,7 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 			String feed = params[0];
 			if (feed == null) {
 				return repository.getRootCollection();
-			}
-			else {
+			} else {
 				return repository.getCollectionFromFeed(feed);
 			}
 		} catch (FeedLoadException fle) {
@@ -60,12 +59,10 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 
 	@Override
 	protected void onPostExecute(CmisItemCollection itemCollection) {
-		activity.setListAdapter(new CmisItemCollectionAdapter(activity, R.layout.feed_list_row,
-				itemCollection));
+		activity.setListAdapter(new CmisItemCollectionAdapter(activity, R.layout.feed_list_row, itemCollection));
 		if (title == null) {
 			activity.getWindow().setTitle(itemCollection.getTitle());
-		}
-		else {
+		} else {
 			activity.getWindow().setTitle(title);
 		}
 		activity.setProgressBarIndeterminateVisibility(false);
