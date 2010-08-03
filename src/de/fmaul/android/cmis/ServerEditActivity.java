@@ -77,14 +77,16 @@ public class ServerEditActivity extends Activity {
 	}
 
 	private void initServerData() {
-		currentServer = (Server) getIntent().getExtras().getSerializable("server");
+		if (getIntent().getExtras() != null) {
+			currentServer = (Server) getIntent().getExtras().getSerializable("server");
+		}
+		
+		serverNameEditText = (EditText) findViewById(R.id.cmis_repo_server_name);
+		serverUrlEditText = (EditText) findViewById(R.id.cmis_repo_url_id);
+		userEditText = (EditText) findViewById(R.id.cmis_repo_user_id);
+		passwordEditText = (EditText) findViewById(R.id.cmis_repo_password_id);
 		
 		if (currentServer != null){
-			serverNameEditText = (EditText) findViewById(R.id.cmis_repo_server_name);
-			serverUrlEditText = (EditText) findViewById(R.id.cmis_repo_url_id);
-			userEditText = (EditText) findViewById(R.id.cmis_repo_user_id);
-			passwordEditText = (EditText) findViewById(R.id.cmis_repo_password_id);
-			
 			serverNameEditText.setText(currentServer.getName());
 			serverUrlEditText.setText(currentServer.getUrl());
 			userEditText.setText(currentServer.getUsername());
