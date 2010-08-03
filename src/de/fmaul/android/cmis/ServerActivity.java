@@ -89,6 +89,7 @@ public class ServerActivity extends ListActivity {
 			editor.putString("serverURL", s.getUrl());
 			editor.putString("username", s.getUsername());
 			editor.putString("password", s.getPassword());
+			editor.putString("workspace", s.getWorkspace());
 			editor.commit();
 			
 			startActivity(intent);

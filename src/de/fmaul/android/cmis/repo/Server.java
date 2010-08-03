@@ -11,14 +11,16 @@ public class Server implements Serializable{
     private String url;
 	private String username;
 	private String password;
+	private String workspace;
 	
-	public Server(long id, String name, String url, String username, String password) {
+	public Server(long id, String name, String url, String username, String password, String workspace) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.url = url;
 		this.username = username;
 		this.password = password;
+		this.workspace = workspace;
 	}
 	
 	
@@ -55,6 +57,12 @@ public class Server implements Serializable{
 	}
 	public String getName() {
 		return name;
+	}
+	public void setWorkspace(String workspace) {
+		this.workspace = workspace;
+	}
+	public String getWorkspace() {
+		return workspace;
 	}
 	
 	

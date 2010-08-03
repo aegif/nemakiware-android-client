@@ -30,6 +30,9 @@ public class CmisDBAdapter {
     public static final String COLUMN_PASS = "password";
     public static final int COLUMN_PASS_ID = 4;
     
+    public static final String COLUMN_WS = "workspace";
+    public static final int COLUMN_WS_ID = 5;
+    
     
     
     private static final int DATABASE_VERSION = 1;
@@ -45,7 +48,8 @@ public class CmisDBAdapter {
     	+ COLUMN_NAME + " TEXT NOT NULL,"
     	+ COLUMN_URL + " TEXT NOT NULL,"
     	+ COLUMN_USER + " TEXT NOT NULL,"
-    	+ COLUMN_PASS + " TEXT NOT NULL" 
+    	+ COLUMN_PASS + " TEXT NOT NULL," 
+    	+ COLUMN_WS + " TEXT NOT NULL" 
     	+ ");";
     
     public CmisDBAdapter(Context ctx){
@@ -61,24 +65,26 @@ public class CmisDBAdapter {
 		cmisDB.close();
 	}
 	
-	public long insert(String name, String url, String username, String pass) {
+	public long insert(String name, String url, String username, String pass, String workspace) {
 		ContentValues insertValues = new ContentValues();
 		
 		insertValues.put(COLUMN_NAME, name);
 		insertValues.put(COLUMN_URL, url);
 		insertValues.put(COLUMN_USER, username);
 		insertValues.put(COLUMN_PASS, pass);
+		insertValues.put(COLUMN_WS, workspace);
 		
 		return cmisDB.insert(TABLE_SERVERS, null, insertValues);
 	}
 	
-	public boolean update(long id, String name, String url, String username, String pass) {
+	public boolean update(long id, String name, String url, String username, String pass, String workspace) {
 		ContentValues updateValues = new ContentValues();
 		
 		updateValues.put(COLUMN_NAME, name);
 		updateValues.put(COLUMN_URL, url);
 		updateValues.put(COLUMN_USER, username);
 		updateValues.put(COLUMN_PASS, pass);
+		updateValues.put(COLUMN_WS, workspace);
 		
 		return cmisDB.update(TABLE_SERVERS, updateValues, COLUMN_ID + "=" + id, null) > 0;
 	}
@@ -89,7 +95,7 @@ public class CmisDBAdapter {
 	
 	public ArrayList<Server> getAllServers() {
 		Cursor c = cmisDB.query(
-				TABLE_SERVERS, new String[] { COLUMN_ID, COLUMN_NAME, COLUMN_URL, COLUMN_USER, COLUMN_PASS },
+				TABLE_SERVERS, new String[] { COLUMN_ID, COLUMN_NAME, COLUMN_URL, COLUMN_USER, COLUMN_PASS, COLUMN_WS },
 				null, null, null, null, null);
 		return cursorToServers(c);
 	}
@@ -113,7 +119,14 @@ public class CmisDBAdapter {
 		c.moveToFirst();
 		
 		do {
-			Server server = new Server(c.getInt(COLUMN_ID_ID), c.getString(COLUMN_NAME_ID), c.getString(COLUMN_URL_ID), c.getString(COLUMN_USER_ID), c.getString(COLUMN_PASS_ID));
+			Server server = new Server(
+					c.getInt(COLUMN_ID_ID), 
+					c.getString(COLUMN_NAME_ID), 
+					c.getString(COLUMN_URL_ID), 
+					c.getString(COLUMN_USER_ID), 
+					c.getString(COLUMN_PASS_ID),
+					c.getString(COLUMN_WS_ID)
+					);
 			servers.add(server);
 		} while (c.moveToNext());
 		c.close();
@@ -124,7 +137,14 @@ public class CmisDBAdapter {
 		if (c.getCount() == 0){
 			return null;
 		}
-		Server server = new Server(c.getInt(COLUMN_ID_ID), c.getString(COLUMN_NAME_ID), c.getString(COLUMN_URL_ID), c.getString(COLUMN_USER_ID), c.getString(COLUMN_PASS_ID));
+		Server server = new Server(
+				c.getInt(COLUMN_ID_ID), 
+				c.getString(COLUMN_NAME_ID), 
+				c.getString(COLUMN_URL_ID), 
+				c.getString(COLUMN_USER_ID), 
+				c.getString(COLUMN_PASS_ID),
+				c.getString(COLUMN_WS_ID)
+				);
 		c.close();
 		return server;
 	}
@@ -144,6 +164,7 @@ public class CmisDBAdapter {
 			initialValues.put(COLUMN_USER, "Administrator");
 			initialValues.put(COLUMN_PASS, "Administrator");
 			initialValues.put(COLUMN_URL, "http://cmis.demo.nuxeo.org/nuxeo/site/cmis/repository");
+			initialValues.put(COLUMN_WS, "default");
 			
 			db.insert(TABLE_SERVERS, null, initialValues);
 			
@@ -151,6 +172,7 @@ public class CmisDBAdapter {
 			initialValues.put(COLUMN_USER, "admin");
 			initialValues.put(COLUMN_PASS, "admin");
 			initialValues.put(COLUMN_URL, "http://cmis.alfresco.com/service/cmis");
+			initialValues.put(COLUMN_WS, "Main Repository");
 			
 			db.insert(TABLE_SERVERS, null, initialValues);
 			
@@ -158,6 +180,7 @@ public class CmisDBAdapter {
 			initialValues.put(COLUMN_USER, "");
 			initialValues.put(COLUMN_PASS, "");
 			initialValues.put(COLUMN_URL, "http://cmis.exoplatform.org/xcmis1/rest/cmisatom");
+			initialValues.put(COLUMN_WS, "cmis-inmem1");
 			
 			db.insert(TABLE_SERVERS, null, initialValues);
 

@@ -1,0 +1,118 @@
+<?xml version="1.0" ?>
+<service xmlns="http://www.w3.org/2007/app" xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:cmisra="http://docs.oasis-open.org/ns/cmis/restatom/200908/">
+	<workspace>
+		<atom:title type="text">cmis-inmem1</atom:title>
+		<cmisra:repositoryInfo
+			xmlns:cmis="http://docs.oasis-open.org/ns/cmis/core/200908/">
+			<cmis:repositoryId>cmis-inmem1</cmis:repositoryId>
+			<cmis:repositoryName>cmis-inmem1</cmis:repositoryName>
+		</cmisra:repositoryInfo>
+		<collection
+			href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis-inmem1/children/abcdef12-3456-7890-0987-654321fedcba">
+			<atom:title type="text">Folder Children</atom:title>
+			<cmisra:collectionType>root</cmisra:collectionType>
+		</collection>
+		<collection
+			href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis-inmem1/types">
+			<atom:title type="text">Types Children</atom:title>
+			<cmisra:collectionType>types</cmisra:collectionType>
+		</collection>
+		<collection
+			href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis-inmem1/checkedout">
+			<atom:title type="text">Checkedout collection</atom:title>
+			<cmisra:collectionType>checkedout</cmisra:collectionType>
+		</collection>
+		<collection
+			href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis-inmem1/query">
+			<atom:title type="text">Query</atom:title>
+			<cmisra:collectionType>query</cmisra:collectionType>
+		</collection>
+		<collection
+			href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis-inmem1/unfiled">
+			<atom:title type="text">Unfiled collection</atom:title>
+			<cmisra:collectionType>unfiled</cmisra:collectionType>
+		</collection>
+		<cmisra:uritemplate>
+			<cmisra:template>http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis-inmem1/object/{id}?filter={filter}&amp;includeAllowableActions={includeAllowableActions}&amp;includePolicyIds={includePolicyIds}&amp;includeRelationships={includeRelationships}&amp;includeACL={includeACL}&amp;renditionFilter={renditionFilter}
+			</cmisra:template>
+			<cmisra:type>objectbyid</cmisra:type>
+			<cmisra:mediatype>application/atom+xml;type=entry</cmisra:mediatype>
+		</cmisra:uritemplate>
+		<cmisra:uritemplate>
+			<cmisra:template>http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis-inmem1/objectbypath?path={path}&amp;filter={filter}&amp;includeAllowableActions={includeAllowableActions}&amp;includePolicyIds={includePolicyIds}&amp;includeRelationships={includeRelationships}&amp;includeACL={includeACL}&amp;renditionFilter={renditionFilter}
+			</cmisra:template>
+			<cmisra:type>objectbypath</cmisra:type>
+			<cmisra:mediatype>application/atom+xml;type=entry</cmisra:mediatype>
+		</cmisra:uritemplate>
+		<cmisra:uritemplate>
+			<cmisra:template>http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis-inmem1/query?q={q}&amp;searchAllVersions={searchAllVersions}&amp;maxItems={maxItems}&amp;skipCount={skipCount}&amp;includeAllowableActions={includeAllowableActions}=&amp;includeRelationships={includeRelationships}
+			</cmisra:template>
+			<cmisra:type>query</cmisra:type>
+			<cmisra:mediatype>application/atom+xml;type=feed</cmisra:mediatype>
+		</cmisra:uritemplate>
+		<cmisra:uritemplate>
+			<cmisra:template>http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis-inmem1/typebyid/{id}
+			</cmisra:template>
+			<cmisra:type>typebyid</cmisra:type>
+			<cmisra:mediatype>application/atom+xml;type=entry</cmisra:mediatype>
+		</cmisra:uritemplate>
+	</workspace>
+	<workspace>
+		<atom:title type="text">cmis1</atom:title>
+		<cmisra:repositoryInfo
+			xmlns:cmis="http://docs.oasis-open.org/ns/cmis/core/200908/">
+			<cmis:repositoryId>cmis1</cmis:repositoryId>
+			<cmis:repositoryName>cmis1</cmis:repositoryName>
+		</cmisra:repositoryInfo>
+		<collection
+			href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/children/00exo0jcr0root0uuid0000000000000">
+			<atom:title type="text">Folder Children</atom:title>
+			<cmisra:collectionType>root</cmisra:collectionType>
+		</collection>
+		<collection
+			href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/types">
+			<atom:title type="text">Types Children</atom:title>
+			<cmisra:collectionType>types</cmisra:collectionType>
+		</collection>
+		<collection
+			href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/checkedout">
+			<atom:title type="text">Checkedout collection</atom:title>
+			<cmisra:collectionType>checkedout</cmisra:collectionType>
+		</collection>
+		<collection
+			href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/query">
+			<atom:title type="text">Query</atom:title>
+			<cmisra:collectionType>query</cmisra:collectionType>
+		</collection>
+		<collection
+			href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/unfiled">
+			<atom:title type="text">Unfiled collection</atom:title>
+			<cmisra:collectionType>unfiled</cmisra:collectionType>
+		</collection>
+		<cmisra:uritemplate>
+			<cmisra:template>http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/object/{id}?filter={filter}&amp;includeAllowableActions={includeAllowableActions}&amp;includePolicyIds={includePolicyIds}&amp;includeRelationships={includeRelationships}&amp;includeACL={includeACL}&amp;renditionFilter={renditionFilter}
+			</cmisra:template>
+			<cmisra:type>objectbyid</cmisra:type>
+			<cmisra:mediatype>application/atom+xml;type=entry</cmisra:mediatype>
+		</cmisra:uritemplate>
+		<cmisra:uritemplate>
+			<cmisra:template>http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/objectbypath?path={path}&amp;filter={filter}&amp;includeAllowableActions={includeAllowableActions}&amp;includePolicyIds={includePolicyIds}&amp;includeRelationships={includeRelationships}&amp;includeACL={includeACL}&amp;renditionFilter={renditionFilter}
+			</cmisra:template>
+			<cmisra:type>objectbypath</cmisra:type>
+			<cmisra:mediatype>application/atom+xml;type=entry</cmisra:mediatype>
+		</cmisra:uritemplate>
+		<cmisra:uritemplate>
+			<cmisra:template>http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/query?q={q}&amp;searchAllVersions={searchAllVersions}&amp;maxItems={maxItems}&amp;skipCount={skipCount}&amp;includeAllowableActions={includeAllowableActions}=&amp;includeRelationships={includeRelationships}
+			</cmisra:template>
+			<cmisra:type>query</cmisra:type>
+			<cmisra:mediatype>application/atom+xml;type=feed</cmisra:mediatype>
+		</cmisra:uritemplate>
+		<cmisra:uritemplate>
+			<cmisra:template>http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/typebyid/{id}
+			</cmisra:template>
+			<cmisra:type>typebyid</cmisra:type>
+			<cmisra:mediatype>application/atom+xml;type=entry</cmisra:mediatype>
+		</cmisra:uritemplate>
+	</workspace>
+</service>

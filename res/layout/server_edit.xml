@@ -79,12 +79,61 @@
 		android:password="true"
 		/>
 		
-	<!-- VALIDATION -->
-	<Button android:id="@+id/validation_button" 
-		android:text="@string/button_accept"
-		android:layout_width="wrap_content" 
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true" 
-		android:layout_below="@+id/cmis_repo_password_id" />
+	<!-- Workspace -->
+	<TextView android:id="@+id/cmis_repo_workspace" 
+		android:text="Workspace"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_centerHorizontal = "true"
+		 android:layout_below="@+id/cmis_repo_password_id"
+		/>
+
+	<Button android:id="@+id/cmis_repo_workspace_id" 
+		android:layout_height="40dp"
+		android:layout_width="fill_parent"
+		android:layout_margin="5dp"
+		android:layout_below="@+id/cmis_repo_workspace"
+		android:singleLine="true" 
+		android:layout_centerHorizontal = "true"
+		android:editable="false"
+		android:clickable="true"
+		/>
+
+	<!-- <Spinner android:id="@+id/cmis_repo_workspace_id" 
+		android:layout_height="40dp"
+		android:layout_width="fill_parent"
+		android:layout_margin="5dp"
+		android:layout_below="@+id/cmis_repo_workspace"
+		android:singleLine="true" 
+		android:layout_centerHorizontal = "true"
+		/>	 -->
+		
+		
+	<!-- BUTTONS -->
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	   	android:layout_width="fill_parent"
+	   	android:layout_height="wrap_content"
+	   	android:orientation="horizontal"
+	   	android:padding="5sp"
+	   	android:layout_below="@+id/cmis_repo_workspace_id" 
+	   	android:gravity="center_horizontal"
+	   	>
+		
+		<!-- TEST 
+		<Button android:id="@+id/test_button" 
+			android:text="@string/button_test"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true" 
+			/>-->
+			
+		<!-- VALIDATION -->
+		<Button android:id="@+id/validation_button" 
+			android:text="@string/button_accept"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			 />
+		
+	</LinearLayout>
 		
 </RelativeLayout> 

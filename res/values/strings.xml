@@ -8,13 +8,16 @@
     <string name="menu_item_search">Search</string>
     <string name="menu_item_about">About</string>
     <string name="menu_item_settings">Servers</string>
-    <string name="menu_item_reload">Reload</string>
+    <string name="menu_item_settings_reload">Reload</string>
+    <string name="menu_item_settings_ws">Change workspace</string>
     <string name="loading">loading...</string>
     <string name="delete">Delete...</string>
     <string name="edit">Edit</string>
     
     <string name="server_delete">Server removed : OK</string>
     <string name="server_delete_error">Server removed : NOK</string>
+    <string name="server_connect_test">Connexion Status : OK</string>
+     <string name="server_connect_error">Wrong configuration. Check your values.</string>
 
 	<string name="app_name">CMIS Browser</string>
 	<string name="main_no_items">No documents to display</string>
@@ -58,6 +61,7 @@
 	<string name="menu_item_exit">exit</string>
 	
 	<string name="button_accept">Accept</string>
+	<string name="button_test">Test</string>
 	
 	<string name="home_menu_repository">CMIS Repositories</string>
 	<string name="home_menu_favorites">Favorties</string>

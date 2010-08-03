@@ -17,13 +17,19 @@ package de.fmaul.android.cmis;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,8 +45,16 @@ import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.QueryType;
 import de.fmaul.android.cmis.utils.FeedLoadException;
+import de.fmaul.android.cmis.utils.FeedUtils;
 
 public class ListCmisFeedActivity extends ListActivity {
+
+	private Prefs prefs;
+	private List<String> workspaces;
+	private CharSequence[] cs;
+	private SharedPreferences preferences;
+	private SharedPreferences.Editor editor;
+	private Context context = this;
 
 	/**
 	 * Contains the current connection information and methods to access the
@@ -59,13 +73,13 @@ public class ListCmisFeedActivity extends ListActivity {
 	private void initRepository() {
 		try {
 			if (getRepository() == null) {
-				Prefs prefs = new Prefs(this);
+				prefs = new Prefs(this);
 				setRepository(CmisRepository.create(getApplication(), prefs));
 				getRepository().clearCache();
 			} else {
 				Bundle extra = this.getIntent().getExtras();
 				if (extra != null && extra.getBoolean("isFirstStart")){
-					Prefs prefs = new Prefs(this);
+					prefs = new Prefs(this);
 					setRepository(CmisRepository.create(getApplication(), prefs));
 					getRepository().clearCache();
 				}
@@ -347,20 +361,31 @@ public class ListCmisFeedActivity extends ListActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		
-		MenuItem settingsItem = menu.add(Menu.NONE, 1, 0, R.string.menu_item_settings);
-		settingsItem.setIcon(R.drawable.repository);
+		/*MenuItem settingsItem = menu.add(Menu.NONE, 1, 0, R.string.menu_item_settings);
+		settingsItem.setIcon(R.drawable.repository);*/
+		createRepoMenu(menu);
 		
 		MenuItem aboutItem = menu.add(Menu.NONE, 2, 0, R.string.menu_item_about);
 		aboutItem.setIcon(R.drawable.cmisexplorer);
 
-		MenuItem reloadItem = menu.add(Menu.NONE, 3, 0, R.string.menu_item_reload);
-		reloadItem.setIcon(R.drawable.reload);
+		/*MenuItem reloadItem = menu.add(Menu.NONE, 3, 0, R.string.menu_item_reload);
+		reloadItem.setIcon(R.drawable.reload);*/
 
 		createSearchMenu(menu);
 		return true;
 
 	}
 
+	private void createRepoMenu(Menu menu) {
+		SubMenu settingsMenu = menu.addSubMenu(Menu.NONE, 1, 0, R.string.menu_item_settings);
+		settingsMenu.setIcon(R.drawable.repository);
+		settingsMenu.setHeaderIcon(android.R.drawable.ic_menu_info_details);
+
+		settingsMenu.add(Menu.NONE, 7, 0, R.string.menu_item_reload);
+		settingsMenu.add(Menu.NONE, 8, 0, R.string.menu_item_settings);
+		settingsMenu.add(Menu.NONE, 9, 0, R.string.menu_item_settings_ws);
+	}
+	
 	private void createSearchMenu(Menu menu) {
 		SubMenu searchMenu = menu.addSubMenu(R.string.menu_item_search);
 		searchMenu.setIcon(R.drawable.search);
@@ -376,16 +401,9 @@ public class ListCmisFeedActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case 1:
-			startActivity(new Intent(this, ServerActivity.class));
-			return true;
 		case 2:
 			//Toast.makeText(this, R.string.about_message, 5).show();
 			startActivity(new Intent(this, AboutActivity.class));
-			return true;
-		case 3:
-			setRepository(null);
-			onRestart();
 			return true;
 		case 4:
 			onSearchRequested(QueryType.TITLE);
@@ -396,9 +414,45 @@ public class ListCmisFeedActivity extends ListActivity {
 		case 6:
 			onSearchRequested(QueryType.CMISQUERY);
 			return true;
+		case 7:
+			setRepository(null);
+			onRestart();
+			return true;
+		case 8:
+			startActivity(new Intent(this, ServerActivity.class));
+			return true;
+		case 9:
+			chooseWorkspace();
+			return true;
 		}
 
 		return false;
+	}
+	
+	private void chooseWorkspace(){
+		try {
+			workspaces = FeedUtils.getRootFeedsFromRepo(prefs.getUrl(), prefs.getUser(), prefs.getPassword());
+			cs = workspaces.toArray(new CharSequence[workspaces.size()]);
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Choose Default Workspace");
+			builder.setSingleChoiceItems(cs, -1 ,new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int item) {
+			    	PreferenceManager.setDefaultValues(context, R.xml.preferences, false); 
+					preferences = PreferenceManager.getDefaultSharedPreferences(context);
+					editor = preferences.edit();
+			    	editor.putString("workspace", cs[item].toString());
+					editor.commit();
+			        dialog.dismiss();
+			        setRepository(null);
+					onRestart();
+			    }
+			});
+			AlertDialog alert = builder.create();
+			alert.show();
+		} catch (Exception e) {
+			Toast.makeText(ListCmisFeedActivity.this, R.string.server_connect_error, Toast.LENGTH_LONG).show();
+		}
 	}
 
 	/*

@@ -40,8 +40,10 @@ public class CmisRepository {
 	private final String uriTemplateQuery;
 	private final String uriTemplateTypeById;
 	private final String repositoryUser;
-	private final String repostoryPassword;
+	private final String repositoryPassword;
+	private final String repositoryWorkspace;
 	private final Application application;
+	
 
 	/**
 	 * Connects to a CMIS Repository with the given connection information FIXME
@@ -54,17 +56,18 @@ public class CmisRepository {
 	 * @param password
 	 *            The password to login to the repository
 	 */
-	private CmisRepository(Application application, String repositoryUrl, String user, String password) {
+	private CmisRepository(Application application, String repositoryUrl, String user, String password, String workspace) {
 		this.application = application;
 		this.repositoryUser = user;
-		this.repostoryPassword = password;
+		this.repositoryPassword = password;
+		this.repositoryWorkspace = workspace;
 
-		Document doc = FeedUtils.readAtomFeed(repositoryUrl, repositoryUser, repostoryPassword);
-		feedRootCollection = FeedUtils.getCollectionUrlFromRepoFeed(doc, "root");
-		feedTypesCollection = FeedUtils.getCollectionUrlFromRepoFeed(doc, "types");
+		Document doc = FeedUtils.readAtomFeed(repositoryUrl, repositoryUser, repositoryPassword);
+		feedRootCollection = FeedUtils.getCollectionUrlFromRepoFeed(doc, "root", workspace);
+		feedTypesCollection = FeedUtils.getCollectionUrlFromRepoFeed(doc, "types", workspace);
 
-		uriTemplateQuery = FeedUtils.getUriTemplateFromRepoFeed(doc, "query");
-		uriTemplateTypeById = FeedUtils.getUriTemplateFromRepoFeed(doc, "typebyid");
+		uriTemplateQuery = FeedUtils.getUriTemplateFromRepoFeed(doc, "query", workspace);
+		uriTemplateTypeById = FeedUtils.getUriTemplateFromRepoFeed(doc, "typebyid", workspace);
 	}
 
 	/**
@@ -74,11 +77,11 @@ public class CmisRepository {
 	 * @return
 	 */
 	public static CmisRepository create(Application app, final Prefs prefs) {
-		return new CmisRepository(app, prefs.getUrl(), prefs.getUser(), prefs.getPassword());
+		return new CmisRepository(app, prefs.getUrl(), prefs.getUser(), prefs.getPassword(), prefs.getWorkspace());
 	}
 	
 	public static CmisRepository create(Application app, final Server server) {
-		return new CmisRepository(app, server.getUrl(), server.getUsername(), server.getPassword());
+		return new CmisRepository(app, server.getUrl(), server.getUsername(), server.getPassword(), server.getWorkspace());
 	}
 
 	/**
@@ -125,7 +128,7 @@ public class CmisRepository {
 		if (StorageUtils.isFeedInCache(application, feedUrl)) {
 			doc = StorageUtils.getFeedFromCache(application, feedUrl);
 		} else {
-			doc = FeedUtils.readAtomFeed(feedUrl, repositoryUser, repostoryPassword);
+			doc = FeedUtils.readAtomFeed(feedUrl, repositoryUser, repositoryPassword);
 			if (doc != null) {
 				StorageUtils.storeFeedInCache(application, feedUrl, doc);
 			}
@@ -135,7 +138,7 @@ public class CmisRepository {
 
 	public CmisTypeDefinition getTypeDefinition(String documentTypeId) {
 		String url = uriTemplateTypeById.replace("{id}", documentTypeId);
-		Document doc = FeedUtils.readAtomFeed(url, repositoryUser, repostoryPassword);
+		Document doc = FeedUtils.readAtomFeed(url, repositoryUser, repositoryPassword);
 		return CmisTypeDefinition.createFromFeed(doc);
 	}
 
@@ -161,7 +164,7 @@ public class CmisRepository {
 	 * {@link CmisItem}.
 	 */
 	private void downloadContent(CmisItem item, OutputStream os) throws ClientProtocolException, IOException {
-		HttpUtils.getWebRessource(item.getContentUrl(), repositoryUser, repostoryPassword).getEntity().writeTo(os);
+		HttpUtils.getWebRessource(item.getContentUrl(), repositoryUser, repositoryPassword).getEntity().writeTo(os);
 	}
 
 	public void clearCache() {

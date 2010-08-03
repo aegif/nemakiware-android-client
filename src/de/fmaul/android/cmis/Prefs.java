@@ -38,6 +38,10 @@ public class Prefs {
 	public String getPassword() {
 		return getPrefs().getString("password", "vide");
 	}
+	
+	public String getWorkspace() {
+		return getPrefs().getString("workspace", "vide");
+	}
 
 	private SharedPreferences getPrefs() {
 		PreferenceManager.setDefaultValues(activity, R.xml.preferences, false); 

@@ -18,7 +18,9 @@ package de.fmaul.android.cmis.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +40,9 @@ public class FeedUtils {
 	private static final Namespace CMISRA = Namespace.get("http://docs.oasis-open.org/ns/cmis/restatom/200908/");
 	private static final Namespace CMIS = Namespace.get("http://docs.oasis-open.org/ns/cmis/core/200908/");
 
+	private static final QName CMISRA_REPO_INFO = QName.get("repositoryInfo", CMISRA);
+	private static final QName CMIS_REPO_ID = QName.get("repositoryId", CMIS);
+	private static final QName CMIS_REPO_NAME = QName.get("repositoryName", CMIS);
 	private static final QName CMISRA_COLLECTION_TYPE = QName.get("collectionType", CMISRA);
 	private static final QName CMISRA_URI_TEMPLATE = QName.get("uritemplate", CMISRA);
 	private static final QName CMISRA_TYPE = QName.get("type", CMISRA);
@@ -63,11 +68,71 @@ public class FeedUtils {
 		return document;
 	}
 
-	public static String getRootFeedFromRepo(String url, String user, String password) {
-
-		Document doc = readAtomFeed(url, user, password);
-		return getCollectionUrlFromRepoFeed(doc, "root");
+	public static String getRootFeedFromRepo(String url, String user, String password) throws Exception {
+		try {
+			Document doc = readAtomFeed(url, user, password);
+			return getCollectionUrlFromRepoFeed(doc, "root");
+		} catch (Exception e) {
+	        throw new Exception("Wrong Parameters");
+	    }
 	}
+	
+	public static List<String> getRootFeedsFromRepo(String url, String user, String password) throws Exception {
+		try {
+			Document doc = readAtomFeed(url, user, password);
+			return getWorkspaceFromRepoFeed(doc, "root");
+		} catch (Exception e) {
+	        throw new Exception("Wrong Parameters");
+	    }
+	}
+	
+	public static List<String> getWorkspaceFromRepoFeed(Document doc, String type) {
+		List<String> listWorkspace = new ArrayList<String>(2);
+		if (doc != null) {
+			List<Element> workspaces = doc.getRootElement().elements("workspace");
+			if (workspaces.size() > 0){
+				for (Element workspace : workspaces) {
+					Element repoInfo = workspace.element(CMISRA_REPO_INFO);
+					Element repoId = repoInfo.element(CMIS_REPO_NAME);
+					listWorkspace.add(repoId.getText());
+				}
+			}
+		}
+		return listWorkspace;
+	}
+	
+	public static String getCollectionUrlFromRepoFeed(Document doc, String type, String workspaceName) {
+		if (doc != null) {
+			
+			List<Element> collections = getWorkspace(doc, workspaceName).elements("collection");
+
+			for (Element collection : collections) {
+				String currentType = collection.elementText(CMISRA_COLLECTION_TYPE);
+				if (type.equals(currentType.toLowerCase())) {
+					return collection.attributeValue("href");
+				}
+			}
+		}
+		return "";
+	}
+	
+	public static Element getWorkspace(Document doc, String workspaceName){
+		List<Element> workspaces = doc.getRootElement().elements("workspace");
+		Element workspace = null;
+		if (workspaces.size() > 0){
+			for (Element wSpace : workspaces) {
+				Element repoInfo = wSpace.element(CMISRA_REPO_INFO);
+				Element repoId = repoInfo.element(CMIS_REPO_NAME);
+				if (workspaceName.equals(repoId.getData())){
+					return workspace = wSpace;
+				}
+			}
+		} else {
+			workspace = null;
+		}
+		return workspace;
+	}
+	
 
 	public static String getCollectionUrlFromRepoFeed(Document doc, String type) {
 		if (doc != null) {
@@ -110,7 +175,21 @@ public class FeedUtils {
 
 		return feedUrl.toString();
 	}
+	
+	
+	public static String getUriTemplateFromRepoFeed(Document doc, String type,  String workspaceName) {
 
+		List<Element> templates = getWorkspace(doc, workspaceName).elements(CMISRA_URI_TEMPLATE);
+
+		for (Element template : templates) {
+			String currentType = template.elementText(CMISRA_TYPE);
+			if (type.equals(currentType.toLowerCase())) {
+				return template.elementText(CMISRA_TEMPLATE);
+			}
+		}
+		return null;
+	}
+	
 	public static String getUriTemplateFromRepoFeed(Document doc, String type) {
 
 		Element workspace = doc.getRootElement().element("workspace");

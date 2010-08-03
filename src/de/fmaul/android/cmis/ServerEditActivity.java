@@ -1,15 +1,20 @@
 package de.fmaul.android.cmis;
 
-import de.fmaul.android.cmis.repo.CmisDBAdapter;
-import de.fmaul.android.cmis.repo.Server;
+import java.util.List;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import de.fmaul.android.cmis.repo.CmisDBAdapter;
+import de.fmaul.android.cmis.repo.Server;
+import de.fmaul.android.cmis.utils.FeedUtils;
 
 public class ServerEditActivity extends Activity {
 	
@@ -24,6 +29,11 @@ public class ServerEditActivity extends Activity {
 	private EditText serverUrlEditText; 
 	private EditText userEditText; 
 	private EditText passwordEditText;
+	private Button workspaceEditText;
+	
+	private List<String> workspaces;
+
+	private CharSequence[] cs;
 	
 
 	@Override
@@ -36,11 +46,10 @@ public class ServerEditActivity extends Activity {
 		cmisDbAdapter = new CmisDBAdapter(this); 
 		
 		Button button = (Button)findViewById(R.id.validation_button);
-
 		button.setOnClickListener( new Button.OnClickListener(){
 			public void onClick(View view){	  	
 
-				if(serverNameEditText.getText().toString().equals("") || serverUrlEditText.getText().toString().equals("") || userEditText.getText().toString().equals("") || passwordEditText.getText().toString().equals("")){
+				if(serverNameEditText.getText().toString().equals("") || serverUrlEditText.getText().toString().equals("")){
 					Toast.makeText(ServerEditActivity.this, "EMPTY FIELDS", Toast.LENGTH_LONG).show();
 				} else if (isEdit == false){
 					cmisDbAdapter.open();
@@ -49,7 +58,8 @@ public class ServerEditActivity extends Activity {
 							serverNameEditText.getText().toString(), 
 							serverUrlEditText.getText().toString(), 
 							userEditText.getText().toString(), 
-							passwordEditText.getText().toString());
+							passwordEditText.getText().toString(),
+							workspaceEditText.getText().toString());
 					
 					cmisDbAdapter.close();
 					
@@ -64,7 +74,9 @@ public class ServerEditActivity extends Activity {
 							serverNameEditText.getText().toString(), 
 							serverUrlEditText.getText().toString(), 
 							userEditText.getText().toString(), 
-							passwordEditText.getText().toString());
+							passwordEditText.getText().toString(),
+							workspaceEditText.getText().toString()
+							);
 					
 					cmisDbAdapter.close();
 					
@@ -74,10 +86,48 @@ public class ServerEditActivity extends Activity {
 				}
 			}
 		});
+		workspaceEditText.setOnClickListener(new Button.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				chooseWorkspace();
+			}
+		});
+	}
+	
+	private void chooseWorkspace(){
+		try {
+			workspaces = FeedUtils.getRootFeedsFromRepo(getEditTextValue(serverUrlEditText), getEditTextValue(userEditText), getEditTextValue(passwordEditText));
+			cs = workspaces.toArray(new CharSequence[workspaces.size()]);
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Choose Default Workspace");
+			builder.setSingleChoiceItems(cs, -1 ,new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog, int item) {
+			        workspaceEditText.setText(cs[item]);
+			        dialog.dismiss();
+			    }
+			});
+			AlertDialog alert = builder.create();
+			alert.show();
+		} catch (Exception e) {
+			Toast.makeText(ServerEditActivity.this, R.string.server_connect_error, Toast.LENGTH_LONG).show();
+			workspaceEditText.setText("");
+		}
+	}
+	
+	private String getEditTextValue(EditText editText){
+		if (editText != null && editText.getText() != null && editText.getText().length() > 0 ){
+			return editText.getText().toString();
+		} else {
+			return null;
+		}
 	}
 
 	private void initServerData() {
-		if (getIntent().getExtras() != null) {
+		
+		workspaces = null;
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null){
 			currentServer = (Server) getIntent().getExtras().getSerializable("server");
 		}
 		
@@ -85,13 +135,14 @@ public class ServerEditActivity extends Activity {
 		serverUrlEditText = (EditText) findViewById(R.id.cmis_repo_url_id);
 		userEditText = (EditText) findViewById(R.id.cmis_repo_user_id);
 		passwordEditText = (EditText) findViewById(R.id.cmis_repo_password_id);
+		workspaceEditText = (Button) findViewById(R.id.cmis_repo_workspace_id);
 		
 		if (currentServer != null){
 			serverNameEditText.setText(currentServer.getName());
 			serverUrlEditText.setText(currentServer.getUrl());
 			userEditText.setText(currentServer.getUsername());
 			passwordEditText.setText(currentServer.getPassword());
-			
+			workspaceEditText.setText(currentServer.getWorkspace());
 			isEdit = true;
 		}
 	}
