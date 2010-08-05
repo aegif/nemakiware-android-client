@@ -42,7 +42,7 @@ public class ServerActivity extends ListActivity {
 
 		createServerList();
 		
-		registerForContextMenu(this.getListView());
+		registerForContextMenu(getListView());
 	}
 	
 	public void createServerList(){
@@ -55,9 +55,6 @@ public class ServerActivity extends ListActivity {
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu){
-		/*MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.layout.menuservers, menu);*/
-		
 		super.onCreateOptionsMenu(menu);
 		
 		MenuItem menuItem = menu.add(Menu.NONE, 1, 0, R.string.menu_item_server_add);
@@ -70,7 +67,7 @@ public class ServerActivity extends ListActivity {
 	}
 	
 	@Override
-	public boolean onMenuItemSelected(int featureId, MenuItem item){
+	public boolean onOptionsItemSelected(MenuItem item){
 		switch(item.getItemId()){
 		case 1:
 			startActivity(new Intent(this,ServerEditActivity.class));
@@ -79,7 +76,7 @@ public class ServerActivity extends ListActivity {
 			this.finish();
 			return true;
 		}
-		return super.onMenuItemSelected(featureId, item);
+		return super.onOptionsItemSelected(item);
 	}
 	
 	protected void onListItemClick(ListView l, View v, int position, long id) {
@@ -108,6 +105,7 @@ public class ServerActivity extends ListActivity {
 	}
 	
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.setHeaderIcon(android.R.drawable.ic_menu_more);
 		menu.setHeaderTitle(this.getString(R.string.context_menu_title));
 		menu.add(0, 1, Menu.NONE, getString(R.string.edit));
