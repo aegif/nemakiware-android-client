@@ -98,7 +98,7 @@ public class ListCmisFeedActivity extends ListActivity {
 				displayFeedInListViewWithTitleFromFeed(feed);
 			}
 		} else {
-			Toast.makeText(this, getText(R.string.error_settings), 5);
+			Toast.makeText(this, getText(R.string.error_repo_connexion), 5);
 		}
 	}
 
@@ -187,7 +187,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		
 		if (doc != null && doc.hasChildren() == false){
 			menu.add(0, 1, Menu.NONE, getString(R.string.download));
-			menu.add(0, 3, Menu.NONE, getString(R.string.menu_item_email));
+			menu.add(0, 3, Menu.NONE, getString(R.string.menu_item_share));
 		}
 		
 	}
@@ -381,8 +381,8 @@ public class ListCmisFeedActivity extends ListActivity {
 		settingsMenu.setIcon(R.drawable.repository);
 		settingsMenu.setHeaderIcon(android.R.drawable.ic_menu_info_details);
 
-		settingsMenu.add(Menu.NONE, 7, 0, R.string.menu_item_reload);
-		settingsMenu.add(Menu.NONE, 8, 0, R.string.menu_item_settings);
+		settingsMenu.add(Menu.NONE, 7, 0, R.string.menu_item_settings_reload);
+		settingsMenu.add(Menu.NONE, 8, 0, R.string.menu_item_settings_repo);
 		settingsMenu.add(Menu.NONE, 9, 0, R.string.menu_item_settings_ws);
 	}
 	
@@ -435,10 +435,9 @@ public class ListCmisFeedActivity extends ListActivity {
 			cs = workspaces.toArray(new CharSequence[workspaces.size()]);
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("Choose Default Workspace");
+			builder.setTitle(R.string.cmis_repo_choose_workspace);
 			builder.setSingleChoiceItems(cs, -1 ,new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
-			    	PreferenceManager.setDefaultValues(context, R.xml.preferences, false); 
 					preferences = PreferenceManager.getDefaultSharedPreferences(context);
 					editor = preferences.edit();
 			    	editor.putString("workspace", cs[item].toString());
@@ -451,7 +450,7 @@ public class ListCmisFeedActivity extends ListActivity {
 			AlertDialog alert = builder.create();
 			alert.show();
 		} catch (Exception e) {
-			Toast.makeText(ListCmisFeedActivity.this, R.string.server_connect_error, Toast.LENGTH_LONG).show();
+			Toast.makeText(ListCmisFeedActivity.this, R.string.error_repo_connexion, Toast.LENGTH_LONG).show();
 		}
 	}
 

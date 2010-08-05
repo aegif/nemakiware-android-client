@@ -1,67 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="search_results_for">Ergebnisse für</string>
-    <string name="about_message">CMIS Browser von Florian Maul (2010)</string>
+	<!-- APP STRING -->
+	<string name="app_name">CMIS Browser</string>
+	
+	<!-- HOME ACTIVITY -->
+	<string name="home_menu_repository">CMIS Repositories</string>
+	<string name="home_menu_favorites">Favouriten</string>
+	<string name="home_menu_about">Über</string>
+	
+	<!-- SERVER ACTIVITY -->
+	<string name="menu_item_server_add">Add Server</string>
+	
+	<string name="context_menu_title">Server Optionen</string>
+	
+	<string name="server_delete">Server gelöscht.</string>
+    <string name="server_delete_error">Fehler beim Löschen</string>
+	
+	
+	<!-- SERVER EDIT ACTIVITY -->
+	<string name="cmis_repo_server_name">Server Name</string>
+	<string name="cmis_repo_server_url">URL</string>
+	<string name="cmis_repo_user">Benutzer</string>
+	<string name="cmis_repo_password">Passwort</string>
+	<string name="cmis_repo_workspace">Standard Arbeitsplatz</string>
+	
+	<string name="cmis_repo_choose_workspace">Choose Default Workspace</string>
+	
+	<string name="error_repo_connexion">Das Repository ist nicht korrekt eingerichtet. Prüfen Sie die Einstellungen.</string>
+	
+	
+	<!-- LIST CMIS FEED ACTIVITY -->
+	<string name="feed_menu_title">Datei Optionen</string>
+	
+	<string name="menu_item_settings">Servers</string>
+    <string name="menu_item_settings_reload">Neuladen</string>
+    <string name="menu_item_settings_repo">Server Wechseln</string>
+    <string name="menu_item_settings_ws">Arbeitsplatz Wechseln</string>
+    <string name="menu_item_about">Über</string>
+	<string name="menu_item_search">Suchen</string>
     <string name="menu_item_search_cmis">CMIS Abfrage</string>
     <string name="menu_item_search_fulltext">Volltextsuche</string>
     <string name="menu_item_search_title">Suche nach Titel</string>
-    <string name="menu_item_search">Suchen</string>
-    <string name="menu_item_about">Über</string>
-    <string name="menu_item_settings">Server</string>
-    <string name="menu_item_reload">Neuladen</string>
-    <string name="loading">lade...</string>
-    <string name="delete">Löschen...</string>
-    <string name="edit">Bearbeiten</string>
     
-    <string name="server_delete">Server gelöscht.</string>
-    <string name="server_delete_error">Fehler beim Löschen</string>
-
-	<string name="app_name">CMIS Browser</string>
+    <string name="menu_item_details">Details anzeigen</string>
+	<string name="menu_item_share">Datei sharen</string>
+	
+	
+	<!-- SEARCH RESULT -->
+	<string name="search_results_for">Ergebnisse für</string>
+	
+	
+	<!-- DOCUMENT DETAILS ACTIVITY -->
+	<string name="title_details">Details für</string>
+	
+	<string name="download_progress">Inhalte werden heruntergeladen...</string>
 	<string name="main_no_items">Keine Dokumente vorhanden.</string>
 	<string name="error_file_does_not_exists">Die heruntergeladene Datei exisitert nicht.</string>
 	<string name="application_not_available">Es gibt keine Anwendung für diesen Dateityp.</string>
 	<string name="error_downloading_content">Fehler beim Herunterladen vom CMIS Repository</string>
 	
-	<string name="cmis_repo_server_id">cmisRepoServerId</string>
-	<string name="cmis_repo_user_id">CmisRepoUserId</string>
-	<string name="cmis_repo_password_id">CmisRepoPasswordId</string>
-	<string name="cmis_repo_server_name_id">cmisRepoServerId</string>
 	
-	<string name="search_label">CMIS Repository</string>
-	<string name="cmis_repo_server_name">Server Name</string>
-	
-	<string name="cmis_repo_server_url">URL</string>
-	<string name="cmis_repo_server_summary">Der Rechnername und Pfad des CMIS Repositories.</string>
-	<string name="cmis_repo_server_default">http://cmis.alfresco.com/service/cmis</string>
-	
-	<string name="cmis_repo_user">Benutzer</string>
-	<string name="cmis_repo_user_summary">Der Benutzer zum Einloggen in das Repository.</string>
-	<string name="cmis_repo_user_default">admin</string>
-	
-	<string name="cmis_repo_password">Passwort</string>
-	<string name="cmis_repo_password_summary">Das Passwort zum Einloggen in das Repository.</string>
-	<string name="cmis_repo_password_default">admin</string>
-	
-	<string name="menu_item_details">Details anzeigen</string>
-	<string name="menu_item_email">Datei sharen</string>
+	<!-- GENERIC ACTION STRING -->
+	<string name="delete">Löschen...</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="validate">Speichern</string>
+    <string name="download">Download</string>
+    <string name="share">Sharen</string>
+    <string name="quit">Beenden</string>
+    <string name="loading">lade...</string>
 
-	<string name="title_details">Details für</string>
-	<string name="title_children">EMail Document</string>
-	
-	<string name="download">Download</string>
-	<string name="download_progress">Inhalte werden heruntergeladen...</string>
-	
-	<string name="error_settings">Das Repository ist nicht korrekt eingerichtet. Prüfen Sie die Einstellungen.</string>
-	<string name="menu_item_exit">Beenden</string>
-	
-	<string name="button_accept">Speichern</string>
-	
-	<string name="home_menu_repository">CMIS Repositories</string>
-	<string name="home_menu_favorites">Favouriten</string>
-	<string name="home_menu_about">Über</string>
-	
-	<string name="server_menu_title">Server Optionen</string>
-	<string name="feed_menu_title">Datei Optionen</string>
 
 </resources>

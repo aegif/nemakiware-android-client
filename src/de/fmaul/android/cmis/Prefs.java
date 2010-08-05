@@ -44,7 +44,6 @@ public class Prefs {
 	}
 
 	private SharedPreferences getPrefs() {
-		PreferenceManager.setDefaultValues(activity, R.xml.preferences, false); 
 		return PreferenceManager.getDefaultSharedPreferences(activity);
 	}
 }

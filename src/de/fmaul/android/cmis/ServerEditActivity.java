@@ -100,7 +100,7 @@ public class ServerEditActivity extends Activity {
 			cs = workspaces.toArray(new CharSequence[workspaces.size()]);
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("Choose Default Workspace");
+			builder.setTitle(R.string.cmis_repo_choose_workspace);
 			builder.setSingleChoiceItems(cs, -1 ,new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
 			        workspaceEditText.setText(cs[item]);
@@ -110,7 +110,7 @@ public class ServerEditActivity extends Activity {
 			AlertDialog alert = builder.create();
 			alert.show();
 		} catch (Exception e) {
-			Toast.makeText(ServerEditActivity.this, R.string.server_connect_error, Toast.LENGTH_LONG).show();
+			Toast.makeText(ServerEditActivity.this, R.string.error_repo_connexion, Toast.LENGTH_LONG).show();
 			workspaceEditText.setText("");
 		}
 	}

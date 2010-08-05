@@ -1,47 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="search_results_for">results for</string>
-    <string name="about_message">CMIS Browser by Florian Maul (2010)</string>
-    <string name="menu_item_search_cmis">CMIS query</string>
+
+	<!-- APP STRING -->
+	<string name="app_name">CMIS Navigateur</string>
+	
+	<!-- HOME ACTIVITY -->
+	<string name="home_menu_repository">Entrepôt de données</string>
+	<string name="home_menu_favorites">Favoris</string>
+	<string name="home_menu_about">A Propos</string>
+	
+	<!-- SERVER ACTIVITY -->
+	<string name="menu_item_server_add">Ajouter un entrepôt</string>
+	
+	<string name="context_menu_title">Options de l\'entrepôt</string>
+	
+	<string name="server_delete">La suppression de l\'entrepôt est effectuée</string>
+    <string name="server_delete_error">Un problème a été rencontré durant la suppression. Veuillez réessayer.</string>
+	
+	
+	<!-- SERVER EDIT ACTIVITY -->
+	<string name="cmis_repo_server_name">Nom de l\'entrepôt</string>
+	<string name="cmis_repo_server_url">URL</string>
+	<string name="cmis_repo_user">Utilisateur</string>
+	<string name="cmis_repo_password">Mot de passe</string>
+	<string name="cmis_repo_workspace">Espace de travail par défaut</string>
+	
+	<string name="cmis_repo_choose_workspace">Choisir un espace de travail</string>
+	
+	<string name="error_repo_connexion">Les paramètres de l\'entrepôt ont été mal défini. Veuillez les vérifier.</string>
+	
+	
+	<!-- LIST CMIS FEED ACTIVITY -->
+	<string name="feed_menu_title">Option de l\'élément</string>
+	
+	<string name="menu_item_settings">Paramètres</string>
+    <string name="menu_item_settings_reload">Recharger le contexte</string>
+    <string name="menu_item_settings_repo">Changer d\'entrepôt</string>
+    <string name="menu_item_settings_ws">Changer d\'espace de travail</string>
+    <string name="menu_item_about">A Propos</string>
+	<string name="menu_item_search">Recherche</string>
+	<string name="menu_item_search_cmis">Requête CMIS</string>
     <string name="menu_item_search_fulltext">Recherche plein texte</string>
     <string name="menu_item_search_title">Recherche par titre</string>
-    <string name="menu_item_search">Recherche</string>
-    <string name="menu_item_about">A propos</string>
-    <string name="menu_item_settings">Paramètres</string>
-    <string name="menu_item_reload">Recharger</string>
+    
+    <string name="menu_item_details">Afficher les details</string>
+	<string name="menu_item_share">Partager...</string>
+	
+	
+	<!-- SEARCH RESULT -->
+	<string name="search_results_for">Resultats de la recherche : </string>
+	
+	
+	<!-- DOCUMENT DETAILS ACTIVITY -->
+	<string name="title_details">Les détails pour</string>
+	
+	<string name="download_progress">Téléchargement du contenu...</string>
+	<string name="main_no_items">Aucun document à afficher</string>
+	<string name="error_file_does_not_exists">Le contenu du fichier téléchargé n\'existe pas</string>
+	<string name="application_not_available">Il n\'y a pas d\'application pour ce type de fichier.</string>
+	<string name="error_downloading_content">Une erreur s\'est produite lors du téléchargement du fichier.</string>
+	
+	
+	<!-- GENERIC ACTION STRING -->
+	<string name="delete">Supprimer...</string>
+    <string name="edit">Editer</string>
+    <string name="validate">Valider</string>
+    <string name="download">Télécharger</string>
+    <string name="share">Partager</string>
+    <string name="quit">Quitter</string>
     <string name="loading">Chargement...</string>
 
-	<string name="app_name">CMIS Navigateur</string>
-	<string name="main_no_items">Aucun document à afficher</string>
-	<string name="error_file_does_not_exists">Le fichier ne peut être téléchargé.</string>
-	<string name="application_not_available">Il n\'y a pas d\'application pour lire ce type de fichier.</string>
-	<string name="error_downloading_content">Erreur lors du téléchargement du contenu.</string>
-	<string name="cmis_repo_server_id">cmisRepoServerId</string>
-	<string name="cmis_repo_user_id">CmisRepoUserId</string>
-	<string name="cmis_repo_password_id">CmisRepoPasswordId</string>
-	<string name="search_label">CMIS Repository</string>
-	
-	<string name="cmis_repo_server_url">URL</string>
-	<string name="cmis_repo_server_summary">L\'adresse vers l\'entrepot de données CMIS.</string>
-	<string name="cmis_repo_server_default">http://cmis.alfresco.com/service/cmis</string>
-	
-	<string name="cmis_repo_user">Utilisateur</string>
-	<string name="cmis_repo_user_summary">L\'utilisateur avec lequel on souhaite se connecter à l\'entrepôt de données.</string>
-	<string name="cmis_repo_user_default">admin</string>
-	
-	<string name="cmis_repo_password">Mot de Passe</string>
-	<string name="cmis_repo_password_summary">Le mot de passe associé à l\'utlisateur.</string>
-	<string name="cmis_repo_password_default">admin</string>
-	
-	<string name="menu_item_details">Afficher le détail</string>
-	<string name="menu_item_email">Envoyer par E-mail</string>
-	
-	<string name="title_details">Details de</string>
-	<string name="title_children">EMail Document</string>
-	
-	<string name="download">Téléchargement</string>
-	<string name="download_progress">Téléchargement en cours...</string>
-	
-	<string name="error_settings">Impossible de se connecter. Vérifiez les paramètres de l\'entrepôt.</string>
-	
 </resources>

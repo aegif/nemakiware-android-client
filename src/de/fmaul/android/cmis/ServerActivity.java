@@ -35,7 +35,6 @@ public class ServerActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false); 
 		preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		editor = preferences.edit();
 		
@@ -101,7 +100,7 @@ public class ServerActivity extends ListActivity {
 	
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		menu.setHeaderIcon(android.R.drawable.ic_menu_more);
-		menu.setHeaderTitle(this.getString(R.string.server_menu_title));
+		menu.setHeaderTitle(this.getString(R.string.context_menu_title));
 		menu.add(0, 1, Menu.NONE, getString(R.string.edit));
 		menu.add(0, 2, Menu.NONE, getString(R.string.delete));
 	}
