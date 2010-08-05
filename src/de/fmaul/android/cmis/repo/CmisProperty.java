@@ -26,8 +26,7 @@ public class CmisProperty implements Parcelable {
 	private final String displayName;
 	private final String value;
 
-	public CmisProperty(String type, String definitionId, String localName,
-			String displayName, String value) {
+	public CmisProperty(String type, String definitionId, String localName, String displayName, String value) {
 		this.type = type;
 		this.definitionId = definitionId;
 		this.localName = localName;

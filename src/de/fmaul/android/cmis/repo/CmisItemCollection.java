@@ -21,11 +21,14 @@ import java.util.List;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
+import de.fmaul.android.cmis.R;
+
 public class CmisItemCollection {
 
 	private List<CmisItem> items = new ArrayList<CmisItem>();
 	private String upLink;
 	private String title;
+	public final static String FEED_UP = "up";
 
 	private CmisItemCollection() {
 	}
@@ -60,14 +63,15 @@ public class CmisItemCollection {
 
 	@SuppressWarnings("unchecked")
 	private void parseFeed(Document doc) {
-		List<Element> feedLinks = doc.getRootElement().elements("link");
+		/*List<Element> feedLinks = doc.getRootElement().elements("link");
 		for (Element link : feedLinks) {
 			if ("up".equalsIgnoreCase(link.attributeValue("rel"))) {
 				upLink = link.attributeValue("href");
 				items.add(CmisItem.create("..", upLink));
 			}
-		}
-		title = doc.getRootElement().elementText("title");
+		}*/
+		//title = doc.getRootElement().elementText("title");
+		items.add(CmisItem.create("", FEED_UP));
 	}
 
 	public static CmisItemCollection emptyCollection() {

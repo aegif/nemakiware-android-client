@@ -41,6 +41,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import de.fmaul.android.cmis.repo.CmisItem;
+import de.fmaul.android.cmis.repo.CmisItemCollection;
 import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.QueryType;
@@ -95,7 +96,8 @@ public class ListCmisFeedActivity extends ListActivity {
 			} else {
 				// display the feed that is passed in through the intent
 				String feed = getFeedFromIntent();
-				displayFeedInListViewWithTitleFromFeed(feed);
+				String title = getTitleFromIntent();
+				displayFeedInListView(feed, title);
 			}
 		} else {
 			Toast.makeText(this, getText(R.string.error_repo_connexion), 5);
@@ -176,6 +178,7 @@ public class ListCmisFeedActivity extends ListActivity {
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.setHeaderIcon(android.R.drawable.ic_menu_more);
 		menu.setHeaderTitle(this.getString(R.string.feed_menu_title));
 		
@@ -217,6 +220,16 @@ public class ListCmisFeedActivity extends ListActivity {
 		if (extras != null) {
 			if (extras.get("feed") != null) {
 				return extras.get("feed").toString();
+			}
+		}
+		return null;
+	}
+	
+	private String getTitleFromIntent() {
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			if (extras.get("title") != null) {
+				return extras.get("title").toString();
 			}
 		}
 		return null;
@@ -316,7 +329,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		Intent intent = new Intent(ListCmisFeedActivity.this, DocumentDetailsActivity.class);
 
 		ArrayList<CmisProperty> propList = new ArrayList<CmisProperty>(doc.getProperties().values());
-
+		
 		intent.putParcelableArrayListExtra("properties", propList);
 		intent.putExtra("title", doc.getTitle());
 		intent.putExtra("mimetype", doc.getMimeType());
@@ -334,8 +347,13 @@ public class ListCmisFeedActivity extends ListActivity {
 	 */
 	private void openNewListViewActivity(CmisItem item) {
 		Intent intent = new Intent(this, ListCmisFeedActivity.class);
-		intent.putExtra("feed", item.getDownLink());
-		startActivity(intent);
+		if (CmisItemCollection.FEED_UP.equals(item.getDownLink())){
+			finish();
+		} else {
+			intent.putExtra("feed", item.getDownLink());
+			intent.putExtra("title", item.getTitle());
+			startActivity(intent);
+		}
 	}
 
 	private void emailDocument(final CmisItem item) {
@@ -361,15 +379,10 @@ public class ListCmisFeedActivity extends ListActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		
-		/*MenuItem settingsItem = menu.add(Menu.NONE, 1, 0, R.string.menu_item_settings);
-		settingsItem.setIcon(R.drawable.repository);*/
 		createRepoMenu(menu);
 		
 		MenuItem aboutItem = menu.add(Menu.NONE, 2, 0, R.string.menu_item_about);
 		aboutItem.setIcon(R.drawable.cmisexplorer);
-
-		/*MenuItem reloadItem = menu.add(Menu.NONE, 3, 0, R.string.menu_item_reload);
-		reloadItem.setIcon(R.drawable.reload);*/
 
 		createSearchMenu(menu);
 		return true;

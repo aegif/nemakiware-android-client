@@ -23,6 +23,7 @@ import java.io.OutputStream;
 
 import org.apache.http.client.ClientProtocolException;
 import org.dom4j.Document;
+import org.dom4j.Element;
 
 import android.app.Application;
 import de.fmaul.android.cmis.Prefs;
@@ -63,11 +64,14 @@ public class CmisRepository {
 		this.repositoryWorkspace = workspace;
 
 		Document doc = FeedUtils.readAtomFeed(repositoryUrl, repositoryUser, repositoryPassword);
-		feedRootCollection = FeedUtils.getCollectionUrlFromRepoFeed(doc, "root", workspace);
-		feedTypesCollection = FeedUtils.getCollectionUrlFromRepoFeed(doc, "types", workspace);
-
-		uriTemplateQuery = FeedUtils.getUriTemplateFromRepoFeed(doc, "query", workspace);
-		uriTemplateTypeById = FeedUtils.getUriTemplateFromRepoFeed(doc, "typebyid", workspace);
+		
+		Element wsElement = FeedUtils.getWorkspace(doc, workspace);
+		
+		feedRootCollection = FeedUtils.getCollectionUrlFromRepoFeed("root", wsElement);
+		feedTypesCollection = FeedUtils.getCollectionUrlFromRepoFeed("types", wsElement);
+		uriTemplateQuery = FeedUtils.getUriTemplateFromRepoFeed("query", wsElement);
+		uriTemplateTypeById = FeedUtils.getUriTemplateFromRepoFeed("typebyid", wsElement);
+		
 	}
 
 	/**

@@ -101,10 +101,10 @@ public class FeedUtils {
 		return listWorkspace;
 	}
 	
-	public static String getCollectionUrlFromRepoFeed(Document doc, String type, String workspaceName) {
-		if (doc != null) {
+	public static String getCollectionUrlFromRepoFeed(String type, Element workspace) {
+		if (workspace != null) {
 			
-			List<Element> collections = getWorkspace(doc, workspaceName).elements("collection");
+			List<Element> collections = workspace.elements("collection");
 
 			for (Element collection : collections) {
 				String currentType = collection.elementText(CMISRA_COLLECTION_TYPE);
@@ -176,23 +176,7 @@ public class FeedUtils {
 		return feedUrl.toString();
 	}
 	
-	
-	public static String getUriTemplateFromRepoFeed(Document doc, String type,  String workspaceName) {
-
-		List<Element> templates = getWorkspace(doc, workspaceName).elements(CMISRA_URI_TEMPLATE);
-
-		for (Element template : templates) {
-			String currentType = template.elementText(CMISRA_TYPE);
-			if (type.equals(currentType.toLowerCase())) {
-				return template.elementText(CMISRA_TEMPLATE);
-			}
-		}
-		return null;
-	}
-	
-	public static String getUriTemplateFromRepoFeed(Document doc, String type) {
-
-		Element workspace = doc.getRootElement().element("workspace");
+	public static String getUriTemplateFromRepoFeed(String type, Element workspace) {
 
 		List<Element> templates = workspace.elements(CMISRA_URI_TEMPLATE);
 
@@ -217,9 +201,13 @@ public class FeedUtils {
 				for (Element property : properties) {
 					final String id = property.attributeValue("propertyDefinitionId");
 
-					props.put(id,
-							new CmisProperty(property.getName(), id, property.attributeValue("localName"), property.attributeValue("displayName"),
-									property.elementText(CMIS_VALUE)));
+					props.put(id, new CmisProperty(
+							property.getName(), 
+							id, 
+							property.attributeValue("localName"), 
+							property.attributeValue("displayName"),
+							property.elementText(CMIS_VALUE))
+					);
 				}
 			}
 		}

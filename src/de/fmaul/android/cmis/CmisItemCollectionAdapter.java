@@ -84,7 +84,12 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 	private void updateControlIcon(ViewHolder vh, CmisItem item) {
 
 		if (item.hasChildren()) {
-			vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.folderopen));
+			if (CmisItemCollection.FEED_UP.equals(item.getDownLink())){
+				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.up));
+			} else {
+				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.folderopen));
+			}
+			
 		} else {
 			String mimetype = item.getMimeType();
 			if(mimetype.contains("image")){

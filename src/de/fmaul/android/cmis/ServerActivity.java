@@ -55,19 +55,27 @@ public class ServerActivity extends ListActivity {
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu){
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.layout.server_menu, menu);
+		/*MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.layout.menuservers, menu);*/
+		
+		super.onCreateOptionsMenu(menu);
+		
+		MenuItem menuItem = menu.add(Menu.NONE, 1, 0, R.string.menu_item_server_add);
+		menuItem.setIcon(R.drawable.add);
+		
+		menuItem = menu.add(Menu.NONE, 2, 0, R.string.quit);
+		menuItem.setIcon(R.drawable.quit);
+		
 		return true;
 	}
 	
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item){
 		switch(item.getItemId()){
-		case R.id.menu_login:
-			this.finish();
+		case 1:
 			startActivity(new Intent(this,ServerEditActivity.class));
 			return true;
-		case R.id.menu_quit:
+		case 2:
 			this.finish();
 			return true;
 		}
@@ -82,6 +90,7 @@ public class ServerActivity extends ListActivity {
 			Intent intent = new Intent(this, ListCmisFeedActivity.class);
 			
 			intent.putExtra("isFirstStart", true);
+			intent.putExtra("title", s.getName());
 			
 			editor.putLong("serverID", s.getId());
 			editor.putString("serverName", s.getName());
