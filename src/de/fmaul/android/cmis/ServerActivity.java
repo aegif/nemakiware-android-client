@@ -159,7 +159,6 @@ public class ServerActivity extends ListActivity {
 	public void editServer(Server server){
 		Intent intent = new Intent(this, ServerEditActivity.class);
 		intent.putExtra("server", server);
-		this.finish();
 		startActivity(intent);
 	}
 	
