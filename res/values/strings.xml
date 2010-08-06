@@ -76,6 +76,14 @@
     <string name="share">Share</string>
     <string name="quit">Quit</string>
     <string name="loading">Loading...</string>
+    <string name="data_empty">No data found...</string>
     
+
+	<!-- Preferences -->
+	<string name="cmis_repo_maxitems">cmisRepoServerMaxItems</string>
+	<string name="cmis_repo_filter">CmisRepoFilter</string>
+	<string name="cmis_repo_types">CmisRepoTypes</string>
+	<string name="cmis_repo_orderby">CmisRepoOrderBy</string>
+	<string name="cmis_repo_params">CmisRepoParams</string>
 
 </resources>

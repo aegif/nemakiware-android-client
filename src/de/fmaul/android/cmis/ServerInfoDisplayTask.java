@@ -7,6 +7,7 @@ import java.util.Map;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.os.AsyncTask;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import de.fmaul.android.cmis.repo.CmisProperty;
@@ -31,7 +32,6 @@ public class ServerInfoDisplayTask extends AsyncTask<String, Void, SimpleAdapter
 	protected SimpleAdapter doInBackground(String... params) {
 		try {
 			ArrayList<CmisProperty> propList = activity.getIntent().getParcelableArrayListExtra(activity.getIntent().getStringExtra("context"));
-			
 			List<Map<String, ?>> list = ListUtils.buildListOfNameValueMaps(propList);
 			SimpleAdapter props = new SimpleAdapter(activity, list, R.layout.document_details_row, new String[] { "name", "value" }, new int[] {
 					R.id.propertyName, R.id.propertyValue });
@@ -47,6 +47,9 @@ public class ServerInfoDisplayTask extends AsyncTask<String, Void, SimpleAdapter
 		activity.setContentView(R.layout.server_info_general);
 		ListView listInfo = (ListView) activity.findViewById(R.id.server_info_general);
 		listInfo.setAdapter(props);
+		if (listInfo.getCount() == 0){
+			activity.findViewById(R.id.empty).setVisibility(View.VISIBLE);
+		}
 		activity.setProgressBarIndeterminateVisibility(false);
 	}
 

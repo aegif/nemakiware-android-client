@@ -70,6 +70,6 @@ public class ServerInfoLoadingTask extends AsyncTask<String, Void, Map<String, A
 
 	@Override
 	protected void onCancelled() {
-		activity.setProgressBarIndeterminateVisibility(false);
+		pg.dismiss();
 	}
 }

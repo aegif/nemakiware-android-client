@@ -67,29 +67,33 @@ public class ListCmisFeedActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initWindow();
-		initRepository();
-		processSearchOrDisplayIntent();
+		if (initRepository() == false){
+			processSearchOrDisplayIntent();
+		}
 	}
 
-	private void initRepository() {
+	private boolean initRepository() {
+		boolean init = true;
 		try {
 			if (getRepository() == null) {
 				prefs = new Prefs(this);
-				setRepository(CmisRepository.create(getApplication(), prefs));
-				getRepository().clearCache();
+				new CmisServerLoadingTask(this, getApplication(), prefs).execute();
 			} else {
+				// Case if we change repository.
 				Bundle extra = this.getIntent().getExtras();
-				if (extra != null && extra.getBoolean("isFirstStart")){
+				if (extra != null && extra.getBoolean("isFirstStart")) {
 					prefs = new Prefs(this);
-					setRepository(CmisRepository.create(getApplication(), prefs));
-					getRepository().clearCache();
+					new CmisServerLoadingTask(this, getApplication(), prefs).execute();
+				} else {
+					init = false;
 				}
 			}
 		} catch (FeedLoadException fle) {
 		}
+		return init;
 	}
 	
-	private void processSearchOrDisplayIntent() {
+	public void processSearchOrDisplayIntent() {
 		if (getRepository() != null) {
 			if (activityIsCalledWithSearchAction()) {
 				doSearchWithIntent(getIntent());
@@ -254,7 +258,7 @@ public class ListCmisFeedActivity extends ListActivity {
 	 */
 	private void displayFeedInListView(final String feed, String title) {
 		setTitle(R.string.loading);
-		new FeedDisplayTask(this, getRepository(), title).execute(feed);
+		new FeedDisplayTask(this, getRepository(), title, prefs).execute(feed);
 	}
 
 	private void displayFeedInListViewWithTitleFromFeed(final String feed) {

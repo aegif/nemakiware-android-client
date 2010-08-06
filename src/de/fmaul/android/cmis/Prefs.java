@@ -42,6 +42,26 @@ public class Prefs {
 	public String getWorkspace() {
 		return getPrefs().getString("workspace", "vide");
 	}
+	
+	public String getMaxItems() {
+		return getPrefs().getString(activity.getString(R.string.cmis_repo_maxitems), "-1");
+	}
+
+	public String getFilter() {
+		return getPrefs().getString(activity.getString(R.string.cmis_repo_filter), "*");
+	}
+
+	public String getTypes() {
+		return getPrefs().getString(activity.getString(R.string.cmis_repo_types), "");
+	}
+
+	public String getOrder() {
+		return getPrefs().getString(activity.getString(R.string.cmis_repo_orderby), "cmis:name ASC");	
+	}
+	
+	public Boolean getParams() {
+		return getPrefs().getBoolean(activity.getString(R.string.cmis_repo_params), false);	
+	}
 
 	private SharedPreferences getPrefs() {
 		return PreferenceManager.getDefaultSharedPreferences(activity);

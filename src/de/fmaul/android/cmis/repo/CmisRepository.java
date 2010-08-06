@@ -96,6 +96,10 @@ public class CmisRepository {
 	public CmisItemCollection getRootCollection() {
 		return getCollectionFromFeed(feedRootCollection);
 	}
+	
+	public CmisItemCollection getRootCollection(String params) {
+		return getCollectionFromFeed(feedRootCollection + params);
+	}
 
 	/**
 	 * Returns the ATOM feed that can be used to perform a search for the

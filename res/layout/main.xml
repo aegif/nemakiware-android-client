@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:scrollbars="vertical"
     >
 
@@ -11,7 +11,7 @@
 	    android:orientation="vertical"
 	    android:layout_width="fill_parent"
 	    android:gravity="center_vertical|center_horizontal" 
-	    android:layout_height="150sp">
+	    android:layout_height="80sp">
 	    
 	    <TextView
 	    	android:id="@+id/app_name"
@@ -37,8 +37,20 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="@string/home_menu_repository" 
-        android:textSize="25sp" 
+        android:textSize="20sp" 
         android:drawableLeft="@drawable/repository"
+        android:drawablePadding="10sp"
+        android:layout_marginBottom="15sp"
+        />
+        
+    <Button
+   	 	android:id="@+id/preferences"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="Preferences" 
+        android:textSize="20sp" 
+        android:drawableLeft="@drawable/preferences"
         android:drawablePadding="10sp"
         android:layout_marginBottom="15sp"
         />
@@ -49,7 +61,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="@string/home_menu_about" 
-        android:textSize="25sp" 
+        android:textSize="20sp" 
         android:drawableLeft="@drawable/cmisexplorer"
         android:drawablePadding="10sp"
         android:layout_marginBottom="15sp"
