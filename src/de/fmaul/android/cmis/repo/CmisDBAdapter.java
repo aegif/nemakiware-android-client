@@ -183,6 +183,14 @@ public class CmisDBAdapter {
 			initialValues.put(COLUMN_WS, "cmis-inmem1");
 			
 			db.insert(TABLE_SERVERS, null, initialValues);
+			
+			initialValues.put(COLUMN_NAME, "CMIS Day CRX");
+			initialValues.put(COLUMN_USER, "");
+			initialValues.put(COLUMN_PASS, "");
+			initialValues.put(COLUMN_URL, "http://cmis.day.com/cmis/repository");
+			initialValues.put(COLUMN_WS, "CRX");
+			
+			db.insert(TABLE_SERVERS, null, initialValues);
 
 		}
 
