@@ -53,7 +53,7 @@ public class CmisServerLoadingTask extends AsyncTask<String, Void, CmisRepositor
 	@Override
 	protected void onPostExecute(CmisRepository repo) {
 		activity.setRepository(repo);
-		activity.getRepository().clearCache();
+		activity.getRepository().clearCache(repo.getRepositoryWorkspace());
 		activity.processSearchOrDisplayIntent();
 	}
 

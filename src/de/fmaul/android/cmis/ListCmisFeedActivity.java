@@ -276,18 +276,21 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * @param item
 	 */
 	private void openDocument(final CmisItem item) {
-
-		new AbstractDownloadTask(getRepository(), this) {
-			@Override
-			public void onDownloadFinished(File contentFile) {
-				if (contentFile != null && contentFile.exists()) {
-					viewFileInAssociatedApp(contentFile, item.getMimeType());
-				} else {
-					displayError(R.string.error_file_does_not_exists);
+		File content = item.getContent(getRepository().getRepositoryWorkspace());
+		if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getProperties().get("cmis:contentStreamLength").getValue())){
+			viewFileInAssociatedApp(content, item.getMimeType());
+		} else {
+			new AbstractDownloadTask(getRepository(), this) {
+				@Override
+				public void onDownloadFinished(File contentFile) {
+					if (contentFile != null && contentFile.exists()) {
+						viewFileInAssociatedApp(contentFile, item.getMimeType());
+					} else {
+						displayError(R.string.error_file_does_not_exists);
+					}
 				}
-			}
-		}.execute(item);
-
+			}.execute(item);
+		}
 	}
 
 	/**
@@ -335,11 +338,18 @@ public class ListCmisFeedActivity extends ListActivity {
 		ArrayList<CmisProperty> propList = new ArrayList<CmisProperty>(doc.getProperties().values());
 		
 		intent.putParcelableArrayListExtra("properties", propList);
+		intent.putExtra("workspace", getRepository().getRepositoryWorkspace());
 		intent.putExtra("title", doc.getTitle());
 		intent.putExtra("mimetype", doc.getMimeType());
 		intent.putExtra("objectTypeId", doc.getProperties().get("cmis:objectTypeId").getValue());
 		intent.putExtra("baseTypeId", doc.getProperties().get("cmis:baseTypeId").getValue());
 		intent.putExtra("contentUrl", doc.getContentUrl());
+		
+		CmisProperty fileSize = doc.getProperties().get("cmis:contentStreamLength");
+		if (fileSize != null) {
+			intent.putExtra("contentStream",fileSize.getValue());
+		}
+		
 		startActivity(intent);
 	}
 

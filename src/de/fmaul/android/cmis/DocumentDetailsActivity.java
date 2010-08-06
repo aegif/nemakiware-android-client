@@ -63,7 +63,7 @@ public class DocumentDetailsActivity extends ListActivity {
 		delete = (Button) findViewById(R.id.delete);
 		
 		//File
-		if (item != null && getBaseTypeIdFromIntent().equals("cmis:folder") == false){
+		if (item != null && getContentFromIntent() != null){
 			download.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -78,15 +78,15 @@ public class DocumentDetailsActivity extends ListActivity {
 				}
 			});
 			
-			edit.setVisibility(8);
-			delete.setVisibility(8);
+			edit.setVisibility(View.GONE);
+			delete.setVisibility(View.GONE);
 			
 		} else {
 			//FOLDER
-			download.setVisibility(8);
-			edit.setVisibility(8);
-			share.setVisibility(8);
-			delete.setVisibility(8);
+			download.setVisibility(View.GONE);
+			edit.setVisibility(View.GONE);
+			share.setVisibility(View.GONE);
+			delete.setVisibility(View.GONE);
 		}
 	}
 
@@ -109,6 +109,10 @@ public class DocumentDetailsActivity extends ListActivity {
 	
 	private String getBaseTypeIdFromIntent() {
 		return getIntent().getStringExtra("baseTypeId");
+	}
+	
+	private String getContentFromIntent() {
+		return getIntent().getStringExtra("contentStream");
 	}
 
 	private void initListAdapter(List<Map<String, ?>> list) {
@@ -158,17 +162,21 @@ public class DocumentDetailsActivity extends ListActivity {
 	 */
 	private void openDocument() {
 
-		
-		new AbstractDownloadTask(getRepository(), this) {
-			@Override
-			public void onDownloadFinished(File contentFile) {
-				if (contentFile != null && contentFile.exists()) {
-					viewFileInAssociatedApp(contentFile, item.getMimeType());
-				} else {
-					displayError(R.string.error_file_does_not_exists);
+		File content = item.getContent(getIntent().getStringExtra("workspace"));
+		if (content != null && content.length() > 0 && content.length() == Long.parseLong(getContentFromIntent())){
+			viewFileInAssociatedApp(content, item.getMimeType());
+		} else {
+			new AbstractDownloadTask(getRepository(), this) {
+				@Override
+				public void onDownloadFinished(File contentFile) {
+					if (contentFile != null && contentFile.exists()) {
+						viewFileInAssociatedApp(contentFile, item.getMimeType());
+					} else {
+						displayError(R.string.error_file_does_not_exists);
+					}
 				}
-			}
-		}.execute(item);
+			}.execute(item);
+		}
 	}
 
 	private void displayError(int messageId) {

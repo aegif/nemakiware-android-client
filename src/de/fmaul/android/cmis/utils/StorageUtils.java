@@ -23,13 +23,13 @@ public class StorageUtils {
 	public static final String TYPE_CONTENT = "content";
 	public static String DUMMYREPO = "repo1";
 
-	public static boolean isFeedInCache(Application app, String url) {
-		File cacheFile = getFeedFile(app, DUMMYREPO, md5(url));
+	public static boolean isFeedInCache(Application app, String url, String workspace) {
+		File cacheFile = getFeedFile(app, workspace, md5(url));
 		return cacheFile != null && cacheFile.exists();
 	}
 
-	public static Document getFeedFromCache(Application app, String url) {
-		File cacheFile = getFeedFile(app, DUMMYREPO, md5(url));
+	public static Document getFeedFromCache(Application app, String url, String workspace) {
+		File cacheFile = getFeedFile(app, workspace, md5(url));
 		Document document = null;
 		SAXReader reader = new SAXReader(); // dom4j SAXReader
 		try {
@@ -43,11 +43,11 @@ public class StorageUtils {
 	}
 
 	private static File getFeedFile(Application app, String repoId, String feedHash) {
-		return getStorageFile(app, repoId, TYPE_FEEDS, null, feedHash + ".xml");
+		return getStorageFile(repoId, TYPE_FEEDS, null, feedHash + ".xml");
 	}
 
-	public static void storeFeedInCache(Application app, String url, Document doc) {
-		File cacheFile = getFeedFile(app, DUMMYREPO, md5(url));
+	public static void storeFeedInCache(Application app, String url, Document doc, String workspace) {
+		File cacheFile = getFeedFile(app, workspace, md5(url));
 		ensureOrCreatePathAndFile(cacheFile);
 
 		try {
@@ -66,11 +66,12 @@ public class StorageUtils {
 
 	}
 
-	public static File getStorageFile(Application app, String repoId, String storageType, String itemId, String filename) {
+	public static File getStorageFile(String repoId, String storageType, String itemId, String filename) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(Environment.getExternalStorageDirectory());
 		builder.append("/");
-		builder.append(app.getPackageName());
+		//builder.append(app.getPackageName());
+		builder.append("android-cmis-browser");
 		builder.append("/");
 		builder.append(repoId);
 		if (storageType != null) {
@@ -90,7 +91,7 @@ public class StorageUtils {
 
 	public static File createStorageFile(Application app, String repoId, String storageType, String itemId, String filename) {
 
-		File contentFile = getStorageFile(app, repoId, storageType, itemId, filename);
+		File contentFile = getStorageFile(repoId, storageType, itemId, filename);
 		ensureOrCreatePathAndFile(contentFile);
 		return contentFile;
 	}
@@ -124,7 +125,7 @@ public class StorageUtils {
 	}
 
 	public static boolean deleteRepositoryFiles(Application app, String repoId) {
-		File repoDir = getStorageFile(app, repoId, null, null, null);
+		File repoDir = getStorageFile(repoId, null, null, null);
 		try {
 			FileUtils.deleteDirectory(repoDir);
 			return true;
@@ -134,8 +135,8 @@ public class StorageUtils {
 	}
 
 	public static boolean deleteRepositoryCacheFiles(Application app, String repoId) {
-		File contentDir = getStorageFile(app, repoId, TYPE_CONTENT, null, null);
-		File feedsDir = getStorageFile(app, repoId, TYPE_FEEDS, null, null);
+		File contentDir = getStorageFile(repoId, TYPE_CONTENT, null, null);
+		File feedsDir = getStorageFile(repoId, TYPE_FEEDS, null, null);
 		try {
 			FileUtils.deleteDirectory(contentDir);
 			FileUtils.deleteDirectory(feedsDir);

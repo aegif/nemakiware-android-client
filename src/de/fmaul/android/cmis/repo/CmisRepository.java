@@ -43,6 +43,8 @@ public class CmisRepository {
 	private final String repositoryUser;
 	private final String repositoryPassword;
 	private final String repositoryWorkspace;
+	
+
 	private final Application application;
 	
 
@@ -133,12 +135,12 @@ public class CmisRepository {
 	public CmisItemCollection getCollectionFromFeed(final String feedUrl) {
 		Document doc;
 
-		if (StorageUtils.isFeedInCache(application, feedUrl)) {
-			doc = StorageUtils.getFeedFromCache(application, feedUrl);
+		if (StorageUtils.isFeedInCache(application, feedUrl, repositoryWorkspace)) {
+			doc = StorageUtils.getFeedFromCache(application, feedUrl, repositoryWorkspace);
 		} else {
 			doc = FeedUtils.readAtomFeed(feedUrl, repositoryUser, repositoryPassword);
 			if (doc != null) {
-				StorageUtils.storeFeedInCache(application, feedUrl, doc);
+				StorageUtils.storeFeedInCache(application, feedUrl, doc, repositoryWorkspace);
 			}
 		}
 		return CmisItemCollection.createFromFeed(doc);
@@ -151,7 +153,7 @@ public class CmisRepository {
 	}
 
 	public File retreiveContent(CmisItem item) {
-		File contentFile = StorageUtils.getStorageFile(application, StorageUtils.DUMMYREPO, StorageUtils.TYPE_CONTENT, item.getId(), item.getTitle());
+		File contentFile = StorageUtils.getStorageFile(repositoryWorkspace, StorageUtils.TYPE_CONTENT, item.getId(), item.getTitle());
 
 		try {
 			contentFile.getParentFile().mkdirs();
@@ -175,8 +177,12 @@ public class CmisRepository {
 		HttpUtils.getWebRessource(item.getContentUrl(), repositoryUser, repositoryPassword).getEntity().writeTo(os);
 	}
 
-	public void clearCache() {
-		StorageUtils.deleteRepositoryFiles(application, StorageUtils.DUMMYREPO);
+	public void clearCache(String workspace) {
+		StorageUtils.deleteRepositoryFiles(application, workspace);
+	}
+	
+	public String getRepositoryWorkspace() {
+		return repositoryWorkspace;
 	}
 
 }

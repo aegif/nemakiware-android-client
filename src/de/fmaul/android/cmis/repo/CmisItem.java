@@ -15,6 +15,7 @@
  */
 package de.fmaul.android.cmis.repo;
 
+import java.io.File;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,7 +26,10 @@ import java.util.Map;
 
 import org.dom4j.Element;
 
+import android.app.Application;
+
 import de.fmaul.android.cmis.utils.FeedUtils;
+import de.fmaul.android.cmis.utils.StorageUtils;
 
 public class CmisItem implements Serializable {
 
@@ -114,6 +118,10 @@ public class CmisItem implements Serializable {
 		}
 		
 		properties = FeedUtils.getCmisPropertiesForEntry(entry);
+	}
+	
+	public File getContent(String repositoryWorkspace){
+		return StorageUtils.getStorageFile(repositoryWorkspace, StorageUtils.TYPE_CONTENT, getId(), getTitle());
 	}
 
 	private Date parseXmlDate(String date) {
