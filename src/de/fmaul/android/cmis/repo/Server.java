@@ -6,6 +6,10 @@ public class Server implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
+	public static final String INFO_GENERAL = "serverInfoGeneral";
+	public static final String INFO_CAPABILITIES = "serverInfoCapabilites";
+	public static final String INFO_ACL_CAPABILITIES = "serverInfoACL";
+	
 	private long id;
     private String name;
     private String url;

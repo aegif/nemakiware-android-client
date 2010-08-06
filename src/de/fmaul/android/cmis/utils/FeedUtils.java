@@ -34,6 +34,7 @@ import org.dom4j.io.SAXReader;
 
 import android.text.TextUtils;
 import de.fmaul.android.cmis.repo.CmisProperty;
+import de.fmaul.android.cmis.repo.Server;
 
 public class FeedUtils {
 
@@ -43,6 +44,8 @@ public class FeedUtils {
 	private static final QName CMISRA_REPO_INFO = QName.get("repositoryInfo", CMISRA);
 	private static final QName CMIS_REPO_ID = QName.get("repositoryId", CMIS);
 	private static final QName CMIS_REPO_NAME = QName.get("repositoryName", CMIS);
+	private static final QName CMIS_REPO_CAPABILITES = QName.get("capabilities", CMIS);
+	private static final QName CMIS_REPO_ACL_CAPABILITES = QName.get("aclCapability", CMIS);
 	private static final QName CMISRA_COLLECTION_TYPE = QName.get("collectionType", CMISRA);
 	private static final QName CMISRA_URI_TEMPLATE = QName.get("uritemplate", CMISRA);
 	private static final QName CMISRA_TYPE = QName.get("type", CMISRA);
@@ -67,26 +70,17 @@ public class FeedUtils {
 		}
 		return document;
 	}
-
-	public static String getRootFeedFromRepo(String url, String user, String password) throws Exception {
-		try {
-			Document doc = readAtomFeed(url, user, password);
-			return getCollectionUrlFromRepoFeed(doc, "root");
-		} catch (Exception e) {
-	        throw new Exception("Wrong Parameters");
-	    }
-	}
 	
 	public static List<String> getRootFeedsFromRepo(String url, String user, String password) throws Exception {
 		try {
 			Document doc = readAtomFeed(url, user, password);
-			return getWorkspaceFromRepoFeed(doc, "root");
+			return getWorkspacesFromRepoFeed(doc);
 		} catch (Exception e) {
 	        throw new Exception("Wrong Parameters");
 	    }
 	}
 	
-	public static List<String> getWorkspaceFromRepoFeed(Document doc, String type) {
+	public static List<String> getWorkspacesFromRepoFeed(Document doc) {
 		List<String> listWorkspace = new ArrayList<String>(2);
 		if (doc != null) {
 			List<Element> workspaces = doc.getRootElement().elements("workspace");
@@ -133,21 +127,8 @@ public class FeedUtils {
 		return workspace;
 	}
 	
-
-	public static String getCollectionUrlFromRepoFeed(Document doc, String type) {
-		if (doc != null) {
-			Element workspace = doc.getRootElement().element("workspace");
-
-			List<Element> collections = workspace.elements("collection");
-
-			for (Element collection : collections) {
-				String currentType = collection.elementText(CMISRA_COLLECTION_TYPE);
-				if (type.equals(currentType.toLowerCase())) {
-					return collection.attributeValue("href");
-				}
-			}
-		}
-		return "";
+	public static Element getWorkspace(String workspace, String url, String user, String password) throws Exception {
+		return getWorkspace(readAtomFeed(url, user, password), workspace);
 	}
 
 	public static String getSearchQueryFeedTitle(String urlTemplate, String query) {
@@ -213,5 +194,38 @@ public class FeedUtils {
 		}
 		return props;
 	}
+	
+	public static Map<String, ArrayList<CmisProperty>> getCmisRepositoryProperties(Element feedEntry) {
+		Map<String, ArrayList<CmisProperty>> infoServerList = new HashMap<String, ArrayList<CmisProperty>>();
+		ArrayList<CmisProperty> propsList = new ArrayList<CmisProperty>();
+		ArrayList<CmisProperty> propsCapabilities = new ArrayList<CmisProperty>();
+		ArrayList<CmisProperty> propsACLCapabilities = new ArrayList<CmisProperty>();
+
+		Element objectElement = feedEntry.element(CMISRA_REPO_INFO);
+		if (objectElement != null) {
+			List<Element> properties = objectElement.elements();
+			for (Element property : properties) {
+				if (CMIS_REPO_CAPABILITES.equals(property.getQName())) {
+					List<Element> props = property.elements();
+					for (Element prop : props) {
+						propsCapabilities.add(new CmisProperty(null, null, null, prop.getName().replace("capability", ""), prop.getText()));
+					}
+				 } else if (CMIS_REPO_ACL_CAPABILITES.equals(property.getQName())) {
+					/*List<Element> props = property.elements();
+					for (Element prop : props) {
+						propsACLCapabilities.add(new CmisProperty(null, null, null, prop.getName().replace("cmis:", ""), prop.getText()));
+					}*/
+				} else {
+					propsList.add(new CmisProperty(null, null, null, property.getName(), property.getText()));
+				}
+			}
+			infoServerList.put(Server.INFO_GENERAL, propsList);
+			infoServerList.put(Server.INFO_CAPABILITIES, propsCapabilities);
+			infoServerList.put(Server.INFO_ACL_CAPABILITIES, propsACLCapabilities);
+		}
+		return infoServerList;
+	}
+	
+	
 
 }

@@ -36,6 +36,7 @@ import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.CmisTypeDefinition;
+import de.fmaul.android.cmis.utils.ListUtils;
 
 public class DocumentDetailsActivity extends ListActivity {
 
@@ -121,7 +122,7 @@ public class DocumentDetailsActivity extends ListActivity {
 		List<Map<String, ?>> list = new ArrayList<Map<String, ?>>();
 		for (CmisProperty cmisProperty : propList) {
 			if (cmisProperty.getDefinitionId() != null) {
-				list.add(createPair(getDisplayNameFromProperty(cmisProperty, typeDefinition), cmisProperty.getValue()));
+				list.add(ListUtils.createPair(getDisplayNameFromProperty(cmisProperty, typeDefinition), cmisProperty.getValue()));
 			}
 		}
 		return list;
@@ -144,13 +145,6 @@ public class DocumentDetailsActivity extends ListActivity {
 	private ArrayList<CmisProperty> getPropertiesFromIntent() {
 		ArrayList<CmisProperty> propList = getIntent().getParcelableArrayListExtra("properties");
 		return propList;
-	}
-
-	private Map<String, ?> createPair(String name, String value) {
-		HashMap<String, String> hashMap = new HashMap<String, String>();
-		hashMap.put("name", name);
-		hashMap.put("value", value);
-		return hashMap;
 	}
 
 	CmisRepository getRepository() {

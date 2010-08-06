@@ -29,6 +29,12 @@
 	
 	<string name="error_repo_connexion">Repository not set up correctly. Please check the repository settings.</string>
 	
+	<!-- SERVER INFO -->
+	<string name="server_info">Info</string>
+	<string name="server_info_general">General</string>
+	<string name="server_info_acl">ACL</string>
+	<string name="server_info_capabilites">Capabilities</string>
+	
 	
 	<!-- LIST CMIS FEED ACTIVITY -->
 	<string name="feed_menu_title">File Option</string>
@@ -70,5 +76,6 @@
     <string name="share">Share</string>
     <string name="quit">Quit</string>
     <string name="loading">Loading...</string>
+    
 
 </resources>

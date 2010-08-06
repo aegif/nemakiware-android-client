@@ -2,8 +2,14 @@ package de.fmaul.android.cmis;
 
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.dom4j.Document;
+import org.dom4j.Element;
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,7 +24,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import de.fmaul.android.cmis.repo.CmisDBAdapter;
+import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.Server;
+import de.fmaul.android.cmis.utils.FeedUtils;
 
 public class ServerActivity extends ListActivity {
 
@@ -108,8 +116,9 @@ public class ServerActivity extends ListActivity {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.setHeaderIcon(android.R.drawable.ic_menu_more);
 		menu.setHeaderTitle(this.getString(R.string.context_menu_title));
-		menu.add(0, 1, Menu.NONE, getString(R.string.edit));
-		menu.add(0, 2, Menu.NONE, getString(R.string.delete));
+		menu.add(0, 1, Menu.NONE, getString(R.string.server_info));
+		menu.add(0, 2, Menu.NONE, getString(R.string.edit));
+		menu.add(0, 3, Menu.NONE, getString(R.string.delete));
 	}
 	
 	@Override
@@ -127,10 +136,16 @@ public class ServerActivity extends ListActivity {
 		switch (menuItem.getItemId()) {
 		case 1:
 			if (server != null) {
-				editServer(server);
+				getInfoServer(server);
 			}
 			return true;
 		case 2:
+			if (server != null) {
+				editServer(server);
+				
+			}
+			return true;
+		case 3:
 			if (server != null) {
 				deleteServer(server.getId());
 			}
@@ -160,6 +175,10 @@ public class ServerActivity extends ListActivity {
 		Intent intent = new Intent(this, ServerEditActivity.class);
 		intent.putExtra("server", server);
 		startActivity(intent);
+	}
+	
+	public void getInfoServer(Server server){
+		new ServerInfoLoadingTask(this, server).execute();
 	}
 	
 }
