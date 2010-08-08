@@ -38,7 +38,8 @@ public class CmisServerLoadingTask extends AsyncTask<String, Void, CmisRepositor
 
 	@Override
 	protected void onPreExecute() {
-		activity.setProgressBarIndeterminateVisibility(true);
+		pg = ProgressDialog.show(activity, "", activity.getText(R.string.loading), true);
+		//activity.setProgressBarIndeterminateVisibility(true);
 	}
 
 	@Override
@@ -55,10 +56,12 @@ public class CmisServerLoadingTask extends AsyncTask<String, Void, CmisRepositor
 		activity.setRepository(repo);
 		activity.getRepository().clearCache(repo.getRepositoryWorkspace());
 		activity.processSearchOrDisplayIntent();
+		pg.dismiss();
 	}
 
 	@Override
 	protected void onCancelled() {
-		activity.setProgressBarIndeterminateVisibility(false);
+		//activity.setProgressBarIndeterminateVisibility(false);
+		pg.dismiss();
 	}
 }

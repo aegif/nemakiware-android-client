@@ -27,6 +27,10 @@ public class Prefs {
 		this.activity = activity;
 	}
 
+	public String getRepoName() {
+		return getPrefs().getString("serverName", "");
+	}
+	
 	public String getUrl() {
 		return getPrefs().getString("serverURL", "vide");
 	}
@@ -56,7 +60,7 @@ public class Prefs {
 	}
 
 	public String getOrder() {
-		return getPrefs().getString(activity.getString(R.string.cmis_repo_orderby), "cmis:name ASC");	
+		return getPrefs().getString(activity.getString(R.string.cmis_repo_orderby), "");	
 	}
 	
 	public Boolean getParams() {

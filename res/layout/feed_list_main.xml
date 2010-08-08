@@ -2,16 +2,80 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
    android:orientation="vertical"
    android:layout_width="fill_parent"
-   android:layout_height="fill_parent"
+   android:layout_height="wrap_content"
    >
-<ListView
-    android:id="@+id/android:list"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    />
-<TextView
-    android:id="@+id/android:empty"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:text="@string/main_no_items"/>
+   
+    <HorizontalScrollView 
+        android:id="@+id/my_scrollview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="none" 
+		>
+
+            <LinearLayout android:id="@+id/my_layout"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent" 
+                    android:layout_gravity="bottom|center_horizontal">
+
+            <Button
+				android:id="@+id/home"
+				android:layout_height="wrap_content"
+				android:drawableTop="@drawable/home"
+				android:clickable="true"
+				android:text="@string/menu_item_home"
+				android:layout_marginRight="10dip"
+				android:layout_width="fill_parent" 
+				android:textSize="8sp" />
+				
+			<Button
+				android:id="@+id/up"
+				android:layout_height="wrap_content"
+				android:drawableTop="@drawable/up"
+				android:clickable="true"
+				android:text="@string/menu_item_up"
+				android:layout_marginRight="10dip"
+				android:layout_width="wrap_content" 
+				android:textSize="8sp" />
+		
+			<Button
+				android:id="@+id/preference"
+				android:layout_height="wrap_content"
+				android:drawableTop="@drawable/preferencesmini"
+				android:clickable="true"
+				android:text="@string/menu_item_prefs"
+				android:layout_marginRight="10dip"
+				android:layout_width="wrap_content" 
+				android:textSize="8sp" />
+				
+			
+
+        </LinearLayout>
+	</HorizontalScrollView>
+   
+   <LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" 
+		android:layout_height="1sp"
+		android:background="#ffffff"
+		/>
+   
+   <LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" 
+		android:layout_weight="1"
+		android:layout_height="0px"
+		>
+   
+		<ListView
+		    android:id="@+id/android:list"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    />
+		<TextView
+		    android:id="@+id/android:empty"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:text="@string/main_no_items"/>
+    
+    </LinearLayout>
+    
 </LinearLayout>

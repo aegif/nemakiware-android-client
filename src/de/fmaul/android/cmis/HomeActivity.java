@@ -14,6 +14,11 @@ public class HomeActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+        	finish();
+        }
+        
         setContentView(R.layout.main);
         
         ((Button) findViewById(R.id.about)).setOnClickListener(new OnClickListener() {

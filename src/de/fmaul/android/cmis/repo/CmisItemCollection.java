@@ -47,7 +47,7 @@ public class CmisItemCollection {
 
 	public static CmisItemCollection createFromFeed(Document doc) {
 		CmisItemCollection cic = new CmisItemCollection();
-		cic.parseFeed(doc);
+		//cic.parseFeed(doc);
 		cic.parseEntries(doc);
 		return cic;
 	}

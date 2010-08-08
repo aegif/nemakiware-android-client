@@ -37,7 +37,10 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.Window;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import de.fmaul.android.cmis.repo.CmisItem;
@@ -56,6 +59,7 @@ public class ListCmisFeedActivity extends ListActivity {
 	private SharedPreferences preferences;
 	private SharedPreferences.Editor editor;
 	private Context context = this;
+	private ListActivity activity = this;
 
 	/**
 	 * Contains the current connection information and methods to access the
@@ -67,9 +71,42 @@ public class ListCmisFeedActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initWindow();
+		initActionIcon();
 		if (initRepository() == false){
 			processSearchOrDisplayIntent();
 		}
+	}
+
+	private void initActionIcon() {
+		Button home = (Button) findViewById(R.id.home);
+		Button up = (Button) findViewById(R.id.up);
+		Button pref = (Button) findViewById(R.id.preference);
+		
+		home.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+				Intent intent = new Intent(activity, HomeActivity.class);
+				intent.putExtra("EXIT", false);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			}
+		});
+		
+		up.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				activity.finish();
+			}
+		});
+		
+		pref.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(activity, CmisPreferences.class));
+			}
+		});
+		
 	}
 
 	private boolean initRepository() {
@@ -135,11 +172,12 @@ public class ListCmisFeedActivity extends ListActivity {
 	}
 
 	/**
-	 * Initialze the window and the activity.
+	 * Initialize the window and the activity.
 	 */
 	private void initWindow() {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
+		
+		setContentView(R.layout.feed_list_main);
 		getListView().setTextFilterEnabled(true);
 		getListView().setItemsCanFocus(true);
 		getListView().setClickable(true);
@@ -239,16 +277,38 @@ public class ListCmisFeedActivity extends ListActivity {
 		return null;
 	}
 
-	/*
-	 * @see android.app.Activity#onRestart()
-	 */
-	@Override
-	protected void onRestart() {
-		super.onRestart();
-		if (getRepository() == null) {
-			initRepository();
-			displayFeedInListViewWithTitleFromFeed(null);
-		}
+	protected void reload(String workspace) {
+			Intent intent = new Intent(this, ListCmisFeedActivity.class);
+			
+			intent.putExtra("EXIT", true);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			
+			intent.putExtra("isFirstStart", true);
+			intent.putExtra("title", getRepository().getRepositoryName());
+			
+			preferences = PreferenceManager.getDefaultSharedPreferences(context);
+			editor = preferences.edit();
+			editor.putString("serverName", getRepository().getRepositoryName());
+			editor.putString("serverURL",  getRepository().getRepositoryUrl());
+			editor.putString("username", getRepository().getRepositoryUser());
+			editor.putString("password", getRepository().getRepositoryPassword());
+			if (workspace != null){
+				editor.putString("workspace", workspace);
+			} else {
+				editor.putString("workspace", getRepository().getRepositoryWorkspace());
+			}
+			editor.commit();
+			
+			this.finish();
+			startActivity(intent);
+	}
+	
+	protected void restart(String workspace) {
+		reload(workspace);
+	}
+	
+	protected void restart() {
+		reload(null);
 	}
 
 	/**
@@ -258,7 +318,7 @@ public class ListCmisFeedActivity extends ListActivity {
 	 */
 	private void displayFeedInListView(final String feed, String title) {
 		setTitle(R.string.loading);
-		new FeedDisplayTask(this, getRepository(), title, prefs).execute(feed);
+		new FeedDisplayTask(this, getRepository(), title).execute(feed);
 	}
 
 	private void displayFeedInListViewWithTitleFromFeed(final String feed) {
@@ -344,6 +404,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		intent.putExtra("objectTypeId", doc.getProperties().get("cmis:objectTypeId").getValue());
 		intent.putExtra("baseTypeId", doc.getProperties().get("cmis:baseTypeId").getValue());
 		intent.putExtra("contentUrl", doc.getContentUrl());
+		intent.putExtra("self", doc.getCmisUrl());
 		
 		CmisProperty fileSize = doc.getProperties().get("cmis:contentStreamLength");
 		if (fileSize != null) {
@@ -442,8 +503,8 @@ public class ListCmisFeedActivity extends ListActivity {
 			onSearchRequested(QueryType.CMISQUERY);
 			return true;
 		case 7:
-			setRepository(null);
-			onRestart();
+			//setRepository(null);
+			restart();
 			return true;
 		case 8:
 			startActivity(new Intent(this, ServerActivity.class));
@@ -465,13 +526,12 @@ public class ListCmisFeedActivity extends ListActivity {
 			builder.setTitle(R.string.cmis_repo_choose_workspace);
 			builder.setSingleChoiceItems(cs, -1 ,new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
-					preferences = PreferenceManager.getDefaultSharedPreferences(context);
+					/*preferences = PreferenceManager.getDefaultSharedPreferences(context);
 					editor = preferences.edit();
 			    	editor.putString("workspace", cs[item].toString());
-					editor.commit();
+					editor.commit();*/
 			        dialog.dismiss();
-			        setRepository(null);
-					onRestart();
+			        restart(cs[item].toString());
 			    }
 			});
 			AlertDialog alert = builder.create();

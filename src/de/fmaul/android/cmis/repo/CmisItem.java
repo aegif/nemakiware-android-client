@@ -31,12 +31,13 @@ import android.app.Application;
 import de.fmaul.android.cmis.utils.FeedUtils;
 import de.fmaul.android.cmis.utils.StorageUtils;
 
-public class CmisItem implements Serializable {
+public class CmisItem {
 
 	private String title;
 	private String downLink;
 	private String author;
 	private String contentUrl;
+	private String cmisUrl;	
 	private String id;
 	private String mimeType;
 	private Date modificationDate;
@@ -57,6 +58,10 @@ public class CmisItem implements Serializable {
 	@Override
 	public String toString() {
 		return getTitle();
+	}
+	
+	public String getCmisUrl() {
+		return cmisUrl;
 	}
 
 	public String getAuthor() {
@@ -114,6 +119,8 @@ public class CmisItem implements Serializable {
 				if (link.attribute("type").getText().startsWith("application/atom+xml")) {
 					downLink = link.attribute("href").getText();
 				}
+			} else if ("self".equals(link.attribute("rel").getText())) {
+				cmisUrl = link.attribute("href").getText();
 			}
 		}
 		

@@ -52,6 +52,11 @@
     <string name="menu_item_details">Display details</string>
 	<string name="menu_item_share">Share...</string>
 	
+	<string name="menu_item_home">Home</string>
+	<string name="menu_item_up">Up</string>
+	<string name="menu_item_back">Back</string>
+	<string name="menu_item_prefs">Prefs</string>
+	
 	
 	<!-- SEARCH RESULT -->
 	<string name="search_label">CMIS Repository</string>

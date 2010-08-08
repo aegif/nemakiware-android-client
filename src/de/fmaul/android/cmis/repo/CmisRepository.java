@@ -20,6 +20,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 import org.apache.http.client.ClientProtocolException;
 import org.dom4j.Document;
@@ -43,11 +46,13 @@ public class CmisRepository {
 	private final String repositoryUser;
 	private final String repositoryPassword;
 	private final String repositoryWorkspace;
-	
-
+	private final String feedParams;
+	private final Boolean useFeedParams;
 	private final Application application;
+	private final String repositoryName;
+	private String repositoryUrl;
 	
-
+	
 	/**
 	 * Connects to a CMIS Repository with the given connection information FIXME
 	 * References to Application should be removed with DI
@@ -59,7 +64,7 @@ public class CmisRepository {
 	 * @param password
 	 *            The password to login to the repository
 	 */
-	private CmisRepository(Application application, String repositoryUrl, String user, String password, String workspace) {
+	/*private CmisRepository(Application application, String repositoryUrl, String user, String password, String workspace) {
 		this.application = application;
 		this.repositoryUser = user;
 		this.repositoryPassword = password;
@@ -74,6 +79,30 @@ public class CmisRepository {
 		uriTemplateQuery = FeedUtils.getUriTemplateFromRepoFeed("query", wsElement);
 		uriTemplateTypeById = FeedUtils.getUriTemplateFromRepoFeed("typebyid", wsElement);
 		
+	}*/
+	
+	private CmisRepository(Application application, Prefs pref) {
+		this.application = application;
+		this.repositoryUser = pref.getUser();
+		this.repositoryPassword = pref.getPassword();
+		this.repositoryWorkspace = pref.getWorkspace();
+		this.repositoryName = pref.getRepoName();
+		this.repositoryUrl = pref.getUrl();
+
+		Document doc = FeedUtils.readAtomFeed(repositoryUrl, repositoryUser, repositoryPassword);
+		
+		Element wsElement = FeedUtils.getWorkspace(doc, repositoryWorkspace);
+		
+		feedRootCollection = FeedUtils.getCollectionUrlFromRepoFeed("root", wsElement);
+		feedTypesCollection = FeedUtils.getCollectionUrlFromRepoFeed("types", wsElement);
+		uriTemplateQuery = FeedUtils.getUriTemplateFromRepoFeed("query", wsElement);
+		uriTemplateTypeById = FeedUtils.getUriTemplateFromRepoFeed("typebyid", wsElement);
+		feedParams = createParams(pref);
+		useFeedParams = pref.getParams();
+	}
+
+	public String getRepositoryUrl() {
+		return repositoryUrl;
 	}
 
 	/**
@@ -83,13 +112,9 @@ public class CmisRepository {
 	 * @return
 	 */
 	public static CmisRepository create(Application app, final Prefs prefs) {
-		return new CmisRepository(app, prefs.getUrl(), prefs.getUser(), prefs.getPassword(), prefs.getWorkspace());
+		return new CmisRepository(app, prefs);
 	}
 	
-	public static CmisRepository create(Application app, final Server server) {
-		return new CmisRepository(app, server.getUrl(), server.getUsername(), server.getPassword(), server.getWorkspace());
-	}
-
 	/**
 	 * Returns the root collection with documents and folders.
 	 * 
@@ -183,6 +208,77 @@ public class CmisRepository {
 	
 	public String getRepositoryWorkspace() {
 		return repositoryWorkspace;
+	}
+	
+	private String createParams(Prefs pref){
+		String params = "";
+		String value = "";
+		ArrayList<String> listParams = new ArrayList<String>(4);
+		
+		if (pref != null){
+			
+			value = pref.getTypes();
+			if (value != null && value.length() > 0){
+				listParams.add("types" + "=" +  pref.getTypes());
+			}
+			
+			/*
+			if (pref.getFilter() != null){
+				paramsList.put("filter", pref.getFilter());
+			}*/
+			
+			value = pref.getMaxItems();
+			if (value != null && value.length() > 0 && value.equals("-1") == false){
+				listParams.add("maxItems" + "=" + pref.getMaxItems());
+			}
+			
+			value = pref.getOrder() ;
+			if (pref.getOrder() != null && pref.getOrder().length() > 0){
+				listParams.add("orderBy" + "=" + pref.getOrder());
+			}
+			
+			//TODO BETTER!
+			for (String param : listParams) {
+				params += "&" + param;
+			}
+			
+			if (params.length() != 0){
+				params = params.replaceFirst("&", "");
+				params = "?" + params;
+			} 
+		}
+		
+		try {
+			params = new URI(null, params, null).toASCIIString();
+		} catch (URISyntaxException e) {
+		}
+		
+		return params;
+	}
+	
+	public String getFeedParams() {
+		return feedParams;
+	}
+
+	public Boolean getUseFeedParams() {
+		if (useFeedParams != null){
+			return useFeedParams;
+		} else {
+			return false;
+		}
+		
+	}
+	
+	public String getRepositoryName() {
+		return repositoryName;
+	}
+	
+	public String getRepositoryUser() {
+		return repositoryUser;
+	}
+
+	public String getRepositoryPassword() {
+		return repositoryPassword;
 	}
 
 }

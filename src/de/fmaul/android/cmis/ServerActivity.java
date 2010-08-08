@@ -81,7 +81,10 @@ public class ServerActivity extends ListActivity {
 			startActivity(new Intent(this,ServerEditActivity.class));
 			return true;
 		case 2:
-			this.finish();
+			Intent intent = new Intent(this, HomeActivity.class);
+			intent.putExtra("EXIT", true);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
