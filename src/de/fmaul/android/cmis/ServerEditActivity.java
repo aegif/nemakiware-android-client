@@ -12,13 +12,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import de.fmaul.android.cmis.repo.CmisDBAdapter;
+import de.fmaul.android.cmis.database.Database;
+import de.fmaul.android.cmis.database.ServerDAO;
 import de.fmaul.android.cmis.repo.Server;
 import de.fmaul.android.cmis.utils.FeedUtils;
 
 public class ServerEditActivity extends Activity {
 	
-	private CmisDBAdapter cmisDbAdapter;
+	private Database database;
 	
 	private Context context = this;
 	
@@ -43,7 +44,7 @@ public class ServerEditActivity extends Activity {
 		
 		initServerData();
 		
-		cmisDbAdapter = new CmisDBAdapter(this); 
+		database = Database.create(this);
 		
 		Button button = (Button)findViewById(R.id.validation_button);
 		button.setOnClickListener( new Button.OnClickListener(){
@@ -52,24 +53,24 @@ public class ServerEditActivity extends Activity {
 				if(serverNameEditText.getText().toString().equals("") || serverUrlEditText.getText().toString().equals("")){
 					Toast.makeText(ServerEditActivity.this, "EMPTY FIELDS", Toast.LENGTH_LONG).show();
 				} else if (isEdit == false){
-					cmisDbAdapter.open();
+					ServerDAO serverDao = new ServerDAO(database.open());
 					
-					cmisDbAdapter.insert(
+					serverDao.insert(
 							serverNameEditText.getText().toString(), 
 							serverUrlEditText.getText().toString(), 
 							userEditText.getText().toString(), 
 							passwordEditText.getText().toString(),
 							workspaceEditText.getText().toString());
 					
-					cmisDbAdapter.close();
+					database.close();
 					
 				    Intent intent = new Intent(context, ServerActivity.class);
 				    finish();
 				   	startActivity(intent);
 				} else if (isEdit) {
-					cmisDbAdapter.open();
+					ServerDAO serverDao = new ServerDAO(database.open());
 					
-					cmisDbAdapter.update(
+					serverDao.update(
 							currentServer.getId(),
 							serverNameEditText.getText().toString(), 
 							serverUrlEditText.getText().toString(), 
@@ -78,7 +79,7 @@ public class ServerEditActivity extends Activity {
 							workspaceEditText.getText().toString()
 							);
 					
-					cmisDbAdapter.close();
+					database.close();
 					
 				    Intent intent = new Intent(context, ServerActivity.class);
 				    finish();

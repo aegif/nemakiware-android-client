@@ -1,36 +1,26 @@
 package de.fmaul.android.cmis;
 
-
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.dom4j.Document;
-import org.dom4j.Element;
 
 import android.app.ListActivity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-import de.fmaul.android.cmis.repo.CmisDBAdapter;
-import de.fmaul.android.cmis.repo.CmisProperty;
+import de.fmaul.android.cmis.database.Database;
+import de.fmaul.android.cmis.database.ServerDAO;
 import de.fmaul.android.cmis.repo.Server;
-import de.fmaul.android.cmis.utils.FeedUtils;
 
 public class ServerActivity extends ListActivity {
 
-	private CmisDBAdapter cmisDbAdapter;
 	private CmisServersAdapter cmisSAdapter;
 	
 	private SharedPreferences preferences;
@@ -54,12 +44,13 @@ public class ServerActivity extends ListActivity {
 	}
 	
 	public void createServerList(){
-		cmisDbAdapter = new CmisDBAdapter(this); 
-		cmisDbAdapter.open();
-		listServer = cmisDbAdapter.getAllServers();
+		Database db = Database.create(this);
+		ServerDAO serverDao = new ServerDAO(db.open());
+		listServer = new ArrayList<Server>(serverDao.findAll());
+		db.close();
+
 		cmisSAdapter = new CmisServersAdapter(this, R.layout.server_row, listServer);
 		setListAdapter(cmisSAdapter);
-		cmisDbAdapter.close();
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu){
@@ -159,19 +150,19 @@ public class ServerActivity extends ListActivity {
 	}
 	
 	public void deleteServer(long id){
-		cmisDbAdapter = new CmisDBAdapter(this);
-		cmisDbAdapter.open();
-		
-			if (cmisDbAdapter.deleteServer(id)){
-				Toast.makeText(this, this.getString(R.string.server_delete), 
-						Toast.LENGTH_LONG).show();
-				createServerList();
+		Database db = Database.create(this);
+		ServerDAO serverDao = new ServerDAO(db.open());
 
-			}else{
-				Toast.makeText(this, this.getString(R.string.server_delete_error), 
-						Toast.LENGTH_LONG).show();
-			}
-		cmisDbAdapter.close();
+		if (serverDao.delete(id)) {
+			Toast.makeText(this, this.getString(R.string.server_delete),
+					Toast.LENGTH_LONG).show();
+			createServerList();
+
+		} else {
+			Toast.makeText(this, this.getString(R.string.server_delete_error),
+					Toast.LENGTH_LONG).show();
+		}
+		db.close();
 	}
 	
 	public void editServer(Server server){
