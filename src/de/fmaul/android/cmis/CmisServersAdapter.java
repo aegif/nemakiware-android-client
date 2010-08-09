@@ -2,7 +2,7 @@ package de.fmaul.android.cmis;
 
 import java.util.ArrayList;
 
-import de.fmaul.android.cmis.repo.Server;
+import de.fmaul.android.cmis.model.Server;
 
 import android.content.Context;
 import android.view.LayoutInflater;

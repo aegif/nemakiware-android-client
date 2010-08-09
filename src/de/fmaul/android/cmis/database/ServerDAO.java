@@ -6,7 +6,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import de.fmaul.android.cmis.repo.Server;
+import de.fmaul.android.cmis.model.Server;
 
 public class ServerDAO implements DAO<Server> {
 

@@ -1,4 +1,4 @@
-package de.fmaul.android.cmis.repo;
+package de.fmaul.android.cmis.model;
 
 import java.io.Serializable;
 

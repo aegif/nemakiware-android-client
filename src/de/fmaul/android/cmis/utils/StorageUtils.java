@@ -21,7 +21,6 @@ public class StorageUtils {
 
 	public static final String TYPE_FEEDS = "feeds";
 	public static final String TYPE_CONTENT = "content";
-	public static String DUMMYREPO = "repo1";
 
 	public static boolean isFeedInCache(Application app, String url, String workspace) {
 		File cacheFile = getFeedFile(app, workspace, md5(url));

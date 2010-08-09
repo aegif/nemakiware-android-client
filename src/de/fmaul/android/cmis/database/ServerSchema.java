@@ -35,7 +35,8 @@ public class ServerSchema {
       	+ COLUMN_WS + " TEXT NOT NULL" 
       	+ ");";
 
-	private static final String QUERY_TABLE_DROP = "DROP TABLE IF EXISTS servers";
+	private static final String QUERY_TABLE_DROP = "DROP TABLE IF EXISTS "
+			+ TABLENAME;
     
 	public static void onCreate(SQLiteDatabase db) {
 		db.execSQL(ServerSchema.QUERY_TABLE_CREATE);

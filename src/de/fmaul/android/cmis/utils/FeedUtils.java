@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,8 +32,8 @@ import org.dom4j.QName;
 import org.dom4j.io.SAXReader;
 
 import android.text.TextUtils;
+import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.CmisProperty;
-import de.fmaul.android.cmis.repo.Server;
 
 public class FeedUtils {
 
@@ -42,7 +41,6 @@ public class FeedUtils {
 	private static final Namespace CMIS = Namespace.get("http://docs.oasis-open.org/ns/cmis/core/200908/");
 
 	private static final QName CMISRA_REPO_INFO = QName.get("repositoryInfo", CMISRA);
-	private static final QName CMIS_REPO_ID = QName.get("repositoryId", CMIS);
 	private static final QName CMIS_REPO_NAME = QName.get("repositoryName", CMIS);
 	private static final QName CMIS_REPO_CAPABILITES = QName.get("capabilities", CMIS);
 	private static final QName CMIS_REPO_ACL_CAPABILITES = QName.get("aclCapability", CMIS);

@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.CmisProperty;
-import de.fmaul.android.cmis.repo.Server;
 import de.fmaul.android.cmis.utils.ListUtils;
 
 import android.app.Activity;

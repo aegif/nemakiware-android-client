@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import de.fmaul.android.cmis.database.Database;
 import de.fmaul.android.cmis.database.ServerDAO;
-import de.fmaul.android.cmis.repo.Server;
+import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.utils.FeedUtils;
 
 public class ServerEditActivity extends Activity {

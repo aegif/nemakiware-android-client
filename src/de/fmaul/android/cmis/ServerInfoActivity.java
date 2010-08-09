@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.TabHost;
-import de.fmaul.android.cmis.repo.Server;
+import de.fmaul.android.cmis.model.Server;
 
 public class ServerInfoActivity extends TabActivity {
     

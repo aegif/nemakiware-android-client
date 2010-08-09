@@ -1,21 +1,13 @@
 package de.fmaul.android.cmis.utils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
-
-import de.fmaul.android.cmis.AbstractDownloadTask;
 import de.fmaul.android.cmis.R;
-import de.fmaul.android.cmis.repo.CmisItem;
-import de.fmaul.android.cmis.repo.CmisProperty;
 
 public class ActionUtils {
 

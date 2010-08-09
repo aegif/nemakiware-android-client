@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import de.fmaul.android.cmis.database.Database;
 import de.fmaul.android.cmis.database.ServerDAO;
-import de.fmaul.android.cmis.repo.Server;
+import de.fmaul.android.cmis.model.Server;
 
 public class ServerActivity extends ListActivity {
 

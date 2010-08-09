@@ -41,11 +41,14 @@ public class Database {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			ServerSchema.onCreate(db);
+			FavoriteSchema.onCreate(db);
+			
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			ServerSchema.onUpgrade(db, oldVersion, newVersion);
+			FavoriteSchema.onUpgrade(db, oldVersion, newVersion);
 		}
 	}
     
