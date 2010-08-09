@@ -145,5 +145,15 @@ public class StorageUtils {
 			return false;
 		}
 	}
+	
+	public static boolean deleteFeedFile(String repoId, String url) {
+		File feedFile = getStorageFile(repoId, TYPE_FEEDS, null,  md5(url));
+		try {
+			FileUtils.deleteDirectory(feedFile);
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
 
 }

@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.QueryType;
 import de.fmaul.android.cmis.utils.FeedLoadException;
 import de.fmaul.android.cmis.utils.FeedUtils;
+import de.fmaul.android.cmis.utils.StorageUtils;
 
 public class ListCmisFeedActivity extends ListActivity {
 
@@ -59,6 +61,7 @@ public class ListCmisFeedActivity extends ListActivity {
 	private SharedPreferences.Editor editor;
 	private Context context = this;
 	private ListActivity activity = this;
+	private OnSharedPreferenceChangeListener listener;
 
 	/**
 	 * Contains the current connection information and methods to access the
@@ -75,11 +78,21 @@ public class ListCmisFeedActivity extends ListActivity {
 		if (initRepository() == false){
 			processSearchOrDisplayIntent();
 		}
-	}
+		
+		listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+			  public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+				  getRepository().reCreateParams(activity);
+			  }
+			};
 
+		PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(listener);
+
+	}
+	
 	private void initActionIcon() {
 		Button home = (Button) findViewById(R.id.home);
 		Button up = (Button) findViewById(R.id.up);
+		Button refresh = (Button) findViewById(R.id.refresh);
 		Button pref = (Button) findViewById(R.id.preference);
 		
 		home.setOnClickListener(new OnClickListener() {
@@ -104,6 +117,13 @@ public class ListCmisFeedActivity extends ListActivity {
 			@Override
 			public void onClick(View v) {
 				startActivity(new Intent(activity, CmisPreferences.class));
+			}
+		});
+		
+		refresh.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				refresh();
 			}
 		});
 		
@@ -302,6 +322,23 @@ public class ListCmisFeedActivity extends ListActivity {
 			
 			this.finish();
 			startActivity(intent);
+	}
+	
+	private void refresh() {
+		String feed = getFeedFromIntent();
+		if (feed == null){
+			feed = getRepository().getFeedRootCollection();
+		}
+		
+		if (StorageUtils.deleteFeedFile(getRepository().getRepositoryWorkspace(), feed)){
+			Intent intent = new Intent(activity, ListCmisFeedActivity.class);
+			intent.putExtra("feed", getFeedFromIntent());
+			intent.putExtra("title", getTitleFromIntent());
+			startActivity(intent);
+			activity.finish();
+		} else {
+			displayError(R.string.application_not_available);
+		}
 	}
 	
 	protected void restart(String workspace) {

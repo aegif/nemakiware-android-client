@@ -28,6 +28,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
+import android.app.Activity;
 import android.app.Application;
 import de.fmaul.android.cmis.Prefs;
 import de.fmaul.android.cmis.utils.FeedUtils;
@@ -46,7 +47,7 @@ public class CmisRepository {
 	private final String repositoryUser;
 	private final String repositoryPassword;
 	private final String repositoryWorkspace;
-	private final String feedParams;
+	private String feedParams;
 	private final Boolean useFeedParams;
 	private final Application application;
 	private final String repositoryName;
@@ -99,6 +100,14 @@ public class CmisRepository {
 		uriTemplateTypeById = FeedUtils.getUriTemplateFromRepoFeed("typebyid", wsElement);
 		feedParams = createParams(pref);
 		useFeedParams = pref.getParams();
+	}
+
+	public String getFeedRootCollection() {
+		return feedRootCollection;
+	}
+
+	public void setFeedParams(String feedParams) {
+		this.feedParams = feedParams;
 	}
 
 	public String getRepositoryUrl() {
@@ -208,6 +217,10 @@ public class CmisRepository {
 	
 	public String getRepositoryWorkspace() {
 		return repositoryWorkspace;
+	}
+	
+	public void reCreateParams(Activity activity){
+		setFeedParams(createParams(new Prefs(activity)));
 	}
 	
 	private String createParams(Prefs pref){
