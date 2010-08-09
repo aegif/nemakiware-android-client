@@ -71,7 +71,11 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 			activity.getWindow().setTitle(title);
 		}
 		activity.setProgressBarIndeterminateVisibility(false);
-		activity.findViewById(R.id.my_scrollview).setVisibility(View.VISIBLE);
+		
+		activity.findViewById(R.id.loading).setVisibility(View.GONE);
+		if (itemCollection.getItems().size() == 0 ){
+			activity.findViewById(R.id.empty).setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override

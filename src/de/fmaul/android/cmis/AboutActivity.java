@@ -14,24 +14,19 @@ public class AboutActivity extends TabActivity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.about);
 
-	    Resources res = getResources(); // Resource object to get Drawables
-	    TabHost tabHost = getTabHost();  // The activity TabHost
-	    TabHost.TabSpec spec;  // Resusable TabSpec for each tab
-	    Intent intent;  // Reusable Intent for each tab
+	    Resources res = getResources(); 
+	    TabHost tabHost = getTabHost();  
+	    TabHost.TabSpec spec;  
+	    Intent intent;  
 
-	    // Create an Intent to launch an Activity for the tab (to be reused)
 	    intent = new Intent().setClass(this, AboutDevActivity.class);
 
-	    // Initialize a TabSpec for each tab and add it to the TabHost
-	    spec = tabHost.newTabSpec("dev").setIndicator("dev",
-	                      res.getDrawable(R.drawable.dev))
+	    spec = tabHost.newTabSpec("dev").setIndicator(this.getText(R.string.about_dev),res.getDrawable(R.drawable.dev))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 
-	    // Do the same for the other tabs
 	    intent = new Intent().setClass(this, AboutResourcesActivity.class);
-	    spec = tabHost.newTabSpec("resource").setIndicator("Resources",
-	                      res.getDrawable(R.drawable.resources))
+	    spec = tabHost.newTabSpec("res").setIndicator(this.getText(R.string.about_resources), res.getDrawable(R.drawable.resources))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 

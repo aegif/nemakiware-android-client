@@ -101,7 +101,7 @@ public class ServerEditActivity extends Activity {
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.cmis_repo_choose_workspace);
-			builder.setSingleChoiceItems(cs, -1 ,new DialogInterface.OnClickListener() {
+			builder.setSingleChoiceItems(cs, workspaces.indexOf(workspaceEditText.getText()) ,new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
 			        workspaceEditText.setText(cs[item]);
 			        dialog.dismiss();

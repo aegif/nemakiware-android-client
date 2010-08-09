@@ -31,20 +31,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.view.Window;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.Toast;
 import de.fmaul.android.cmis.repo.CmisItem;
-import de.fmaul.android.cmis.repo.CmisItemCollection;
 import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.QueryType;
@@ -183,6 +181,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		getListView().setClickable(true);
 		getListView().setOnItemClickListener(new CmisDocSelectedListener());
 		getListView().setOnCreateContextMenuListener(this);
+		
 	}
 
 	@Override
@@ -422,13 +421,9 @@ public class ListCmisFeedActivity extends ListActivity {
 	 */
 	private void openNewListViewActivity(CmisItem item) {
 		Intent intent = new Intent(this, ListCmisFeedActivity.class);
-		if (CmisItemCollection.FEED_UP.equals(item.getDownLink())){
-			finish();
-		} else {
-			intent.putExtra("feed", item.getDownLink());
-			intent.putExtra("title", item.getTitle());
-			startActivity(intent);
-		}
+		intent.putExtra("feed", item.getDownLink());
+		intent.putExtra("title", item.getTitle());
+		startActivity(intent);
 	}
 
 	private void emailDocument(final CmisItem item) {
@@ -519,17 +514,13 @@ public class ListCmisFeedActivity extends ListActivity {
 	
 	private void chooseWorkspace(){
 		try {
-			workspaces = FeedUtils.getRootFeedsFromRepo(prefs.getUrl(), prefs.getUser(), prefs.getPassword());
+			workspaces = FeedUtils.getRootFeedsFromRepo(getRepository().getRepositoryUrl(), getRepository().getRepositoryUser(), getRepository().getRepositoryPassword());
 			cs = workspaces.toArray(new CharSequence[workspaces.size()]);
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.cmis_repo_choose_workspace);
-			builder.setSingleChoiceItems(cs, -1 ,new DialogInterface.OnClickListener() {
+			builder.setSingleChoiceItems(cs, workspaces.indexOf(getRepository().getRepositoryWorkspace()) ,new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
-					/*preferences = PreferenceManager.getDefaultSharedPreferences(context);
-					editor = preferences.edit();
-			    	editor.putString("workspace", cs[item].toString());
-					editor.commit();*/
 			        dialog.dismiss();
 			        restart(cs[item].toString());
 			    }

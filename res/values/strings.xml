@@ -57,6 +57,7 @@
 	<string name="menu_item_back">Back</string>
 	<string name="menu_item_prefs">Prefs</string>
 	
+	<string name="loading_data">Please wait a few moment... Loading data...</string>
 	
 	<!-- SEARCH RESULT -->
 	<string name="search_label">CMIS Repository</string>
@@ -90,5 +91,10 @@
 	<string name="cmis_repo_types">CmisRepoTypes</string>
 	<string name="cmis_repo_orderby">CmisRepoOrderBy</string>
 	<string name="cmis_repo_params">CmisRepoParams</string>
+	
+	
+	<!-- ABOUT ACTIVITY -->
+	<string name="about_dev">Developpers</string>
+	<string name="about_resources">Resources</string>
 
 </resources>
