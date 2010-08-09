@@ -16,6 +16,7 @@
 package de.fmaul.android.cmis;
 
 import android.app.ListActivity;
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.view.View;
 import de.fmaul.android.cmis.repo.CmisItemCollection;
@@ -76,10 +77,12 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 		if (itemCollection.getItems().size() == 0 ){
 			activity.findViewById(R.id.empty).setVisibility(View.VISIBLE);
 		}
+		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 	}
 
 	@Override
 	protected void onCancelled() {
 		activity.setProgressBarIndeterminateVisibility(false);
+		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 	}
 }
