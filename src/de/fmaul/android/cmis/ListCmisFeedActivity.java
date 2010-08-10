@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.app.SearchManager;
@@ -48,6 +49,7 @@ import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.QueryType;
+import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.FeedLoadException;
 import de.fmaul.android.cmis.utils.FeedUtils;
 import de.fmaul.android.cmis.utils.StorageUtils;
@@ -221,7 +223,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		switch (menuItem.getItemId()) {
 		case 1:
 			if (doc != null && doc.hasChildren() == false) {
-				openDocument(doc);
+				ActionUtils.openDocument(activity, doc);
 			}
 			return true;
 		case 2:
@@ -231,7 +233,7 @@ public class ListCmisFeedActivity extends ListActivity {
 			return true;
 		case 3:
 			if (doc != null) {
-				emailDocument(doc);
+				ActionUtils.shareDocument(activity, getRepository().getRepositoryWorkspace(), doc);
 			}
 			return true;
 		default:
@@ -250,10 +252,10 @@ public class ListCmisFeedActivity extends ListActivity {
 		CmisItem doc = (CmisItem) getListView().getItemAtPosition(info.position);
 		
 		menu.add(0, 2, Menu.NONE, getString(R.string.menu_item_details));
-		
-		if (doc != null && doc.hasChildren() == false){
+		menu.add(0, 3, Menu.NONE, getString(R.string.menu_item_share));
+
+		if (doc != null && doc.getProperties().get("cmis:contentStreamLength") != null){
 			menu.add(0, 1, Menu.NONE, getString(R.string.download));
-			menu.add(0, 3, Menu.NONE, getString(R.string.menu_item_share));
 		}
 		
 	}
@@ -370,49 +372,6 @@ public class ListCmisFeedActivity extends ListActivity {
 	}
 
 	/**
-	 * Opens a file by downloading it and starting the associated app.
-	 * 
-	 * @param item
-	 */
-	private void openDocument(final CmisItem item) {
-		File content = item.getContent(getRepository().getRepositoryWorkspace());
-		if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getProperties().get("cmis:contentStreamLength").getValue())){
-			viewFileInAssociatedApp(content, item.getMimeType());
-		} else {
-			new AbstractDownloadTask(getRepository(), this) {
-				@Override
-				public void onDownloadFinished(File contentFile) {
-					if (contentFile != null && contentFile.exists()) {
-						viewFileInAssociatedApp(contentFile, item.getMimeType());
-					} else {
-						displayError(R.string.error_file_does_not_exists);
-					}
-				}
-			}.execute(item);
-		}
-	}
-
-	/**
-	 * Displays a file on the local system with the associated app by calling
-	 * the ACTION_VIEW intent.
-	 * 
-	 * @param tempFile
-	 * @param mimeType
-	 */
-	private void viewFileInAssociatedApp(File tempFile, String mimeType) {
-		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
-		Uri data = Uri.fromFile(tempFile);
-		viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		viewIntent.setDataAndType(data, mimeType.toLowerCase());
-
-		try {
-			startActivity(viewIntent);
-		} catch (ActivityNotFoundException e) {
-			Toast.makeText(this, R.string.application_not_available, Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	/**
 	 * Listener that is called whenever a user clicks on a file or folder in the
 	 * list.
 	 */
@@ -443,7 +402,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		intent.putExtra("objectTypeId", doc.getProperties().get("cmis:objectTypeId").getValue());
 		intent.putExtra("baseTypeId", doc.getProperties().get("cmis:baseTypeId").getValue());
 		intent.putExtra("contentUrl", doc.getContentUrl());
-		intent.putExtra("self", doc.getCmisUrl());
+		intent.putExtra("self", doc.getSelfUrl());
 		
 		CmisProperty fileSize = doc.getProperties().get("cmis:contentStreamLength");
 		if (fileSize != null) {
@@ -464,25 +423,6 @@ public class ListCmisFeedActivity extends ListActivity {
 		intent.putExtra("feed", item.getDownLink());
 		intent.putExtra("title", item.getTitle());
 		startActivity(intent);
-	}
-
-	private void emailDocument(final CmisItem item) {
-
-		new AbstractDownloadTask(getRepository(), this) {
-			@Override
-			public void onDownloadFinished(File contentFile) {
-				if (contentFile != null && contentFile.exists()) {
-					Intent i = new Intent(Intent.ACTION_SEND);
-					i.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
-					i.putExtra(Intent.EXTRA_TEXT, item.getContentUrl());
-					i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(contentFile));
-					i.setType(item.getMimeType());
-					startActivity(Intent.createChooser(i, "Email file"));
-				} else {
-					displayError(R.string.error_file_does_not_exists);
-				}
-			}
-		}.execute(item);
 	}
 
 	@Override

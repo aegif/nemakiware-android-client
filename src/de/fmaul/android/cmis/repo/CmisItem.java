@@ -37,7 +37,7 @@ public class CmisItem {
 	private String downLink;
 	private String author;
 	private String contentUrl;
-	private String cmisUrl;	
+	private String selfUrl;	
 	private String id;
 	private String mimeType;
 	private Date modificationDate;
@@ -60,8 +60,8 @@ public class CmisItem {
 		return getTitle();
 	}
 	
-	public String getCmisUrl() {
-		return cmisUrl;
+	public String getSelfUrl() {
+		return selfUrl;
 	}
 
 	public String getAuthor() {
@@ -120,7 +120,7 @@ public class CmisItem {
 					downLink = link.attribute("href").getText();
 				}
 			} else if ("self".equals(link.attribute("rel").getText())) {
-				cmisUrl = link.attribute("href").getText();
+				selfUrl = link.attribute("href").getText();
 			}
 		}
 		
@@ -154,12 +154,13 @@ public class CmisItem {
 		return cmisItem;
 	}
 	
-	public static CmisItem create(String title, String id,  String mimeType, String contentUrl) {
+	public static CmisItem create(String title, String id,  String mimeType, String contentUrl, String selfUrl) {
 		CmisItem cmisItem = new CmisItem();
 		cmisItem.title = title;
 		cmisItem.id = id;
 		cmisItem.mimeType = mimeType;
 		cmisItem.contentUrl = contentUrl;
+		cmisItem.selfUrl = selfUrl;
 		cmisItem.properties = new HashMap<String, CmisProperty>();
 		return cmisItem;
 	}

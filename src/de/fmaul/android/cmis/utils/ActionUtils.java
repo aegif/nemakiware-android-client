@@ -7,44 +7,86 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
+import de.fmaul.android.cmis.AbstractDownloadTask;
+import de.fmaul.android.cmis.CmisApp;
 import de.fmaul.android.cmis.R;
+import de.fmaul.android.cmis.repo.CmisItem;
+import de.fmaul.android.cmis.repo.CmisRepository;
 
 public class ActionUtils {
 
-	private static void viewFileInAssociatedApp(Activity activity, File tempFile, String mimeType) {
+	public static void openDocument(final Activity contextActivity, final CmisItem item) {
+
+		File content = item.getContent(contextActivity.getIntent().getStringExtra("workspace"));
+		if (content != null && content.length() > 0 && content.length() == Long.parseLong(getContentFromIntent(contextActivity))){
+			viewFileInAssociatedApp(contextActivity, content, item.getMimeType());
+		} else {
+			new AbstractDownloadTask(getRepository(contextActivity), contextActivity) {
+				@Override
+				public void onDownloadFinished(File contentFile) {
+					if (contentFile != null && contentFile.exists()) {
+						viewFileInAssociatedApp(contextActivity, contentFile, item.getMimeType());
+					} else {
+						displayError(contextActivity, R.string.error_file_does_not_exists);
+					}
+				}
+			}.execute(item);
+		}
+	}
+	
+	
+	public static void displayError(Activity contextActivity, int messageId) {
+		Toast.makeText(contextActivity, messageId, Toast.LENGTH_SHORT).show();
+	}
+	
+	private static void viewFileInAssociatedApp(Activity contextActivity, File tempFile, String mimeType) {
 		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
 		Uri data = Uri.fromFile(tempFile);
 		viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		viewIntent.setDataAndType(data, mimeType.toLowerCase());
 
 		try {
-			activity.startActivity(viewIntent);
+			contextActivity.startActivity(viewIntent);
 		} catch (ActivityNotFoundException e) {
-			Toast.makeText(activity, R.string.application_not_available, Toast.LENGTH_SHORT).show();
+			Toast.makeText(contextActivity, R.string.application_not_available, Toast.LENGTH_SHORT).show();
 		}
 	}
 	
-	/*private void openDocument(Activity activity, String workspace, CmisItem item) {
-
+	public static void shareDocument(final Activity contextActivity, final String workspace, final CmisItem item) {
 		File content = item.getContent(workspace);
-		if (content != null && content.length() > 0 && content.length() == Long.parseLong(getContentFromIntent())){
-			viewFileInAssociatedApp(acontent, item.getMimeType());
+		if (item.getMimeType().length() == 0){
+			shareFileInAssociatedApp(contextActivity, content, item);
+		} else if (content != null && content.length() > 0 && content.length() == Long.parseLong(getContentFromIntent(contextActivity))) {
+			shareFileInAssociatedApp(contextActivity, content, item);
 		} else {
-			new AbstractDownloadTask(getRepository(), this) {
+			new AbstractDownloadTask(getRepository(contextActivity), contextActivity) {
 				@Override
 				public void onDownloadFinished(File contentFile) {
-					if (contentFile != null && contentFile.exists()) {
-						viewFileInAssociatedApp(contentFile, item.getMimeType());
-					} else {
-						displayError(R.string.error_file_does_not_exists);
-					}
+						shareFileInAssociatedApp(contextActivity, contentFile, item);
 				}
 			}.execute(item);
 		}
-	}*/
-
-	private void displayError(Activity activity, int messageId) {
-		Toast.makeText(activity, messageId, Toast.LENGTH_SHORT).show();
 	}
 	
+	private static void shareFileInAssociatedApp(Activity contextActivity, File contentFile, CmisItem item) {
+		Intent i = new Intent(Intent.ACTION_SEND);
+		i.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
+		if (contentFile != null && contentFile.exists()){
+			i.putExtra(Intent.EXTRA_TEXT, item.getContentUrl());
+			i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(contentFile));
+			i.setType(item.getMimeType());
+		} else {
+			i.putExtra(Intent.EXTRA_TEXT, item.getSelfUrl());
+			i.setType("text/plain");
+		}
+		contextActivity.startActivity(Intent.createChooser(i, "Share..."));
+	}
+	
+	private static CmisRepository getRepository(Activity activity) {
+		return ((CmisApp) activity.getApplication()).getRepository();
+	}
+	
+	private static String getContentFromIntent(Activity activity) {
+		return activity.getIntent().getStringExtra("contentStream");
+	}
 }

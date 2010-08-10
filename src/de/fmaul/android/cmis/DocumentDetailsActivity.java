@@ -36,6 +36,7 @@ import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.CmisTypeDefinition;
+import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.ListUtils;
 
 public class DocumentDetailsActivity extends ListActivity {
@@ -55,7 +56,7 @@ public class DocumentDetailsActivity extends ListActivity {
 	
 	private void displayActionIcons(){
 		
-		item = CmisItem.create(getIntent().getStringExtra("title"), null, getIntent().getStringExtra("mimetype"), getIntent().getStringExtra("contentUrl"));
+		item = CmisItem.create(getIntent().getStringExtra("title"), null, getIntent().getStringExtra("mimetype"), getIntent().getStringExtra("contentUrl"), getSelfUrlFromIntent());
 		
 		download = (Button) findViewById(R.id.download);
 		share = (Button) findViewById(R.id.share);
@@ -67,7 +68,7 @@ public class DocumentDetailsActivity extends ListActivity {
 			download.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					openDocument();
+					ActionUtils.openDocument(DocumentDetailsActivity.this, item);
 				}
 			});
 			
@@ -86,7 +87,7 @@ public class DocumentDetailsActivity extends ListActivity {
 		share.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				shareDocument();
+				ActionUtils.shareDocument(DocumentDetailsActivity.this, DocumentDetailsActivity.this.getIntent().getStringExtra("workspace"), item);
 			}
 		});
 	}
@@ -160,11 +161,7 @@ public class DocumentDetailsActivity extends ListActivity {
 		return ((CmisApp) getApplication()).getRepository();
 	}
 	
-	/**
-	 * Opens a file by downloading it and starting the associated app.
-	 * 
-	 * @param item
-	 */
+/*
 	private void openDocument() {
 
 		File content = item.getContent(getIntent().getStringExtra("workspace"));
@@ -188,13 +185,7 @@ public class DocumentDetailsActivity extends ListActivity {
 		Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show();
 	}
 	
-	/**
-	 * Displays a file on the local system with the associated app by calling
-	 * the ACTION_VIEW intent.
-	 * 
-	 * @param tempFile
-	 * @param mimeType
-	 */
+
 	private void viewFileInAssociatedApp(File tempFile, String mimeType) {
 		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
 		Uri data = Uri.fromFile(tempFile);
@@ -219,11 +210,7 @@ public class DocumentDetailsActivity extends ListActivity {
 			new AbstractDownloadTask(getRepository(), this) {
 				@Override
 				public void onDownloadFinished(File contentFile) {
-					//if (contentFile != null && contentFile.exists()) {
 						shareFileInAssociatedApp(contentFile);
-					//} else {
-					//	displayError(R.string.error_file_does_not_exists);
-					//}
 				}
 			}.execute(item);
 		}
@@ -242,7 +229,7 @@ public class DocumentDetailsActivity extends ListActivity {
 			i.setType("plain/text");
 		}
 		startActivity(Intent.createChooser(i, "Send mail..."));
-	}
+	}*/
 	
 
 }
