@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.fmaul.android.cmis;
+package de.fmaul.android.cmis.asynctask;
 
 import android.app.ListActivity;
 import android.content.pm.ActivityInfo;
@@ -21,6 +21,11 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import de.fmaul.android.cmis.CmisItemCollectionAdapter;
+import de.fmaul.android.cmis.R;
+import de.fmaul.android.cmis.R.anim;
+import de.fmaul.android.cmis.R.id;
+import de.fmaul.android.cmis.R.layout;
 import de.fmaul.android.cmis.repo.CmisItemCollection;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.utils.FeedLoadException;

@@ -1,4 +1,4 @@
-package de.fmaul.android.cmis;
+package de.fmaul.android.cmis.asynctask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +14,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import de.fmaul.android.cmis.CmisApp;
+import de.fmaul.android.cmis.ListCmisFeedActivity;
+import de.fmaul.android.cmis.Prefs;
+import de.fmaul.android.cmis.R;
+import de.fmaul.android.cmis.R.string;
 import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
@@ -53,8 +58,8 @@ public class CmisServerLoadingTask extends AsyncTask<String, Void, CmisRepositor
 
 	@Override
 	protected void onPostExecute(CmisRepository repo) {
-		activity.setRepository(repo);
-		activity.getRepository().clearCache(repo.getRepositoryWorkspace());
+		((CmisApp) activity.getApplication()).setRepository(repo);
+		((CmisApp) activity.getApplication()).getRepository().clearCache(repo.getRepositoryWorkspace());
 		activity.processSearchOrDisplayIntent();
 		pg.dismiss();
 	}

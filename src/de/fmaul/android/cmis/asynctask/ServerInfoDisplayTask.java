@@ -1,4 +1,4 @@
-package de.fmaul.android.cmis;
+package de.fmaul.android.cmis.asynctask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,9 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import de.fmaul.android.cmis.R;
+import de.fmaul.android.cmis.R.id;
+import de.fmaul.android.cmis.R.layout;
 import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.utils.FeedLoadException;
 import de.fmaul.android.cmis.utils.ListUtils;
