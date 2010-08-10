@@ -68,7 +68,4 @@ public class Server implements Serializable{
 	public String getWorkspace() {
 		return workspace;
 	}
-	
-	
-
 }

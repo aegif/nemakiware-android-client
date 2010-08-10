@@ -19,12 +19,16 @@ public class FavoriteSchema {
     public static final String COLUMN_SERVERID = "serverid";
     public static final int COLUMN_SERVERID_ID = 3;
     
+    public static final String COLUMN_MIMETYPE = "mimetype";
+    public static final int COLUMN_MIMETYPE_ID = 4;
+    
     private static final String QUERY_TABLE_CREATE =
     	  "create table " + TABLENAME + " (" 
       	+ COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
       	+ COLUMN_NAME + " TEXT NOT NULL,"
       	+ COLUMN_URL + " TEXT NOT NULL,"
-      	+ COLUMN_SERVERID + " INTEGER NOT NULL"
+      	+ COLUMN_SERVERID + " INTEGER NOT NULL,"
+      	+ COLUMN_MIMETYPE + " TEXT NOT NULL"
       	+ ");";
 
 	private static final String QUERY_TABLE_DROP = "DROP TABLE IF EXISTS "

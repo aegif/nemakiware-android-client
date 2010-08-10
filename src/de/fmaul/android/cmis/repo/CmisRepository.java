@@ -23,6 +23,8 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 import org.dom4j.Document;
@@ -30,7 +32,9 @@ import org.dom4j.Element;
 
 import android.app.Activity;
 import android.app.Application;
+import android.text.TextUtils;
 import de.fmaul.android.cmis.Prefs;
+import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.utils.FeedUtils;
 import de.fmaul.android.cmis.utils.HttpUtils;
 import de.fmaul.android.cmis.utils.StorageUtils;
@@ -48,10 +52,11 @@ public class CmisRepository {
 	private final String repositoryPassword;
 	private final String repositoryWorkspace;
 	private String feedParams;
-	private final Boolean useFeedParams;
+	private Boolean useFeedParams;
 	private final Application application;
 	private final String repositoryName;
 	private String repositoryUrl;
+	private final Server server;
 	
 	
 	/**
@@ -65,30 +70,14 @@ public class CmisRepository {
 	 * @param password
 	 *            The password to login to the repository
 	 */
-	/*private CmisRepository(Application application, String repositoryUrl, String user, String password, String workspace) {
+	private CmisRepository(Application application, Server server) {
 		this.application = application;
-		this.repositoryUser = user;
-		this.repositoryPassword = password;
-		this.repositoryWorkspace = workspace;
-
-		Document doc = FeedUtils.readAtomFeed(repositoryUrl, repositoryUser, repositoryPassword);
-		
-		Element wsElement = FeedUtils.getWorkspace(doc, workspace);
-		
-		feedRootCollection = FeedUtils.getCollectionUrlFromRepoFeed("root", wsElement);
-		feedTypesCollection = FeedUtils.getCollectionUrlFromRepoFeed("types", wsElement);
-		uriTemplateQuery = FeedUtils.getUriTemplateFromRepoFeed("query", wsElement);
-		uriTemplateTypeById = FeedUtils.getUriTemplateFromRepoFeed("typebyid", wsElement);
-		
-	}*/
-	
-	private CmisRepository(Application application, Prefs pref) {
-		this.application = application;
-		this.repositoryUser = pref.getUser();
-		this.repositoryPassword = pref.getPassword();
-		this.repositoryWorkspace = pref.getWorkspace();
-		this.repositoryName = pref.getRepoName();
-		this.repositoryUrl = pref.getUrl();
+		this.repositoryUser = server.getUsername();
+		this.repositoryPassword = server.getPassword();
+		this.repositoryWorkspace = server.getWorkspace();
+		this.repositoryName = server.getName();
+		this.repositoryUrl = server.getUrl();
+		this.server = server;
 
 		Document doc = FeedUtils.readAtomFeed(repositoryUrl, repositoryUser, repositoryPassword);
 		
@@ -98,8 +87,6 @@ public class CmisRepository {
 		feedTypesCollection = FeedUtils.getCollectionUrlFromRepoFeed("types", wsElement);
 		uriTemplateQuery = FeedUtils.getUriTemplateFromRepoFeed("query", wsElement);
 		uriTemplateTypeById = FeedUtils.getUriTemplateFromRepoFeed("typebyid", wsElement);
-		feedParams = createParams(pref);
-		useFeedParams = pref.getParams();
 	}
 
 	public String getFeedRootCollection() {
@@ -120,8 +107,8 @@ public class CmisRepository {
 	 * @param prefs
 	 * @return
 	 */
-	public static CmisRepository create(Application app, final Prefs prefs) {
-		return new CmisRepository(app, prefs);
+	public static CmisRepository create(Application app, final Server server) {
+		return new CmisRepository(app, server);
 	}
 	
 	/**
@@ -215,18 +202,21 @@ public class CmisRepository {
 		StorageUtils.deleteRepositoryFiles(application, workspace);
 	}
 	
-	public String getRepositoryWorkspace() {
-		return repositoryWorkspace;
-	}
-	
-	public void reCreateParams(Activity activity){
-		setFeedParams(createParams(new Prefs(activity)));
+	public void generateParams(Activity activity){
+		Prefs pref = new Prefs(activity);
+		if (pref.getParams()){
+			setUseFeedParams(true);
+			setFeedParams(createParams(pref));
+		} else {
+			setUseFeedParams(false);
+		}
 	}
 	
 	private String createParams(Prefs pref){
 		String params = "";
 		String value = "";
 		ArrayList<String> listParams = new ArrayList<String>(4);
+		//List<String> listParams = new LinkedList<String>();
 		
 		if (pref != null && pref.getParams()){
 			
@@ -250,15 +240,7 @@ public class CmisRepository {
 				listParams.add("orderBy" + "=" + pref.getOrder());
 			}
 			
-			//TODO BETTER!
-			for (String param : listParams) {
-				params += "&" + param;
-			}
-			
-			if (params.length() != 0){
-				params = params.replaceFirst("&", "");
-				params = "?" + params;
-			} 
+			params = "?" + TextUtils.join("&", listParams);
 		}
 		
 		try {
@@ -279,19 +261,16 @@ public class CmisRepository {
 		} else {
 			return false;
 		}
-		
 	}
 	
-	public String getRepositoryName() {
-		return repositoryName;
+	public void setUseFeedParams(Boolean useFeedParams) {
+		this.useFeedParams = useFeedParams;
 	}
 	
-	public String getRepositoryUser() {
-		return repositoryUser;
+	public Server getServer() {
+		return server;
 	}
-
-	public String getRepositoryPassword() {
-		return repositoryPassword;
-	}
+	
+	
 
 }

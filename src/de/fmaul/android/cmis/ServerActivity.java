@@ -8,10 +8,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -22,7 +22,7 @@ import de.fmaul.android.cmis.model.Server;
 
 public class ServerActivity extends ListActivity {
 
-	private CmisServersAdapter cmisSAdapter;
+	private ServerAdapter cmisSAdapter;
 	
 	private SharedPreferences preferences;
 	private SharedPreferences.Editor editor;
@@ -50,7 +50,7 @@ public class ServerActivity extends ListActivity {
 		listServer = new ArrayList<Server>(serverDao.findAll());
 		db.close();
 
-		cmisSAdapter = new CmisServersAdapter(this, R.layout.server_row, listServer);
+		cmisSAdapter = new ServerAdapter(this, R.layout.server_row, listServer);
 		setListAdapter(cmisSAdapter);
 	}
 	
@@ -90,15 +90,8 @@ public class ServerActivity extends ListActivity {
 			Intent intent = new Intent(this, ListCmisFeedActivity.class);
 			
 			intent.putExtra("isFirstStart", true);
+			intent.putExtra("server", s);
 			intent.putExtra("title", s.getName());
-			
-			editor.putLong("serverID", s.getId());
-			editor.putString("serverName", s.getName());
-			editor.putString("serverURL", s.getUrl());
-			editor.putString("username", s.getUsername());
-			editor.putString("password", s.getPassword());
-			editor.putString("workspace", s.getWorkspace());
-			editor.commit();
 			
 			startActivity(intent);
 		} else {

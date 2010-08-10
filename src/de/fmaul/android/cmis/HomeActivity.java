@@ -33,7 +33,7 @@ public class HomeActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, CmisPreferences.class));
+				startActivity(new Intent(HomeActivity.this, CmisFilter.class));
 			}
 		});
         

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"  android:key="mainPreferences">
+	<PreferenceCategory android:title="Repository Preferences">
+		<CheckBoxPreference 
+			android:key="@string/cmis_repo_params"
+			android:title="Activer Params" 
+			android:summary="Allow activer Params"
+			android:defaultValue="false" />
+		<EditTextPreference 
+			android:key="@string/cmis_repo_maxitems"
+			android:title="Max Items" 
+			android:summary="Max Items"
+			android:defaultValue="" />
+		<EditTextPreference 
+			android:key="@string/cmis_repo_filter"
+			android:title="Filter" 
+			android:summary="Filter"
+			android:defaultValue="" />
+		<EditTextPreference 
+			android:key="@string/cmis_repo_types"
+			android:title="Types" 
+			android:summary="Types"
+			android:defaultValue="" />
+		<EditTextPreference 
+			android:key="@string/cmis_repo_orderby"
+			android:title="Order By" 
+			android:summary="Order By"
+			android:defaultValue="" />
+	</PreferenceCategory>
+</PreferenceScreen>

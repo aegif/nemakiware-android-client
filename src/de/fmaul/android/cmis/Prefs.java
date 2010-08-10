@@ -26,33 +26,13 @@ public class Prefs {
 	public Prefs(Activity activity) {
 		this.activity = activity;
 	}
-
-	public String getRepoName() {
-		return getPrefs().getString("serverName", "");
-	}
-	
-	public String getUrl() {
-		return getPrefs().getString("serverURL", "vide");
-	}
-
-	public String getUser() {
-		return getPrefs().getString("username", "vide");
-	}
-
-	public String getPassword() {
-		return getPrefs().getString("password", "vide");
-	}
-	
-	public String getWorkspace() {
-		return getPrefs().getString("workspace", "vide");
-	}
 	
 	public String getMaxItems() {
-		return getPrefs().getString(activity.getString(R.string.cmis_repo_maxitems), "-1");
+		return getPrefs().getString(activity.getString(R.string.cmis_repo_maxitems), "");
 	}
 
 	public String getFilter() {
-		return getPrefs().getString(activity.getString(R.string.cmis_repo_filter), "*");
+		return getPrefs().getString(activity.getString(R.string.cmis_repo_filter), "");
 	}
 
 	public String getTypes() {

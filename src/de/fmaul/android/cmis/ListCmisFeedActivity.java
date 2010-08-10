@@ -40,8 +40,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.Toast;
-import de.fmaul.android.cmis.asynctask.CmisServerLoadingTask;
 import de.fmaul.android.cmis.asynctask.FeedDisplayTask;
+import de.fmaul.android.cmis.asynctask.ServerInitTask;
+import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
@@ -53,11 +54,9 @@ import de.fmaul.android.cmis.utils.StorageUtils;
 
 public class ListCmisFeedActivity extends ListActivity {
 
-	private Prefs prefs;
+	//private Prefs prefs;
 	private List<String> workspaces;
 	private CharSequence[] cs;
-	private SharedPreferences preferences;
-	private SharedPreferences.Editor editor;
 	private Context context = this;
 	private ListActivity activity = this;
 	private OnSharedPreferenceChangeListener listener;
@@ -77,13 +76,13 @@ public class ListCmisFeedActivity extends ListActivity {
 		if (initRepository() == false){
 			processSearchOrDisplayIntent();
 		}
-		
 		listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 			  public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-				  getRepository().reCreateParams(activity);
+				  if (prefs.getBoolean(activity.getString(R.string.cmis_repo_params), false)){
+					  getRepository().generateParams(activity);
+				  }
 			  }
 			};
-
 		PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(listener);
 
 	}
@@ -115,7 +114,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		pref.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(activity, CmisPreferences.class));
+				startActivity(new Intent(activity, CmisFilter.class));
 			}
 		});
 		
@@ -127,19 +126,17 @@ public class ListCmisFeedActivity extends ListActivity {
 		});
 		
 	}
-
+	
 	private boolean initRepository() {
 		boolean init = true;
 		try {
 			if (getRepository() == null) {
-				prefs = new Prefs(this);
-				new CmisServerLoadingTask(this, getApplication(), prefs).execute();
+				new ServerInitTask(this, getApplication(), (Server) getIntent().getExtras().getSerializable("server")).execute();
 			} else {
 				// Case if we change repository.
 				Bundle extra = this.getIntent().getExtras();
 				if (extra != null && extra.getBoolean("isFirstStart")) {
-					prefs = new Prefs(this);
-					new CmisServerLoadingTask(this, getApplication(), prefs).execute();
+					new ServerInitTask(this, getApplication(), (Server) getIntent().getExtras().getSerializable("server")).execute();
 				} else {
 					init = false;
 				}
@@ -206,39 +203,6 @@ public class ListCmisFeedActivity extends ListActivity {
 	}
 
 	@Override
-	public boolean onContextItemSelected(MenuItem menuItem) {
-
-		AdapterView.AdapterContextMenuInfo menuInfo;
-		try {
-			menuInfo = (AdapterView.AdapterContextMenuInfo) menuItem.getMenuInfo();
-		} catch (ClassCastException e) {
-			return false;
-		}
-
-		CmisItem doc = (CmisItem) getListView().getItemAtPosition(menuInfo.position);
-
-		switch (menuItem.getItemId()) {
-		case 1:
-			if (doc != null && doc.hasChildren() == false) {
-				ActionUtils.openDocument(activity, doc);
-			}
-			return true;
-		case 2:
-			if (doc != null) {
-				displayDocumentDetails(doc);
-			}
-			return true;
-		case 3:
-			if (doc != null) {
-				ActionUtils.shareDocument(activity, getRepository().getRepositoryWorkspace(), doc);
-			}
-			return true;
-		default:
-			return super.onContextItemSelected(menuItem);
-		}
-	}
-
-	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.setHeaderIcon(android.R.drawable.ic_menu_more);
@@ -255,6 +219,45 @@ public class ListCmisFeedActivity extends ListActivity {
 			menu.add(0, 1, Menu.NONE, getString(R.string.download));
 		}
 		
+		menu.add(0, 4, Menu.NONE, getString(R.string.menu_item_favorites));
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem menuItem) {
+
+		AdapterView.AdapterContextMenuInfo menuInfo;
+		try {
+			menuInfo = (AdapterView.AdapterContextMenuInfo) menuItem.getMenuInfo();
+		} catch (ClassCastException e) {
+			return false;
+		}
+
+		CmisItem item = (CmisItem) getListView().getItemAtPosition(menuInfo.position);
+
+		switch (menuItem.getItemId()) {
+		case 1:
+			if (item != null && item.hasChildren() == false) {
+				ActionUtils.openDocument(activity, item);
+			}
+			return true;
+		case 2:
+			if (item != null) {
+				ActionUtils.displayDocumentDetails(activity, item);
+			}
+			return true;
+		case 3:
+			if (item != null) {
+				ActionUtils.shareDocument(activity, getRepository().getServer().getWorkspace(), item);
+			}
+			return true;
+		case 4:
+			if (item != null) {
+				ActionUtils.createFavorite(activity, getRepository().getServer(), item);
+			}
+			return true;
+		default:
+			return super.onContextItemSelected(menuItem);
+		}
 	}
 
 	/**
@@ -304,20 +307,13 @@ public class ListCmisFeedActivity extends ListActivity {
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			
 			intent.putExtra("isFirstStart", true);
-			intent.putExtra("title", getRepository().getRepositoryName());
 			
-			preferences = PreferenceManager.getDefaultSharedPreferences(context);
-			editor = preferences.edit();
-			editor.putString("serverName", getRepository().getRepositoryName());
-			editor.putString("serverURL",  getRepository().getRepositoryUrl());
-			editor.putString("username", getRepository().getRepositoryUser());
-			editor.putString("password", getRepository().getRepositoryPassword());
+			Server s = getRepository().getServer();
 			if (workspace != null){
-				editor.putString("workspace", workspace);
-			} else {
-				editor.putString("workspace", getRepository().getRepositoryWorkspace());
-			}
-			editor.commit();
+				s.setWorkspace(workspace);
+			} 
+			intent.putExtra("server", s);
+			intent.putExtra("title",s.getName());
 			
 			this.finish();
 			startActivity(intent);
@@ -329,7 +325,7 @@ public class ListCmisFeedActivity extends ListActivity {
 			feed = getRepository().getFeedRootCollection();
 		}
 		
-		if (StorageUtils.deleteFeedFile(getRepository().getRepositoryWorkspace(), feed)){
+		if (StorageUtils.deleteFeedFile(getRepository().getServer().getWorkspace(), feed)){
 			activity.finish();
 			Intent intent = new Intent(activity, ListCmisFeedActivity.class);
 			intent.putExtra("feed", feed);
@@ -382,18 +378,19 @@ public class ListCmisFeedActivity extends ListActivity {
 				openNewListViewActivity(doc);
 			} else {
 				//openDocument(doc);
-				displayDocumentDetails(doc);
+				ActionUtils.displayDocumentDetails(activity, doc);
 			}
 		}
 	}
 
-	private void displayDocumentDetails(CmisItem doc) {
+	/*private void displayDocumentDetails(CmisItem doc) {
 		Intent intent = new Intent(ListCmisFeedActivity.this, DocumentDetailsActivity.class);
 
 		ArrayList<CmisProperty> propList = new ArrayList<CmisProperty>(doc.getProperties().values());
 		
 		intent.putParcelableArrayListExtra("properties", propList);
-		intent.putExtra("workspace", getRepository().getRepositoryWorkspace());
+		
+		intent.putExtra("workspace", getRepository().getServer().getWorkspace());
 		intent.putExtra("title", doc.getTitle());
 		intent.putExtra("mimetype", doc.getMimeType());
 		intent.putExtra("objectTypeId", doc.getProperties().get("cmis:objectTypeId").getValue());
@@ -407,7 +404,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		}
 		
 		startActivity(intent);
-	}
+	}*/
 
 	/**
 	 * Opens a feed url in a new listview. This enables the user to use the
@@ -426,18 +423,19 @@ public class ListCmisFeedActivity extends ListActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		
+		MenuItem item = menu.add(Menu.NONE, 1, 0, R.string.menu_item_favorites);
+		item.setIcon(R.drawable.favorites);
 		createRepoMenu(menu);
-		
-		MenuItem aboutItem = menu.add(Menu.NONE, 2, 0, R.string.menu_item_about);
-		aboutItem.setIcon(R.drawable.cmisexplorer);
-
 		createSearchMenu(menu);
+		item = menu.add(Menu.NONE, 3, 0, R.string.menu_item_about);
+		item.setIcon(R.drawable.cmisexplorer);
+		
 		return true;
 
 	}
 
 	private void createRepoMenu(Menu menu) {
-		SubMenu settingsMenu = menu.addSubMenu(Menu.NONE, 1, 0, R.string.menu_item_settings);
+		SubMenu settingsMenu = menu.addSubMenu(R.string.menu_item_settings);
 		settingsMenu.setIcon(R.drawable.repository);
 		settingsMenu.setHeaderIcon(android.R.drawable.ic_menu_info_details);
 
@@ -461,8 +459,12 @@ public class ListCmisFeedActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case 2:
-			//Toast.makeText(this, R.string.about_message, 5).show();
+		case 1:
+			Intent intent = new Intent(this, FavoriteActivity.class);
+			intent.putExtra("server", getRepository().getServer());
+			startActivity(intent);
+			return true;
+		case 3:
 			startActivity(new Intent(this, AboutActivity.class));
 			return true;
 		case 4:
@@ -475,7 +477,6 @@ public class ListCmisFeedActivity extends ListActivity {
 			onSearchRequested(QueryType.CMISQUERY);
 			return true;
 		case 7:
-			//setRepository(null);
 			restart();
 			return true;
 		case 8:
@@ -491,12 +492,13 @@ public class ListCmisFeedActivity extends ListActivity {
 	
 	private void chooseWorkspace(){
 		try {
-			workspaces = FeedUtils.getRootFeedsFromRepo(getRepository().getRepositoryUrl(), getRepository().getRepositoryUser(), getRepository().getRepositoryPassword());
+			Server server = getRepository().getServer();
+			workspaces = FeedUtils.getRootFeedsFromRepo(server.getUrl(), server.getUsername(), server.getPassword());
 			cs = workspaces.toArray(new CharSequence[workspaces.size()]);
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.cmis_repo_choose_workspace);
-			builder.setSingleChoiceItems(cs, workspaces.indexOf(getRepository().getRepositoryWorkspace()) ,new DialogInterface.OnClickListener() {
+			builder.setSingleChoiceItems(cs, workspaces.indexOf(server.getWorkspace()) ,new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
 			        dialog.dismiss();
 			        restart(cs[item].toString());

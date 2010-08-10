@@ -13,12 +13,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public class CmisServersAdapter extends ArrayAdapter<Server> {
+public class ServerAdapter extends ArrayAdapter<Server> {
 
 	private final Context context;
 	private ArrayList<Server> items;
 
-	public CmisServersAdapter(Context context, int textViewResourceId, ArrayList<Server> servers) {
+	public ServerAdapter(Context context, int textViewResourceId, ArrayList<Server> servers) {
 		super(context, textViewResourceId,servers);
 		this.items = servers;
 		this.context = context;

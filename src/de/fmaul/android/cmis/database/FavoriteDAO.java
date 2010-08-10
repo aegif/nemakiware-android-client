@@ -16,8 +16,8 @@ public class FavoriteDAO implements DAO<Favorite> {
 		this.db = db;
 	}
 	
-	public long insert(String name, String url, long serverId) {
-		ContentValues insertValues = createContentValues(name, url, serverId);
+	public long insert(String name, String url, long serverId, String mimetype) {
+		ContentValues insertValues = createContentValues(name, url, serverId, mimetype);
 		
 		return db.insert(FavoriteSchema.TABLENAME, null, insertValues);
 	}
@@ -28,8 +28,15 @@ public class FavoriteDAO implements DAO<Favorite> {
 	
 	public List<Favorite> findAll() {
 		Cursor c = db.query(
-				FavoriteSchema.TABLENAME, new String[] { FavoriteSchema.COLUMN_ID, FavoriteSchema.COLUMN_NAME, FavoriteSchema.COLUMN_URL, FavoriteSchema.COLUMN_SERVERID },
+				FavoriteSchema.TABLENAME, new String[] { FavoriteSchema.COLUMN_ID, FavoriteSchema.COLUMN_NAME, FavoriteSchema.COLUMN_URL, FavoriteSchema.COLUMN_SERVERID, FavoriteSchema.COLUMN_MIMETYPE },
 				null, null, null, null, null);
+		return cursorToFavorites(c);
+	}
+	
+	public List<Favorite> findAll(Long serverId) {
+		Cursor c = db.query(
+				FavoriteSchema.TABLENAME, new String[] { FavoriteSchema.COLUMN_ID, FavoriteSchema.COLUMN_NAME, FavoriteSchema.COLUMN_URL, FavoriteSchema.COLUMN_SERVERID, FavoriteSchema.COLUMN_MIMETYPE },
+				FavoriteSchema.COLUMN_SERVERID + " = " + serverId, null, null, null, null);
 		return cursorToFavorites(c);
 	}
 	
@@ -42,13 +49,13 @@ public class FavoriteDAO implements DAO<Favorite> {
 		return cursorToFavorite(c);
 	}
 
-	private ContentValues createContentValues(String name, String url,
-			long repoId) {
+	private ContentValues createContentValues(String name, String url, long repoId, String mimetype) {
 		ContentValues updateValues = new ContentValues();
 		
 		updateValues.put(FavoriteSchema.COLUMN_NAME, name);
 		updateValues.put(FavoriteSchema.COLUMN_URL, url);
 		updateValues.put(FavoriteSchema.COLUMN_SERVERID, repoId);
+		updateValues.put(FavoriteSchema.COLUMN_MIMETYPE, mimetype);
 		return updateValues;
 	}
 	
@@ -73,7 +80,8 @@ public class FavoriteDAO implements DAO<Favorite> {
 				c.getInt(FavoriteSchema.COLUMN_ID_ID), 
 				c.getString(FavoriteSchema.COLUMN_NAME_ID), 
 				c.getString(FavoriteSchema.COLUMN_URL_ID), 
-				c.getInt(FavoriteSchema.COLUMN_SERVERID_ID)
+				c.getInt(FavoriteSchema.COLUMN_SERVERID_ID),
+				c.getString(FavoriteSchema.COLUMN_MIMETYPE_ID) 
 				);
 		return fav;
 	}

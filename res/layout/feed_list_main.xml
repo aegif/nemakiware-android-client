@@ -52,7 +52,7 @@
 			<Button
 				android:id="@+id/preference"
 				android:layout_height="wrap_content"
-				android:drawableTop="@drawable/preferencesmini"
+				android:drawableTop="@drawable/filter"
 				android:clickable="true"
 				android:text="@string/menu_item_prefs"
 				android:layout_marginRight="10dip"

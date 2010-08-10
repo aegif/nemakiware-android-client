@@ -1,6 +1,7 @@
 package de.fmaul.android.cmis.utils;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -8,9 +9,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 import de.fmaul.android.cmis.CmisApp;
+import de.fmaul.android.cmis.DocumentDetailsActivity;
+import de.fmaul.android.cmis.ListCmisFeedActivity;
 import de.fmaul.android.cmis.R;
+import de.fmaul.android.cmis.ServerActivity;
 import de.fmaul.android.cmis.asynctask.AbstractDownloadTask;
+import de.fmaul.android.cmis.database.Database;
+import de.fmaul.android.cmis.database.FavoriteDAO;
+import de.fmaul.android.cmis.database.ServerDAO;
+import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.CmisItem;
+import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 
 public class ActionUtils {
@@ -36,7 +45,11 @@ public class ActionUtils {
 	
 	
 	public static void displayError(Activity contextActivity, int messageId) {
-		Toast.makeText(contextActivity, messageId, Toast.LENGTH_SHORT).show();
+		Toast.makeText(contextActivity, messageId, Toast.LENGTH_LONG).show();
+	}
+	
+	public static void displayError(Activity contextActivity, String messageId) {
+		Toast.makeText(contextActivity, messageId, Toast.LENGTH_LONG).show();
 	}
 	
 	private static void viewFileInAssociatedApp(Activity contextActivity, File tempFile, String mimeType) {
@@ -89,4 +102,53 @@ public class ActionUtils {
 	private static String getContentFromIntent(Activity activity) {
 		return activity.getIntent().getStringExtra("contentStream");
 	}
+	
+	
+	public static void createFavorite(Activity activity, Server server, CmisItem item){
+		Database database = Database.create(activity);
+		FavoriteDAO favDao = new FavoriteDAO(database.open());
+		long result;
+		if (item.hasChildren()){
+			result = favDao.insert(item.getTitle(), item.getDownLink(), server.getId(), "");
+		} else {
+			result = favDao.insert(item.getTitle(), item.getSelfUrl(), server.getId(), item.getMimeType());
+		}
+		database.close();
+		
+		if (result == -1){
+			Toast.makeText(activity, "ERROR during Favorite Added", Toast.LENGTH_LONG).show();
+		} else {
+			Toast.makeText(activity, "Favorite Added", Toast.LENGTH_LONG).show();
+		}
+		
+	}
+	
+	public static void displayDocumentDetails(Activity activity, CmisItem doc) {
+		displayDocumentDetails(activity, getRepository(activity).getServer(), doc);
+	}
+	
+	public static void displayDocumentDetails(Activity activity, Server server, CmisItem doc) {
+		Intent intent = new Intent(activity, DocumentDetailsActivity.class);
+
+		ArrayList<CmisProperty> propList = new ArrayList<CmisProperty>(doc.getProperties().values());
+		
+		intent.putParcelableArrayListExtra("properties", propList);
+		
+		intent.putExtra("workspace", server.getWorkspace());
+		intent.putExtra("title", doc.getTitle());
+		intent.putExtra("mimetype", doc.getMimeType());
+		intent.putExtra("objectTypeId", doc.getProperties().get("cmis:objectTypeId").getValue());
+		intent.putExtra("baseTypeId", doc.getProperties().get("cmis:baseTypeId").getValue());
+		intent.putExtra("contentUrl", doc.getContentUrl());
+		intent.putExtra("self", doc.getSelfUrl());
+		
+		CmisProperty fileSize = doc.getProperties().get("cmis:contentStreamLength");
+		if (fileSize != null) {
+			intent.putExtra("contentStream",fileSize.getValue());
+		}
+		
+		activity.startActivity(intent);
+	}
+	
+	
 }
