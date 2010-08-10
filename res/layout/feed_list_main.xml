@@ -81,19 +81,46 @@
 		    android:layout_width="fill_parent"
 		    android:layout_height="fill_parent"
 		    />
-		<TextView
-		    android:id="@+id/loading"
-		    android:layout_width="fill_parent"
-		    android:layout_height="fill_parent"
-		    android:text="@string/loading_data"
-		    />
+		
 		<TextView
 		    android:id="@+id/empty"
 		    android:layout_width="fill_parent"
 		    android:layout_height="fill_parent"
 		    android:text="@string/main_no_items"
-		    android:visibility="gone"/>
-    
+		    android:visibility="gone"
+		    />
+		    
     </LinearLayout>
+    
+    <LinearLayout android:id="@+id/animation"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="40dip"
+                    >
+
+            <ImageView
+		        android:id="@+id/repository_image"
+		        android:layout_width="wrap_content"
+		        android:layout_height="fill_parent"
+		        android:src="@drawable/repository" />
+		        
+		    <ImageView
+		        android:id="@+id/transfert"
+		        android:layout_width="wrap_content"
+		        android:layout_height="fill_parent"
+		        android:src="@drawable/next"
+		        android:paddingLeft="70dip" 
+		        android:paddingRight="70dip" 
+		        />
+		        
+		     <ImageView
+		        android:id="@+id/phone"
+		        android:layout_width="wrap_content"
+		        android:layout_height="fill_parent"
+		        android:src="@drawable/phone"
+		         />
+        </LinearLayout>
     
 </LinearLayout>

@@ -228,7 +228,7 @@ public class CmisRepository {
 		String value = "";
 		ArrayList<String> listParams = new ArrayList<String>(4);
 		
-		if (pref != null){
+		if (pref != null && pref.getParams()){
 			
 			value = pref.getTypes();
 			if (value != null && value.length() > 0){

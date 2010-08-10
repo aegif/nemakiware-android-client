@@ -331,11 +331,12 @@ public class ListCmisFeedActivity extends ListActivity {
 		}
 		
 		if (StorageUtils.deleteFeedFile(getRepository().getRepositoryWorkspace(), feed)){
+			activity.finish();
 			Intent intent = new Intent(activity, ListCmisFeedActivity.class);
-			intent.putExtra("feed", getFeedFromIntent());
+			intent.putExtra("feed", feed);
 			intent.putExtra("title", getTitleFromIntent());
 			startActivity(intent);
-			activity.finish();
+			//activity.finish();
 		} else {
 			displayError(R.string.application_not_available);
 		}

@@ -19,6 +19,8 @@ import android.app.ListActivity;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import de.fmaul.android.cmis.repo.CmisItemCollection;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.utils.FeedLoadException;
@@ -29,6 +31,7 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 	private final CmisRepository repository;
 	private final String title;
 	private String feedParams = "";
+	private View layout;
 
 	public FeedDisplayTask(ListActivity activity, CmisRepository repository) {
 		this(activity, repository, null);
@@ -47,6 +50,13 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 		if (repository != null && repository.getUseFeedParams()){
 			feedParams = repository.getFeedParams();
 		}
+		
+		layout = activity.findViewById(R.id.animation);
+		layout.setVisibility(View.VISIBLE);
+		View objet = activity.findViewById(R.id.transfert);
+        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.download);
+        objet.startAnimation(animation);
+		
 	}
 
 	@Override
@@ -73,7 +83,7 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 		}
 		activity.setProgressBarIndeterminateVisibility(false);
 		
-		activity.findViewById(R.id.loading).setVisibility(View.GONE);
+		layout.setVisibility(View.GONE);
 		if (itemCollection.getItems().size() == 0 ){
 			activity.findViewById(R.id.empty).setVisibility(View.VISIBLE);
 		}
