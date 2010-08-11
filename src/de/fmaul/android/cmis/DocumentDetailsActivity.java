@@ -82,7 +82,7 @@ public class DocumentDetailsActivity extends ListActivity {
 		} else {
 			//FOLDER
 			download.setVisibility(View.GONE);
-			//edit.setVisibility(View.GONE);
+			edit.setVisibility(View.GONE);
 			//share.setVisibility(View.GONE);
 			//qrcode.setVisibility(View.GONE);
 			delete.setVisibility(View.GONE);
