@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -39,11 +40,13 @@ public class DocumentDetailsActivity extends ListActivity {
 	private CmisItemLazy item;
 	private Button download, share, edit, delete, qrcode;
 	private String objectTypeId;
+	private Activity activity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.document_details_main);
+		activity = this;
 		
 		item = (CmisItemLazy) getIntent().getExtras().getSerializable("item");
 		
@@ -65,14 +68,14 @@ public class DocumentDetailsActivity extends ListActivity {
 			download.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					ActionUtils.openDocument(DocumentDetailsActivity.this, item);
+					ActionUtils.openDocument(activity, item);
 				}
 			});
 			
 			qrcode.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					IntentIntegrator.shareText(DocumentDetailsActivity.this, item.getSelfUrl());
+					IntentIntegrator.shareText(activity, item.getSelfUrl());
 				}
 			});
 			
@@ -93,7 +96,7 @@ public class DocumentDetailsActivity extends ListActivity {
 		share.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ActionUtils.shareDocument(DocumentDetailsActivity.this, DocumentDetailsActivity.this.getIntent().getStringExtra("workspace"), item);
+				ActionUtils.shareDocument(activity, activity.getIntent().getStringExtra("workspace"), item);
 			}
 		});
 	}

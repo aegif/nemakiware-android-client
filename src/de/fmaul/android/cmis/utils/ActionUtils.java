@@ -38,22 +38,25 @@ import de.fmaul.android.cmis.repo.CmisRepository;
 public class ActionUtils {
 
 	public static void openDocument(final Activity contextActivity, final CmisItemLazy item) {
-
-		File content = item.getContent(contextActivity.getIntent().getStringExtra("workspace"));
-		if (content != null && content.length() > 0 && content.length() == Long.parseLong(getContentFromIntent(contextActivity))){
-			viewFileInAssociatedApp(contextActivity, content, item.getMimeType());
-		} else {
-			
-			new AbstractDownloadTask(getRepository(contextActivity), contextActivity) {
-				@Override
-				public void onDownloadFinished(File contentFile) {
-					if (contentFile != null && contentFile.exists()) {
-						viewFileInAssociatedApp(contextActivity, contentFile, item.getMimeType());
-					} else {
-						displayError(contextActivity, R.string.error_file_does_not_exists);
+		try {
+			File content = item.getContent(contextActivity.getIntent().getStringExtra("workspace"));
+			if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getSize())){
+				viewFileInAssociatedApp(contextActivity, content, item.getMimeType());
+			} else {
+				
+				new AbstractDownloadTask(getRepository(contextActivity), contextActivity) {
+					@Override
+					public void onDownloadFinished(File contentFile) {
+						if (contentFile != null && contentFile.exists()) {
+							viewFileInAssociatedApp(contextActivity, contentFile, item.getMimeType());
+						} else {
+							displayError(contextActivity, R.string.error_file_does_not_exists);
+						}
 					}
-				}
-			}.execute(item);
+				}.execute(item);
+			}
+		} catch (Exception e) {
+			displayError(contextActivity, e.getMessage());
 		}
 	}
 	
@@ -108,19 +111,25 @@ public class ActionUtils {
 	}
 	
 	public static void shareDocument(final Activity contextActivity, final String workspace, final CmisItemLazy item) {
-		File content = item.getContent(workspace);
-		if (item.getMimeType().length() == 0){
-			shareFileInAssociatedApp(contextActivity, content, item);
-		} else if (content != null && content.length() > 0 && content.length() == Long.parseLong(getContentFromIntent(contextActivity))) {
-			shareFileInAssociatedApp(contextActivity, content, item);
-		} else {
-			new AbstractDownloadTask(getRepository(contextActivity), contextActivity) {
-				@Override
-				public void onDownloadFinished(File contentFile) {
-						shareFileInAssociatedApp(contextActivity, contentFile, item);
-				}
-			}.execute(item);
+		
+		try {
+			File content = item.getContent(workspace);
+			if (item.getMimeType().length() == 0){
+				shareFileInAssociatedApp(contextActivity, content, item);
+			} else if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getSize())) {
+				shareFileInAssociatedApp(contextActivity, content, item);
+			} else {
+				new AbstractDownloadTask(getRepository(contextActivity), contextActivity) {
+					@Override
+					public void onDownloadFinished(File contentFile) {
+							shareFileInAssociatedApp(contextActivity, contentFile, item);
+					}
+				}.execute(item);
+			}
+		} catch (Exception e) {
+			displayError(contextActivity, R.string.generic_error);
 		}
+		
 	}
 	
 	private static void shareFileInAssociatedApp(Activity contextActivity, File contentFile, CmisItemLazy item) {
@@ -141,26 +150,25 @@ public class ActionUtils {
 		return ((CmisApp) activity.getApplication()).getRepository();
 	}
 	
-	private static String getContentFromIntent(Activity activity) {
-		return activity.getIntent().getStringExtra("contentStream");
-	}
-	
-	
 	public static void createFavorite(Activity activity, Server server, CmisItemLazy item){
-		Database database = Database.create(activity);
-		FavoriteDAO favDao = new FavoriteDAO(database.open());
-		long result;
-		if (item.hasChildren()){
-			result = favDao.insert(item.getTitle(), item.getDownLink(), server.getId(), "");
-		} else {
-			result = favDao.insert(item.getTitle(), item.getSelfUrl(), server.getId(), item.getMimeType());
-		}
-		database.close();
-		
-		if (result == -1){
-			Toast.makeText(activity, R.string.favorite_create_error, Toast.LENGTH_LONG).show();
-		} else {
-			Toast.makeText(activity, R.string.favorite_create, Toast.LENGTH_LONG).show();
+		try {
+			Database database = Database.create(activity);
+			FavoriteDAO favDao = new FavoriteDAO(database.open());
+			long result;
+			if (item.hasChildren()){
+				result = favDao.insert(item.getTitle(), item.getDownLink(), server.getId(), "");
+			} else {
+				result = favDao.insert(item.getTitle(), item.getSelfUrl(), server.getId(), item.getMimeType());
+			}
+			database.close();
+			
+			if (result == -1){
+				Toast.makeText(activity, R.string.favorite_create_error, Toast.LENGTH_LONG).show();
+			} else {
+				Toast.makeText(activity, R.string.favorite_create, Toast.LENGTH_LONG).show();
+			}
+		} catch (Exception e) {
+			displayError(activity, R.string.generic_error);
 		}
 		
 	}
@@ -170,19 +178,21 @@ public class ActionUtils {
 	}
 	
 	public static void displayDocumentDetails(Activity activity, Server server, CmisItem doc) {
-		Intent intent = new Intent(activity, DocumentDetailsActivity.class);
-
-		ArrayList<CmisProperty> propList = new ArrayList<CmisProperty>(doc.getProperties().values());
-		
-		intent.putParcelableArrayListExtra("properties", propList);
-		
-		intent.putExtra("workspace", server.getWorkspace());
-		intent.putExtra("objectTypeId", doc.getProperties().get("cmis:objectTypeId").getValue());
-		intent.putExtra("baseTypeId", doc.getProperties().get("cmis:baseTypeId").getValue());
-		intent.putExtra("item", new CmisItemLazy(doc));
-		
-		activity.startActivity(intent);
+		try {
+			Intent intent = new Intent(activity, DocumentDetailsActivity.class);
+	
+			ArrayList<CmisProperty> propList = new ArrayList<CmisProperty>(doc.getProperties().values());
+			
+			intent.putParcelableArrayListExtra("properties", propList);
+			
+			intent.putExtra("workspace", server.getWorkspace());
+			intent.putExtra("objectTypeId", doc.getProperties().get("cmis:objectTypeId").getValue());
+			intent.putExtra("baseTypeId", doc.getProperties().get("cmis:baseTypeId").getValue());
+			intent.putExtra("item", new CmisItemLazy(doc));
+			
+			activity.startActivity(intent);
+		} catch (Exception e) {
+			displayError(activity, R.string.generic_error);
+		}
 	}
-	
-	
 }

@@ -55,7 +55,6 @@ import de.fmaul.android.cmis.utils.StorageUtils;
 
 public class ListCmisFeedActivity extends ListActivity {
 
-	//private Prefs prefs;
 	private List<String> workspaces;
 	private CharSequence[] cs;
 	private Context context = this;
@@ -71,7 +70,7 @@ public class ListCmisFeedActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setRequestedOrientation(getResources().getConfiguration().orientation);
+		
 		initWindow();
 		initActionIcon();
 		if (initRepository() == false){
@@ -143,6 +142,7 @@ public class ListCmisFeedActivity extends ListActivity {
 				}
 			}
 		} catch (FeedLoadException fle) {
+			ActionUtils.displayError(activity, R.string.generic_error);
 		}
 		return init;
 	}
@@ -192,6 +192,7 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * Initialize the window and the activity.
 	 */
 	private void initWindow() {
+		setRequestedOrientation(getResources().getConfiguration().orientation);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		
 		setContentView(R.layout.feed_list_main);

@@ -99,27 +99,4 @@ public class CmisItem extends CmisItemLazy {
 		}
 		return modfiedDate;
 	}
-
-	public static CmisItem create(String title, String upLink) {
-		CmisItem cmisItem = new CmisItem();
-		cmisItem.title = title;
-		cmisItem.downLink = upLink;
-		cmisItem.id = "";
-		cmisItem.author = "";
-		cmisItem.contentUrl = null;
-		cmisItem.properties = new HashMap<String, CmisProperty>();
-		return cmisItem;
-	}
-	
-	public static CmisItem create(String title, String id,  String mimeType, String contentUrl, String selfUrl) {
-		CmisItem cmisItem = new CmisItem();
-		cmisItem.title = title;
-		cmisItem.id = id;
-		cmisItem.mimeType = mimeType;
-		cmisItem.contentUrl = contentUrl;
-		cmisItem.selfUrl = selfUrl;
-		cmisItem.properties = new HashMap<String, CmisProperty>();
-		return cmisItem;
-	}
-
 }
