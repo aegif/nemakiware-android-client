@@ -1,8 +1,21 @@
+/*
+ * Copyright (C) 2010 Jean Marie PASCAL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.fmaul.android.cmis;
 
 import java.util.ArrayList;
-
-import org.dom4j.Document;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -21,9 +34,7 @@ import de.fmaul.android.cmis.database.Database;
 import de.fmaul.android.cmis.database.FavoriteDAO;
 import de.fmaul.android.cmis.model.Favorite;
 import de.fmaul.android.cmis.model.Server;
-import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.utils.ActionUtils;
-import de.fmaul.android.cmis.utils.FeedUtils;
 
 public class FavoriteActivity extends ListActivity {
 
@@ -63,18 +74,7 @@ public class FavoriteActivity extends ListActivity {
 		if (f != null){
 			Intent intent;
 			if (f.getMimetype() != null && f.getMimetype().length() != 0){
-				
-				//TODO ASYNCTASK
 				new FeedItemDisplayTask(activity, currentServer, f.getUrl()).execute();
-				
-				/*intent = new Intent(this, DocumentDetailsActivity.class);
-				Document doc = FeedUtils.readAtomFeed(f.getUrl(), currentServer.getUsername(), currentServer.getPassword());
-				CmisItem item = CmisItem.createFromFeed(doc.getRootElement());
-				if (item != null){
-					ActionUtils.displayDocumentDetails(activity, currentServer, item);
-				} else {
-					ActionUtils.displayError(activity, "ERROR during favorite");
-				}*/
 			} else {
 				intent = new Intent(this, ListCmisFeedActivity.class);
 				intent.putExtra("title", f.getName());
@@ -82,7 +82,7 @@ public class FavoriteActivity extends ListActivity {
 				startActivity(intent);
 			}
 		} else {
-			Toast.makeText(this, "ERROR", 3);
+			ActionUtils.displayError(this, R.string.favorite_error);
 		}
 	}
 	
@@ -121,10 +121,10 @@ public class FavoriteActivity extends ListActivity {
 		FavoriteDAO favoriteDao = new FavoriteDAO(db.open());
 
 		if (favoriteDao.delete(id)) {
-			Toast.makeText(this, this.getString(R.string.server_delete), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, this.getString(R.string.favorite_delete), Toast.LENGTH_LONG).show();
 			createFavoriteList();
 		} else {
-			Toast.makeText(this, this.getString(R.string.server_delete_error), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, this.getString(R.string.favorite_delete_error), Toast.LENGTH_LONG).show();
 		}
 		db.close();
 	}

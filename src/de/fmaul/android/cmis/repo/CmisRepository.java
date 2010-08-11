@@ -23,8 +23,6 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 import org.dom4j.Document;

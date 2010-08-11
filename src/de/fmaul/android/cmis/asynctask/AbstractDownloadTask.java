@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import de.fmaul.android.cmis.R;
-import de.fmaul.android.cmis.R.string;
 import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisRepository;
 

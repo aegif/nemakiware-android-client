@@ -356,11 +356,6 @@ public class ListCmisFeedActivity extends ListActivity {
 		new FeedDisplayTask(this, getRepository(), title).execute(feed);
 	}
 
-	private void displayFeedInListViewWithTitleFromFeed(final String feed) {
-		setTitle(R.string.loading);
-		new FeedDisplayTask(this, getRepository()).execute(feed);
-	}
-
 	private void displayError(int messageId) {
 		Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show();
 	}

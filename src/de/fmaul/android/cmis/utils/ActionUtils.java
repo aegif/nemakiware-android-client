@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2010 Florian Maul & Jean Marie PASCAL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.fmaul.android.cmis.utils;
 
 import java.io.File;
@@ -10,13 +25,10 @@ import android.net.Uri;
 import android.widget.Toast;
 import de.fmaul.android.cmis.CmisApp;
 import de.fmaul.android.cmis.DocumentDetailsActivity;
-import de.fmaul.android.cmis.ListCmisFeedActivity;
 import de.fmaul.android.cmis.R;
-import de.fmaul.android.cmis.ServerActivity;
 import de.fmaul.android.cmis.asynctask.AbstractDownloadTask;
 import de.fmaul.android.cmis.database.Database;
 import de.fmaul.android.cmis.database.FavoriteDAO;
-import de.fmaul.android.cmis.database.ServerDAO;
 import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisProperty;
@@ -92,7 +104,7 @@ public class ActionUtils {
 			i.putExtra(Intent.EXTRA_TEXT, item.getSelfUrl());
 			i.setType("text/plain");
 		}
-		contextActivity.startActivity(Intent.createChooser(i, "Share..."));
+		contextActivity.startActivity(Intent.createChooser(i, contextActivity.getText(R.string.share)));
 	}
 	
 	private static CmisRepository getRepository(Activity activity) {
@@ -116,9 +128,9 @@ public class ActionUtils {
 		database.close();
 		
 		if (result == -1){
-			Toast.makeText(activity, "ERROR during Favorite Added", Toast.LENGTH_LONG).show();
+			Toast.makeText(activity, R.string.favorite_create_error, Toast.LENGTH_LONG).show();
 		} else {
-			Toast.makeText(activity, "Favorite Added", Toast.LENGTH_LONG).show();
+			Toast.makeText(activity, R.string.favorite_create, Toast.LENGTH_LONG).show();
 		}
 		
 	}

@@ -16,7 +16,6 @@
 package de.fmaul.android.cmis.repo;
 
 import java.io.File;
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.dom4j.Element;
-
-import android.app.Application;
 
 import de.fmaul.android.cmis.utils.FeedUtils;
 import de.fmaul.android.cmis.utils.StorageUtils;

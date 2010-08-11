@@ -97,7 +97,7 @@
 		
 		<!-- VALIDATION -->
 		<Button android:id="@+id/open_icon" 
-			android:text="Visit Open Icon Library Website "
+			android:text="@string/about_openicon_website"
 			android:layout_width="wrap_content" 
 			android:layout_height="wrap_content"
 			 />

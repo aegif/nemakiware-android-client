@@ -114,10 +114,6 @@ public class DocumentDetailsActivity extends ListActivity {
 		return getIntent().getStringExtra("objectTypeId");
 	}
 	
-	private String getBaseTypeIdFromIntent() {
-		return getIntent().getStringExtra("baseTypeId");
-	}
-	
 	private String getContentFromIntent() {
 		return getIntent().getStringExtra("contentStream");
 	}
@@ -165,76 +161,4 @@ public class DocumentDetailsActivity extends ListActivity {
 	CmisRepository getRepository() {
 		return ((CmisApp) getApplication()).getRepository();
 	}
-	
-/*
-	private void openDocument() {
-
-		File content = item.getContent(getIntent().getStringExtra("workspace"));
-		if (content != null && content.length() > 0 && content.length() == Long.parseLong(getContentFromIntent())){
-			viewFileInAssociatedApp(content, item.getMimeType());
-		} else {
-			new AbstractDownloadTask(getRepository(), this) {
-				@Override
-				public void onDownloadFinished(File contentFile) {
-					if (contentFile != null && contentFile.exists()) {
-						viewFileInAssociatedApp(contentFile, item.getMimeType());
-					} else {
-						displayError(R.string.error_file_does_not_exists);
-					}
-				}
-			}.execute(item);
-		}
-	}
-
-	private void displayError(int messageId) {
-		Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show();
-	}
-	
-
-	private void viewFileInAssociatedApp(File tempFile, String mimeType) {
-		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
-		Uri data = Uri.fromFile(tempFile);
-		viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		viewIntent.setDataAndType(data, mimeType.toLowerCase());
-
-		try {
-			startActivity(viewIntent);
-		} catch (ActivityNotFoundException e) {
-			Toast.makeText(this, R.string.application_not_available, Toast.LENGTH_SHORT).show();
-		}
-	}
-	
-	private void shareDocument() {
-		
-		File content = item.getContent(getIntent().getStringExtra("workspace"));
-		if (item.getMimeType().length() == 0){
-			shareFileInAssociatedApp(content);
-		} else if (content != null && content.length() > 0 && content.length() == Long.parseLong(getContentFromIntent())) {
-			shareFileInAssociatedApp(content);
-		} else {
-			new AbstractDownloadTask(getRepository(), this) {
-				@Override
-				public void onDownloadFinished(File contentFile) {
-						shareFileInAssociatedApp(contentFile);
-				}
-			}.execute(item);
-		}
-	}
-	
-	private void shareFileInAssociatedApp(File contentFile) {
-		Intent i = new Intent(Intent.ACTION_SEND);
-		i.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
-		//item.get
-		if (contentFile != null && contentFile.exists()){
-			i.putExtra(Intent.EXTRA_TEXT, item.getContentUrl());
-			i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(contentFile));
-			i.setType(item.getMimeType());
-		} else {
-			i.putExtra(Intent.EXTRA_TEXT, getSelfUrlFromIntent());
-			i.setType("plain/text");
-		}
-		startActivity(Intent.createChooser(i, "Send mail..."));
-	}*/
-	
-
 }

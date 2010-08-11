@@ -28,6 +28,7 @@
 	<string name="cmis_repo_choose_workspace">Choose Default Workspace</string>
 	
 	<string name="error_repo_connexion">Repository not set up correctly. Please check the repository settings.</string>
+	<string name="cmis_repo_fields">Some fiels are required : NAME, URL, WORKSPACE</string>
 	
 	<!-- SERVER INFO -->
 	<string name="server_info">Info</string>
@@ -77,6 +78,8 @@
 	<string name="application_not_available">There is no application for this file type.</string>
 	<string name="error_downloading_content">Error downloading content from CMIS repository.</string>
 	
+	<string name="no_properties">No properties found.</string>
+	
 	
 	<!-- GENERIC ACTION STRING -->
 	<string name="delete">Delete...</string>
@@ -88,6 +91,7 @@
     <string name="loading">Loading...</string>
     <string name="data_empty">No data found...</string>
     <string name="qrcode">QRCode</string>
+    <string name="generic_error">An error occured during the treatment. Please try again...</string>
     
 
 	<!-- Preferences -->
@@ -101,5 +105,16 @@
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Developpers</string>
 	<string name="about_resources">Resources</string>
+	<string name="about_project_website">Visit Android CMIS Browser Project Website</string>
+	<string name="about_openicon_website">Visit Open Icon Library Website</string>
+	
+	<!-- FAVORITE ACTIVITY -->
+    <string name="favorite_create">Favorite added : OK</string>
+    <string name="favorite_create_error">A problem occured during creation action. Please try again...</string>
+	
+	<string name="favorite_delete">Favorite removed : OK</string>
+    <string name="favorite_delete_error">A problem occured during delete action. Please try again...</string>
+	<string name="favorite_error">Favorite is not availale.</string>
+	<string name="favorite_error_loading">A problem occured during loading action. Please try again...</string>
 
 </resources>
