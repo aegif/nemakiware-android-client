@@ -86,7 +86,7 @@
     <string name="share">Share</string>
     <string name="quit">Quit</string>
     <string name="loading">Loading...</string>
-    <string name="data_empty">No data found...</string>
+    <string name="data_empty">No data found.</string>
     <string name="qrcode">QRCode</string>
     
 
@@ -99,7 +99,7 @@
 	
 	
 	<!-- ABOUT ACTIVITY -->
-	<string name="about_dev">Developpers</string>
+	<string name="about_dev">Developers</string>
 	<string name="about_resources">Resources</string>
 
 </resources>

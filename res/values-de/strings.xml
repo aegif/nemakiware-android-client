@@ -29,6 +29,12 @@
 	
 	<string name="error_repo_connexion">Das Repository ist nicht korrekt eingerichtet. Prüfen Sie die Einstellungen.</string>
 	
+	<!-- SERVER INFO -->
+	<string name="server_info">Info</string>
+	<string name="server_info_general">Allgemein</string>
+	<string name="server_info_acl">ACL</string>
+	<string name="server_info_capabilites">Fähigkeiten</string>
+
 	
 	<!-- LIST CMIS FEED ACTIVITY -->
 	<string name="feed_menu_title">Datei Optionen</string>
@@ -46,8 +52,19 @@
     <string name="menu_item_details">Details anzeigen</string>
 	<string name="menu_item_share">Datei sharen</string>
 	
+	<string name="menu_item_favorites">Favorites</string>
+	
+	<string name="menu_item_home">Home</string>
+	<string name="menu_item_up">Oben</string>
+	<string name="menu_item_back">Zurück</string>
+	<string name="menu_item_prefs">Einstellungen</string>
+	<string name="menu_item_refresh">Aktualisieren</string>
+	<string name="menu_item_scanner">Scanner</string>
+	
+	<string name="loading_data">Please wait a few moment... Loading data...</string>
 	
 	<!-- SEARCH RESULT -->
+	<string name="search_label">CMIS Repository</string>
 	<string name="search_results_for">Ergebnisse für</string>
 	
 	
@@ -69,6 +86,7 @@
     <string name="share">Sharen</string>
     <string name="quit">Beenden</string>
     <string name="loading">lade...</string>
-
+    <string name="data_empty">Keine Daten gefundnen.</string>
+    <string name="qrcode">QRCode</string>
 
 </resources>
