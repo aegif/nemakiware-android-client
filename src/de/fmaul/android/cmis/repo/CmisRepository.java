@@ -23,8 +23,6 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 import org.dom4j.Document;
@@ -173,7 +171,7 @@ public class CmisRepository {
 		return CmisTypeDefinition.createFromFeed(doc);
 	}
 
-	public File retreiveContent(CmisItem item) {
+	public File retreiveContent(CmisItemLazy item) {
 		File contentFile = StorageUtils.getStorageFile(repositoryWorkspace, StorageUtils.TYPE_CONTENT, item.getId(), item.getTitle());
 
 		try {
@@ -194,7 +192,7 @@ public class CmisRepository {
 	 * Fetches the contents from the CMIS repository for the given
 	 * {@link CmisItem}.
 	 */
-	private void downloadContent(CmisItem item, OutputStream os) throws ClientProtocolException, IOException {
+	private void downloadContent(CmisItemLazy item, OutputStream os) throws ClientProtocolException, IOException {
 		HttpUtils.getWebRessource(item.getContentUrl(), repositoryUser, repositoryPassword).getEntity().writeTo(os);
 	}
 

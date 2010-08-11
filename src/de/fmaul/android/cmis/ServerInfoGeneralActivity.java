@@ -1,22 +1,24 @@
+/*
+ * Copyright (C) 2010 Jean Marie PASCAL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package de.fmaul.android.cmis;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import de.fmaul.android.cmis.asynctask.ServerInfoDisplayTask;
-import de.fmaul.android.cmis.model.Server;
-import de.fmaul.android.cmis.repo.CmisProperty;
-import de.fmaul.android.cmis.utils.ListUtils;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
+import de.fmaul.android.cmis.asynctask.ServerInfoDisplayTask;
 
 public class ServerInfoGeneralActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
@@ -25,19 +27,6 @@ public class ServerInfoGeneralActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		
 		new ServerInfoDisplayTask(this).execute();
-		
-		/*//Init View
-		setContentView(R.layout.server_info_general);
-		
-		//
-		ArrayList<CmisProperty> propList = getIntent().getParcelableArrayListExtra(getIntent().getStringExtra("context"));
-		
-		List<Map<String, ?>> list = ListUtils.buildListOfNameValueMaps(propList);
-		SimpleAdapter props = new SimpleAdapter(this, list, R.layout.document_details_row, new String[] { "name", "value" }, new int[] {
-				R.id.propertyName, R.id.propertyValue });
-		
-		ListView listInfo = (ListView) findViewById(R.id.server_info_general);
-		listInfo.setAdapter(props);*/
 	}
 	
 }

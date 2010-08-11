@@ -21,8 +21,6 @@ import java.util.List;
 import org.dom4j.Document;
 import org.dom4j.Element;
 
-import de.fmaul.android.cmis.R;
-
 public class CmisItemCollection {
 
 	private List<CmisItem> items = new ArrayList<CmisItem>();
