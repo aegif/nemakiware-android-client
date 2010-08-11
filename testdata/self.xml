@@ -1,162 +1,126 @@
-<?xml version="1.0" ?>
-<entry xmlns="http://www.w3.org/2005/Atom" xmlns:cmisra="http://docs.oasis-open.org/ns/cmis/restatom/200908/">
-	<id>3bdfcbc60ae057a050e9abb0c120dbb8</id>
-	<published>2010-06-15T13:50:09.352Z</published>
-	<updated>2010-06-15T13:50:09.768Z</updated>
-	<summary type="text"></summary>
+<?xml version='1.0' encoding='UTF-8'?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:cmisra="http://docs.oasis-open.org/ns/cmis/restatom/200908/"
+	xmlns:cmis="http://docs.oasis-open.org/ns/cmis/core/200908/">
+	<id>urn:uuid:4593d0e5-fa7f-4ae1-9472-3030c270bb1e</id>
+	<title type="text">default-domain</title>
+	<updated>2010-01-11T11:49:20.036Z</updated>
 	<author>
-		<name>__anonim</name>
+		<name>system</name>
 	</author>
-	<title type="text">getCheckedOut.xml</title>
-	<link href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1"
-		rel="service" type="application/atomsvc+xml"></link>
+	<summary type="text">default-domain</summary>
+	<link href="http://cmis.demo.nuxeo.org/nuxeo/site/cmis/repository"
+		rel="service" type="application/atomsvc+xml" />
 	<link
-		href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/object/3bdfcbc60ae057a050e9abb0c120dbb8"
-		rel="self"></link>
+		href="http://cmis.demo.nuxeo.org/nuxeo/site/cmis/object/4593d0e5-fa7f-4ae1-9472-3030c270bb1e"
+		rel="self" type="application/atom+xml; type=entry" />
 	<link
-		href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/object/3bdfcbc60ae057a050e9abb0c120dbb8"
-		rel="edit"></link>
+		href="http://cmis.demo.nuxeo.org/nuxeo/site/cmis/object/4593d0e5-fa7f-4ae1-9472-3030c270bb1e"
+		rel="edit" type="application/atom+xml; type=entry" />
 	<link
-		href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/typebyid/cmis%3Adocument"
-		rel="describedby" type="application/atom+xml; type=entry"></link>
+		href="http://cmis.demo.nuxeo.org/nuxeo/site/cmis/object/4593d0e5-fa7f-4ae1-9472-3030c270bb1e"
+		rel="alternate" type="application/atom+xml; type=entry" />
+	<link href="http://cmis.demo.nuxeo.org/nuxeo/site/cmis/type/Domain"
+		rel="describedby" type="application/atom+xml; type=entry" />
 	<link
-		href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/allowableactions/3bdfcbc60ae057a050e9abb0c120dbb8"
+		href="http://cmis.demo.nuxeo.org/nuxeo/site/cmis/object/4fb1b8a1-6dfd-4da4-95b0-4ef41c27b920"
+		rel="up" type="application/atom+xml; type=entry" />
+	<link
+		href="http://cmis.demo.nuxeo.org/nuxeo/site/cmis/children/4593d0e5-fa7f-4ae1-9472-3030c270bb1e"
+		rel="down" type="application/atom+xml; type=feed" />
+	<link
+		href="http://cmis.demo.nuxeo.org/nuxeo/site/cmis/descendants/4593d0e5-fa7f-4ae1-9472-3030c270bb1e"
+		rel="down" type="application/cmistree+xml" />
+	<link
+		href="http://cmis.demo.nuxeo.org/nuxeo/site/cmis/foldertree/4593d0e5-fa7f-4ae1-9472-3030c270bb1e"
+		rel="http://docs.oasis-open.org/ns/cmis/link/200908/foldertree" type="application/atom+xml; type=feed" />
+	<link
+		href="http://cmis.demo.nuxeo.org/nuxeo/site/cmis/allowableactions/4593d0e5-fa7f-4ae1-9472-3030c270bb1e"
 		rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions"
-		type="application/cmis+xml; type=allowableActions"></link>
-	<link
-		href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/relationships/3bdfcbc60ae057a050e9abb0c120dbb8"
-		rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships"
-		type="application/atom+xml; type=feed"></link>
-	<link
-		href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/policies/3bdfcbc60ae057a050e9abb0c120dbb8"
-		rel="http://docs.oasis-open.org/ns/cmis/link/200908/policies" type="application/atom+xml; type=feed"></link>
-	<link
-		href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/objacl/3bdfcbc60ae057a050e9abb0c120dbb8"
-		rel="http://docs.oasis-open.org/ns/cmis/link/200908/acl" type="application/cmisacl+xml"></link>
-	<link
-		href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/versions/3bdfcbc70ae057a062b3f7e6365e5b8b"
-		rel="version-history" type="application/atom+xml; type=feed"></link>
-	<link
-		href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/object/3bdfcbc60ae057a050e9abb0c120dbb8?returnVersion=latest"
-		rel="current-version" type="application/atom+xml; type=entry"></link>
-	<link
-		href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/parents/3bdfcbc60ae057a050e9abb0c120dbb8"
-		rel="up" type="application/atom+xml; type=feed"></link>
-	<link
-		href="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/file/3bdfcbc60ae057a050e9abb0c120dbb8"
-		rel="edit-media"></link>
-	<content type="application/xml"
-		src="http://cmis.exoplatform.org/xcmis1/rest/cmisatom/cmis1/file/3bdfcbc60ae057a050e9abb0c120dbb8"></content>
-	<cmisra:object xmlns:cmis="http://docs.oasis-open.org/ns/cmis/core/200908/"
-		xmlns:cmisra="http://docs.oasis-open.org/ns/cmis/restatom/200908/">
+		type="application/cmisallowableactions+xml" />
+	<cmisra:object>
 		<cmis:properties>
-			<cmis:propertyBoolean propertyDefinitionId="cmis:isLatestMajorVersion"
-				localName="cmis:isLatestMajorVersion" displayName="cmis:isLatestMajorVersion"
-				queryName="cmis:isLatestMajorVersion">
-				<cmis:value>true</cmis:value>
-			</cmis:propertyBoolean>
-			<cmis:propertyInteger propertyDefinitionId="cmis:contentStreamLength"
-				localName="cmis:contentStreamLength" displayName="cmis:contentStreamLength"
-				queryName="cmis:contentStreamLength">
-				<cmis:value>18923</cmis:value>
-			</cmis:propertyInteger>
-			<cmis:propertyId propertyDefinitionId="cmis:contentStreamId"
-				localName="cmis:contentStreamId" displayName="cmis:contentStreamId"
-				queryName="cmis:contentStreamId">
-				<cmis:value>3bdfcbc80ae057a02883f6e831124652</cmis:value>
+			<cmis:propertyId propertyDefinitionId="cmis:objectId"
+				localName="def:id" displayName="Id">
+				<cmis:value>4593d0e5-fa7f-4ae1-9472-3030c270bb1e</cmis:value>
 			</cmis:propertyId>
 			<cmis:propertyId propertyDefinitionId="cmis:objectTypeId"
-				localName="cmis:objectTypeId" displayName="cmis:objectTypeId"
-				queryName="cmis:objectTypeId">
-				<cmis:value>cmis:document</cmis:value>
+				localName="def:typeid" displayName="Type ID">
+				<cmis:value>Domain</cmis:value>
 			</cmis:propertyId>
-			<cmis:propertyString propertyDefinitionId="cmis:versionSeriesCheckedOutBy"
-				localName="cmis:versionSeriesCheckedOutBy" displayName="cmis:versionSeriesCheckedOutBy"
-				queryName="cmis:versionSeriesCheckedOutBy"></cmis:propertyString>
-			<cmis:propertyId propertyDefinitionId="cmis:versionSeriesCheckedOutId"
-				localName="cmis:versionSeriesCheckedOutId" displayName="cmis:versionSeriesCheckedOutId"
-				queryName="cmis:versionSeriesCheckedOutId"></cmis:propertyId>
+			<cmis:propertyId propertyDefinitionId="cmis:baseTypeId"
+				localName="def:basetypeid" displayName="Base Type ID">
+				<cmis:value>cmis:folder</cmis:value>
+			</cmis:propertyId>
 			<cmis:propertyString propertyDefinitionId="cmis:name"
-				localName="cmis:name" displayName="cmis:name" queryName="cmis:name">
-				<cmis:value>getCheckedOut.xml</cmis:value>
-			</cmis:propertyString>
-			<cmis:propertyString propertyDefinitionId="cmis:contentStreamMimeType"
-				localName="cmis:contentStreamMimeType" displayName="cmis:contentStreamMimeType"
-				queryName="cmis:contentStreamMimeType">
-				<cmis:value>application/xml</cmis:value>
-			</cmis:propertyString>
-			<cmis:propertyId propertyDefinitionId="cmis:versionSeriesId"
-				localName="cmis:versionSeriesId" displayName="cmis:versionSeriesId"
-				queryName="cmis:versionSeriesId">
-				<cmis:value>3bdfcbc70ae057a062b3f7e6365e5b8b</cmis:value>
-			</cmis:propertyId>
-			<cmis:propertyDateTime propertyDefinitionId="cmis:creationDate"
-				localName="cmis:creationDate" displayName="cmis:creationDate"
-				queryName="cmis:creationDate">
-				<cmis:value>2010-06-15T13:50:09.352Z</cmis:value>
-			</cmis:propertyDateTime>
-			<cmis:propertyString propertyDefinitionId="cmis:changeToken"
-				localName="cmis:changeToken" displayName="cmis:changeToken"
-				queryName="cmis:changeToken">
-				<cmis:value>3bdfcd690ae057a009f2849a52b0f44c</cmis:value>
-			</cmis:propertyString>
-			<cmis:propertyBoolean propertyDefinitionId="cmis:isLatestVersion"
-				localName="cmis:isLatestVersion" displayName="cmis:isLatestVersion"
-				queryName="cmis:isLatestVersion">
-				<cmis:value>true</cmis:value>
-			</cmis:propertyBoolean>
-			<cmis:propertyString propertyDefinitionId="cmis:versionLabel"
-				localName="cmis:versionLabel" displayName="cmis:versionLabel"
-				queryName="cmis:versionLabel">
-				<cmis:value>latest</cmis:value>
-			</cmis:propertyString>
-			<cmis:propertyBoolean propertyDefinitionId="cmis:isVersionSeriesCheckedOut"
-				localName="cmis:isVersionSeriesCheckedOut" displayName="cmis:isVersionSeriesCheckedOut"
-				queryName="cmis:isVersionSeriesCheckedOut">
-				<cmis:value>false</cmis:value>
-			</cmis:propertyBoolean>
-			<cmis:propertyString propertyDefinitionId="cmis:lastModifiedBy"
-				localName="cmis:lastModifiedBy" displayName="cmis:lastModifiedBy"
-				queryName="cmis:lastModifiedBy">
-				<cmis:value>__anonim</cmis:value>
+				localName="def:name" displayName="Name">
+				<cmis:value>default-domain</cmis:value>
 			</cmis:propertyString>
 			<cmis:propertyString propertyDefinitionId="cmis:createdBy"
-				localName="cmis:createdBy" displayName="cmis:createdBy" queryName="cmis:createdBy">
-				<cmis:value>__anonim</cmis:value>
+				localName="def:createdby" displayName="Created By">
+				<cmis:value>system</cmis:value>
 			</cmis:propertyString>
-			<cmis:propertyString propertyDefinitionId="cmis:checkinComment"
-				localName="cmis:checkinComment" displayName="cmis:checkinComment"
-				queryName="cmis:checkinComment"></cmis:propertyString>
-			<cmis:propertyId propertyDefinitionId="cmis:objectId"
-				localName="cmis:objectId" displayName="cmis:objectId" queryName="cmis:objectId">
-				<cmis:value>3bdfcbc60ae057a050e9abb0c120dbb8</cmis:value>
-			</cmis:propertyId>
-			<cmis:propertyBoolean propertyDefinitionId="cmis:isImmutable"
-				localName="cmis:isImmutable" displayName="cmis:isImmutable"
-				queryName="cmis:isImmutable"></cmis:propertyBoolean>
-			<cmis:propertyBoolean propertyDefinitionId="cmis:isMajorVersion"
-				localName="cmis:isMajorVersion" displayName="cmis:isMajorVersion"
-				queryName="cmis:isMajorVersion">
-				<cmis:value>true</cmis:value>
-			</cmis:propertyBoolean>
-			<cmis:propertyId propertyDefinitionId="cmis:baseTypeId"
-				localName="cmis:baseTypeId" displayName="cmis:baseTypeId" queryName="cmis:baseTypeId">
-				<cmis:value>cmis:document</cmis:value>
-			</cmis:propertyId>
-			<cmis:propertyString propertyDefinitionId="cmis:contentStreamFileName"
-				localName="cmis:contentStreamFileName" displayName="cmis:contentStreamFileName"
-				queryName="cmis:contentStreamFileName">
-				<cmis:value>getCheckedOut.xml</cmis:value>
+			<cmis:propertyDateTime propertyDefinitionId="cmis:creationDate"
+				localName="def:creationdate" displayName="Creation Date">
+				<cmis:value>2010-01-11T12:49:20+01:00</cmis:value>
+			</cmis:propertyDateTime>
+			<cmis:propertyString propertyDefinitionId="cmis:lastModifiedBy"
+				localName="def:lastmodifiedby" displayName="Last Modified By">
+				<cmis:value>system</cmis:value>
 			</cmis:propertyString>
 			<cmis:propertyDateTime propertyDefinitionId="cmis:lastModificationDate"
-				localName="cmis:lastModificationDate" displayName="cmis:lastModificationDate"
-				queryName="cmis:lastModificationDate">
-				<cmis:value>2010-06-15T13:50:09.768Z</cmis:value>
+				localName="def:lastmodificationdate" displayName="Last Modification Date">
+				<cmis:value>2010-01-11T12:49:20+01:00</cmis:value>
 			</cmis:propertyDateTime>
+			<cmis:propertyId propertyDefinitionId="cmis:parentId"
+				localName="def:parentid" displayName="Parent Id">
+				<cmis:value>4fb1b8a1-6dfd-4da4-95b0-4ef41c27b920</cmis:value>
+			</cmis:propertyId>
+			<cmis:propertyString propertyDefinitionId="cmis:path"
+				localName="def:path" displayName="Path">
+				<cmis:value>/default-domain</cmis:value>
+			</cmis:propertyString>
+			<cmis:propertyString propertyDefinitionId="content_roots"
+				localName="def:nx:content_roots" displayName="content_roots" />
+			<cmis:propertyBoolean propertyDefinitionId="display_type"
+				localName="def:nx:display_type" displayName="display_type">
+				<cmis:value>false</cmis:value>
+			</cmis:propertyBoolean>
+			<cmis:propertyString propertyDefinitionId="dc:title"
+				localName="def:nx:dc:title" displayName="dc:title">
+				<cmis:value>Default domain</cmis:value>
+			</cmis:propertyString>
+			<cmis:propertyString propertyDefinitionId="dc:subjects"
+				localName="def:nx:dc:subjects" displayName="dc:subjects" />
+			<cmis:propertyString propertyDefinitionId="dc:contributors"
+				localName="def:nx:dc:contributors" displayName="dc:contributors">
+				<cmis:value>system</cmis:value>
+			</cmis:propertyString>
+			<cmis:propertyString propertyDefinitionId="dc:description"
+				localName="def:nx:dc:description" displayName="dc:description">
+				<cmis:value>Nuxeo 5 default domain</cmis:value>
+			</cmis:propertyString>
+			<cmis:propertyString propertyDefinitionId="icon"
+				localName="def:nx:icon" displayName="icon">
+				<cmis:value>/icons/domain.gif</cmis:value>
+			</cmis:propertyString>
 		</cmis:properties>
-		<cmis:acl></cmis:acl>
-		<cmis:exactACL>false</cmis:exactACL>
-		<cmis:policyIds></cmis:policyIds>
-		<cmis:rendition></cmis:rendition>
+		<cmis:allowableActions>
+			<cmis:canGetObjectParents>true</cmis:canGetObjectParents>
+			<cmis:canCreateRelationship>true</cmis:canCreateRelationship>
+			<cmis:canGetFolderParent>true</cmis:canGetFolderParent>
+			<cmis:canRemoveObjectFromFolder>true</cmis:canRemoveObjectFromFolder>
+			<cmis:canDeleteTree>true</cmis:canDeleteTree>
+			<cmis:canUpdateProperties>true</cmis:canUpdateProperties>
+			<cmis:canAddObjectToFolder>true</cmis:canAddObjectToFolder>
+			<cmis:canGetFolderTree>true</cmis:canGetFolderTree>
+			<cmis:canDeleteObject>true</cmis:canDeleteObject>
+			<cmis:canMoveObject>true</cmis:canMoveObject>
+			<cmis:canCreateDocument>true</cmis:canCreateDocument>
+			<cmis:canCreateFolder>true</cmis:canCreateFolder>
+			<cmis:canGetChildren>true</cmis:canGetChildren>
+			<cmis:canGetProperties>true</cmis:canGetProperties>
+			<cmis:canGetDescendants>true</cmis:canGetDescendants>
+		</cmis:allowableActions>
 	</cmisra:object>
+	<cmisra:pathSegment>default-domain</cmisra:pathSegment>
 </entry>

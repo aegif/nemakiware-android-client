@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+import de.fmaul.android.cmis.asynctask.FeedItemDisplayTask;
 import de.fmaul.android.cmis.database.Database;
 import de.fmaul.android.cmis.database.FavoriteDAO;
 import de.fmaul.android.cmis.model.Favorite;
@@ -64,14 +65,16 @@ public class FavoriteActivity extends ListActivity {
 			if (f.getMimetype() != null && f.getMimetype().length() != 0){
 				
 				//TODO ASYNCTASK
-				intent = new Intent(this, DocumentDetailsActivity.class);
+				new FeedItemDisplayTask(activity, currentServer, f.getUrl()).execute();
+				
+				/*intent = new Intent(this, DocumentDetailsActivity.class);
 				Document doc = FeedUtils.readAtomFeed(f.getUrl(), currentServer.getUsername(), currentServer.getPassword());
 				CmisItem item = CmisItem.createFromFeed(doc.getRootElement());
 				if (item != null){
 					ActionUtils.displayDocumentDetails(activity, currentServer, item);
 				} else {
 					ActionUtils.displayError(activity, "ERROR during favorite");
-				}
+				}*/
 			} else {
 				intent = new Intent(this, ListCmisFeedActivity.class);
 				intent.putExtra("title", f.getName());

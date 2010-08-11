@@ -15,7 +15,6 @@
  */
 package de.fmaul.android.cmis;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -41,15 +40,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 import de.fmaul.android.cmis.asynctask.FeedDisplayTask;
+import de.fmaul.android.cmis.asynctask.FeedItemDisplayTask;
 import de.fmaul.android.cmis.asynctask.ServerInitTask;
 import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.CmisItem;
-import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.QueryType;
 import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.FeedLoadException;
 import de.fmaul.android.cmis.utils.FeedUtils;
+import de.fmaul.android.cmis.utils.IntentIntegrator;
+import de.fmaul.android.cmis.utils.IntentResult;
 import de.fmaul.android.cmis.utils.StorageUtils;
 
 public class ListCmisFeedActivity extends ListActivity {
@@ -377,34 +378,10 @@ public class ListCmisFeedActivity extends ListActivity {
 			if (doc.hasChildren()) {
 				openNewListViewActivity(doc);
 			} else {
-				//openDocument(doc);
 				ActionUtils.displayDocumentDetails(activity, doc);
 			}
 		}
 	}
-
-	/*private void displayDocumentDetails(CmisItem doc) {
-		Intent intent = new Intent(ListCmisFeedActivity.this, DocumentDetailsActivity.class);
-
-		ArrayList<CmisProperty> propList = new ArrayList<CmisProperty>(doc.getProperties().values());
-		
-		intent.putParcelableArrayListExtra("properties", propList);
-		
-		intent.putExtra("workspace", getRepository().getServer().getWorkspace());
-		intent.putExtra("title", doc.getTitle());
-		intent.putExtra("mimetype", doc.getMimeType());
-		intent.putExtra("objectTypeId", doc.getProperties().get("cmis:objectTypeId").getValue());
-		intent.putExtra("baseTypeId", doc.getProperties().get("cmis:baseTypeId").getValue());
-		intent.putExtra("contentUrl", doc.getContentUrl());
-		intent.putExtra("self", doc.getSelfUrl());
-		
-		CmisProperty fileSize = doc.getProperties().get("cmis:contentStreamLength");
-		if (fileSize != null) {
-			intent.putExtra("contentStream",fileSize.getValue());
-		}
-		
-		startActivity(intent);
-	}*/
 
 	/**
 	 * Opens a feed url in a new listview. This enables the user to use the
@@ -429,6 +406,10 @@ public class ListCmisFeedActivity extends ListActivity {
 		createSearchMenu(menu);
 		item = menu.add(Menu.NONE, 3, 0, R.string.menu_item_about);
 		item.setIcon(R.drawable.cmisexplorer);
+		
+		/* BETA : comment to desactivate Scan Process.*/
+		item = menu.add(Menu.NONE, 10, 0, R.string.menu_item_scanner);
+		item.setIcon(R.drawable.scanner);
 		
 		return true;
 
@@ -485,8 +466,10 @@ public class ListCmisFeedActivity extends ListActivity {
 		case 9:
 			chooseWorkspace();
 			return true;
+		case 10:
+			IntentIntegrator.initiateScan(this);
+			return true;
 		}
-
 		return false;
 	}
 	
@@ -510,6 +493,14 @@ public class ListCmisFeedActivity extends ListActivity {
 			Toast.makeText(ListCmisFeedActivity.this, R.string.error_repo_connexion, Toast.LENGTH_LONG).show();
 		}
 	}
+	
+	 public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+	    	
+	    	IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+		    if (scanResult != null) {
+		    	new FeedItemDisplayTask(activity, getRepository().getServer(), scanResult.getContents()).execute();
+		    }
+		}
 
 	/*
 	 * (non-Javadoc)
