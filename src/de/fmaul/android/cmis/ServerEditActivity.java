@@ -30,6 +30,7 @@ import android.widget.Toast;
 import de.fmaul.android.cmis.database.Database;
 import de.fmaul.android.cmis.database.ServerDAO;
 import de.fmaul.android.cmis.model.Server;
+import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.FeedUtils;
 
 public class ServerEditActivity extends Activity {
@@ -63,44 +64,48 @@ public class ServerEditActivity extends Activity {
 		
 		Button button = (Button)findViewById(R.id.validation_button);
 		button.setOnClickListener( new Button.OnClickListener(){
-			public void onClick(View view){	  	
-
-				if(serverNameEditText.getText().toString().equals("") || serverUrlEditText.getText().toString().equals("") || workspaceEditText.getText().toString().equals("")){
-					Toast.makeText(ServerEditActivity.this, R.string.cmis_repo_fields, Toast.LENGTH_LONG).show();
-				} else if (isEdit == false){
-					ServerDAO serverDao = new ServerDAO(database.open());
-					
-					serverDao.insert(
-							serverNameEditText.getText().toString(), 
-							serverUrlEditText.getText().toString(), 
-							userEditText.getText().toString(), 
-							passwordEditText.getText().toString(),
-							workspaceEditText.getText().toString());
-					
-					database.close();
-					
-				    Intent intent = new Intent(context, ServerActivity.class);
-				    finish();
-				   	startActivity(intent);
-				} else if (isEdit) {
-					ServerDAO serverDao = new ServerDAO(database.open());
-					
-					serverDao.update(
-							currentServer.getId(),
-							serverNameEditText.getText().toString(), 
-							serverUrlEditText.getText().toString(), 
-							userEditText.getText().toString(), 
-							passwordEditText.getText().toString(),
-							workspaceEditText.getText().toString()
-							);
-					
-					database.close();
-					
-				    Intent intent = new Intent(context, ServerActivity.class);
-				    finish();
-				   	startActivity(intent);
+			public void onClick(View view){
+				try{
+					if(serverNameEditText.getText().toString().equals("") || serverUrlEditText.getText().toString().equals("") || workspaceEditText.getText().toString().equals("")){
+						Toast.makeText(ServerEditActivity.this, R.string.cmis_repo_fields, Toast.LENGTH_LONG).show();
+					} else if (isEdit == false){
+						ServerDAO serverDao = new ServerDAO(database.open());
+						
+						serverDao.insert(
+								serverNameEditText.getText().toString(), 
+								serverUrlEditText.getText().toString(), 
+								userEditText.getText().toString(), 
+								passwordEditText.getText().toString(),
+								workspaceEditText.getText().toString());
+						
+						database.close();
+						
+					    Intent intent = new Intent(context, ServerActivity.class);
+					    finish();
+					   	startActivity(intent);
+					} else if (isEdit) {
+						ServerDAO serverDao = new ServerDAO(database.open());
+						
+						serverDao.update(
+								currentServer.getId(),
+								serverNameEditText.getText().toString(), 
+								serverUrlEditText.getText().toString(), 
+								userEditText.getText().toString(), 
+								passwordEditText.getText().toString(),
+								workspaceEditText.getText().toString()
+								);
+						
+						database.close();
+						
+					    Intent intent = new Intent(context, ServerActivity.class);
+					    finish();
+					   	startActivity(intent);
+					}
+				} catch (Exception e) {
+					ActionUtils.displayError(ServerEditActivity.this, R.string.generic_error);
 				}
 			}
+
 		});
 		workspaceEditText.setOnClickListener(new Button.OnClickListener() {
 			@Override
