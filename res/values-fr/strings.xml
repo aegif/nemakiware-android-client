@@ -28,7 +28,13 @@
 	<string name="cmis_repo_choose_workspace">Choisir un espace de travail</string>
 	
 	<string name="error_repo_connexion">Les paramètres de l\'entrepôt ont été mal défini. Veuillez les vérifier.</string>
+	<string name="cmis_repo_fields">Les champs Nom, Url, espace de travail sont obligatoires.</string>
 	
+	<!-- SERVER INFO -->
+	<string name="server_info">Info</string>
+	<string name="server_info_general">General</string>
+	<string name="server_info_acl">ACL</string>
+	<string name="server_info_capabilites">Capabilities</string>
 	
 	<!-- LIST CMIS FEED ACTIVITY -->
 	<string name="feed_menu_title">Option de l\'élément</string>
@@ -46,8 +52,20 @@
     <string name="menu_item_details">Afficher les details</string>
 	<string name="menu_item_share">Partager...</string>
 	
+	<string name="menu_item_favorites">Favoris</string>
+	
+	<string name="menu_item_home">Home</string>
+	<string name="menu_item_up">Up</string>
+	<string name="menu_item_back">Retour</string>
+	<string name="menu_item_prefs">Filtre</string>
+	<string name="menu_item_refresh">Rafraîchir</string>
+	<string name="menu_item_scanner">Scanner</string>
+	
+	<string name="loading_data">Un instant... Chargement des données...</string>
+	
 	
 	<!-- SEARCH RESULT -->
+	<string name="search_label">CMIS Repository</string>
 	<string name="search_results_for">Resultats de la recherche : </string>
 	
 	
@@ -60,6 +78,7 @@
 	<string name="application_not_available">Il n\'y a pas d\'application pour ce type de fichier.</string>
 	<string name="error_downloading_content">Une erreur s\'est produite lors du téléchargement du fichier.</string>
 	
+	<string name="no_properties">Aucune propriété trouvée.</string>
 	
 	<!-- GENERIC ACTION STRING -->
 	<string name="delete">Supprimer...</string>
@@ -69,5 +88,33 @@
     <string name="share">Partager</string>
     <string name="quit">Quitter</string>
     <string name="loading">Chargement...</string>
+    <string name="data_empty">No data found...</string>
+    <string name="qrcode">QRCode</string>
+    <string name="generic_error">An error occured during the treatment. Please try again...</string>
+    
+
+	<!-- Preferences -->
+	<string name="cmis_repo_maxitems">cmisRepoServerMaxItems</string>
+	<string name="cmis_repo_filter">CmisRepoFilter</string>
+	<string name="cmis_repo_types">CmisRepoTypes</string>
+	<string name="cmis_repo_orderby">CmisRepoOrderBy</string>
+	<string name="cmis_repo_params">CmisRepoParams</string>
+	
+	
+	<!-- ABOUT ACTIVITY -->
+	<string name="about_dev">Développeurs</string>
+	<string name="about_resources">Ressources</string>
+	<string name="about_project_website">Visiter le site web du projet Android CMIS Browser</string>
+	<string name="about_openicon_website">Visiter le site web Open Icon Library</string>
+	
+	<!-- FAVORITE ACTIVITY -->
+    <string name="favorite_create">Le favori a été ajouté.</string>
+    <string name="favorite_create_error">Une erreur s\'est produite lors de la création du favori.. Veuillez recommencer...</string>
+	
+	<string name="favorite_delete">Favorite removed : OK</string>
+    <string name="favorite_delete_error">Une erreur s\'est produite lors de la suppression du favori.. Veuillez recommencer...</string>
+	<string name="favorite_error">Favorite is not availale.</string>
+	<string name="favorite_error_loading">Une erreur s\'est produite lors de la chargement du favori.. Veuillez recommencer...</string>
+    
 
 </resources>

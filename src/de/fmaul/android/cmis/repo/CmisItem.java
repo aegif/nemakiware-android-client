@@ -15,8 +15,6 @@
  */
 package de.fmaul.android.cmis.repo;
 
-import java.io.File;
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,70 +24,27 @@ import java.util.Map;
 
 import org.dom4j.Element;
 
-import android.app.Application;
-
 import de.fmaul.android.cmis.utils.FeedUtils;
-import de.fmaul.android.cmis.utils.StorageUtils;
 
-public class CmisItem {
+public class CmisItem extends CmisItemLazy {
 
-	private String title;
-	private String downLink;
-	private String author;
-	private String contentUrl;
-	private String selfUrl;	
-	private String id;
-	private String mimeType;
-	private Date modificationDate;
-
-	private Map<String, CmisProperty> properties;
-
+	public CmisItem(CmisItem item) {
+		super(item);
+	}
+	
 	private CmisItem() {
 	}
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+
+	private Map<String, CmisProperty> properties;
+
 	public Map<String, CmisProperty> getProperties() {
 		return properties;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	@Override
-	public String toString() {
-		return getTitle();
-	}
-	
-	public String getSelfUrl() {
-		return selfUrl;
-	}
-
-	public String getAuthor() {
-		return author;
-	}
-
-	public boolean hasChildren() {
-		return downLink != null && downLink.length() > 0;
-	}
-
-	public String getDownLink() {
-		return downLink;
-	}
-
-	public String getContentUrl() {
-		return contentUrl;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public String getMimeType() {
-		return mimeType;
-	}
-
-	public Date getModificationDate() {
-		return modificationDate;
 	}
 
 	public static CmisItem createFromFeed(Element entry) {
@@ -125,10 +80,12 @@ public class CmisItem {
 		}
 		
 		properties = FeedUtils.getCmisPropertiesForEntry(entry);
-	}
-	
-	public File getContent(String repositoryWorkspace){
-		return StorageUtils.getStorageFile(repositoryWorkspace, StorageUtils.TYPE_CONTENT, getId(), getTitle());
+		
+		if (properties.get("cmis:contentStreamLength") != null){
+			size = properties.get("cmis:contentStreamLength").getValue();
+		} else {
+			size = null;
+		}
 	}
 
 	private Date parseXmlDate(String date) {

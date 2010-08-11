@@ -47,7 +47,7 @@ public class FeedItemDisplayTask extends AsyncTask<String, Void, CmisItem> {
 		if (item != null){
 			ActionUtils.displayDocumentDetails(activity, server, item);
 		} else {
-			ActionUtils.displayError(activity, "ERROR during favorite");
+			ActionUtils.displayError(activity, R.string.favorite_error_loading);
 		}
 		pg.dismiss();
 	}
