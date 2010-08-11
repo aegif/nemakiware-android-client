@@ -124,9 +124,8 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 	}
 
 	private void appendInfoDocumentSize(CmisItem doc, List<String> infos) {
-		CmisProperty fileSize = doc.getProperties().get("cmis:contentStreamLength");
-		if (fileSize != null) {
-			infos.add(convertAndFormatSize(fileSize.getValue()));
+		if (doc.getSize() != null) {
+			infos.add(convertAndFormatSize(doc.getSize()));
 		}
 	}
 

@@ -26,7 +26,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.SimpleAdapter;
-import de.fmaul.android.cmis.repo.CmisItem;
+import de.fmaul.android.cmis.repo.CmisItemLazy;
 import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.CmisTypeDefinition;
@@ -36,7 +36,7 @@ import de.fmaul.android.cmis.utils.ListUtils;
 
 public class DocumentDetailsActivity extends ListActivity {
 
-	private CmisItem item;
+	private CmisItemLazy item;
 	private Button download, share, edit, delete, qrcode;
 	private String objectTypeId;
 
@@ -44,14 +44,15 @@ public class DocumentDetailsActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.document_details_main);
+		
+		item = (CmisItemLazy) getIntent().getExtras().getSerializable("item");
+		
 		setTitleFromIntent();
 		displayPropertiesFromIntent();
 		displayActionIcons();
 	}
 	
 	private void displayActionIcons(){
-		
-		item = CmisItem.create(getIntent().getStringExtra("title"), null, getIntent().getStringExtra("mimetype"), getIntent().getStringExtra("contentUrl"), getSelfUrlFromIntent());
 		
 		download = (Button) findViewById(R.id.download);
 		share = (Button) findViewById(R.id.share);
@@ -60,7 +61,7 @@ public class DocumentDetailsActivity extends ListActivity {
 		qrcode = (Button) findViewById(R.id.qrcode);
 		
 		//File
-		if (item != null && getContentFromIntent() != null){
+		if (item != null && item.getSize() != null){
 			download.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -71,7 +72,7 @@ public class DocumentDetailsActivity extends ListActivity {
 			qrcode.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					IntentIntegrator.shareText(DocumentDetailsActivity.this, DocumentDetailsActivity.this.getIntent().getStringExtra("self"));
+					IntentIntegrator.shareText(DocumentDetailsActivity.this, item.getSelfUrl());
 				}
 			});
 			
@@ -98,8 +99,7 @@ public class DocumentDetailsActivity extends ListActivity {
 	}
 
 	private void setTitleFromIntent() {
-		String title = getIntent().getStringExtra("title");
-		setTitle(getString(R.string.title_details) + " '" + title + "'");
+		setTitle(getString(R.string.title_details) + " '" + item.getTitle() + "'");
 	}
 
 	private void displayPropertiesFromIntent() {
@@ -114,14 +114,6 @@ public class DocumentDetailsActivity extends ListActivity {
 		return getIntent().getStringExtra("objectTypeId");
 	}
 	
-	private String getContentFromIntent() {
-		return getIntent().getStringExtra("contentStream");
-	}
-	
-	private String getSelfUrlFromIntent() {
-		return getIntent().getStringExtra("self");
-	}
-
 	private void initListAdapter(List<Map<String, ?>> list) {
 		SimpleAdapter props = new SimpleAdapter(this, list, R.layout.document_details_row, new String[] { "name", "value" }, new int[] {
 				R.id.propertyName, R.id.propertyValue });

@@ -7,9 +7,10 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.repo.CmisItem;
+import de.fmaul.android.cmis.repo.CmisItemLazy;
 import de.fmaul.android.cmis.repo.CmisRepository;
 
-public abstract class AbstractDownloadTask extends AsyncTask<CmisItem, Void, File> {
+public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Void, File> {
 
 	private final CmisRepository repository;
 	private final Activity activity;
@@ -28,8 +29,8 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItem, Void, Fil
 	}
 
 	@Override
-	protected File doInBackground(CmisItem... params) {
-		CmisItem item = params[0];
+	protected File doInBackground(CmisItemLazy... params) {
+		CmisItemLazy item = params[0];
 		if (item != null) {
 			return repository.retreiveContent(item);
 		}
