@@ -92,15 +92,6 @@
     <string name="data_empty">No data found...</string>
     <string name="qrcode">QRCode</string>
     <string name="generic_error">An error occured during the treatment. Please try again...</string>
-    
-
-	<!-- Preferences -->
-	<string name="cmis_repo_maxitems">cmisRepoServerMaxItems</string>
-	<string name="cmis_repo_filter">CmisRepoFilter</string>
-	<string name="cmis_repo_types">CmisRepoTypes</string>
-	<string name="cmis_repo_orderby">CmisRepoOrderBy</string>
-	<string name="cmis_repo_params">CmisRepoParams</string>
-	
 	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Developpers</string>
@@ -116,5 +107,29 @@
     <string name="favorite_delete_error">A problem occured during delete action. Please try again...</string>
 	<string name="favorite_error">Favorite is not availale.</string>
 	<string name="favorite_error_loading">A problem occured during loading action. Please try again...</string>
+
+	<!-- FILTER/PREFRENCE ACTIVITY -->
+	<string name="cmis_repo_filter_pref">Filter Preferences</string>
+	
+	<string name="cmis_repo_params">CmisRepoParams</string>
+	<string name="cmis_repo_params_title">Filter</string>
+	<string name="cmis_repo_params_desc">Enable filter parameters.</string>
+	
+	<string name="cmis_repo_maxitems">cmisRepoServerMaxItems</string>
+	<string name="cmis_repo_maxitems_title">Max Items</string>
+	<string name="cmis_repo_maxitems_desc">This is the maximum number of items to return in a response.</string>
+	
+	<string name="cmis_repo_filter">CmisRepoFilter</string>
+	<string name="cmis_repo_filter_title">Properties Filter</string>
+	<string name="cmis_repo_filter_desc">Not available!</string>
+	
+	<string name="cmis_repo_types">CmisRepoTypes</string>
+	<string name="cmis_repo_types_title">Children Types</string>
+	<string name="cmis_repo_types_desc">Restrict the type of children returned. (documents, folders, policies, any)</string>
+	
+	<string name="cmis_repo_orderby">CmisRepoOrderBy</string>
+	<string name="cmis_repo_orderby_title">Order By</string>
+	<string name="cmis_repo_orderby_desc">Identifies the order in which the result rows must be sorted</string>
+	
 
 </resources>
