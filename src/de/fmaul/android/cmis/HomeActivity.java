@@ -3,12 +3,10 @@ package de.fmaul.android.cmis;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import de.fmaul.android.cmis.utils.ActionUtils;
-import de.fmaul.android.cmis.utils.IntentIntegrator;
-import de.fmaul.android.cmis.utils.IntentResult;
 
 public class HomeActivity extends Activity {
     
@@ -35,18 +33,8 @@ public class HomeActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				try{
-					
-					IntentIntegrator.initiateScan(HomeActivity.this);
-					
-					/*Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-			        intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-			        startActivityForResult(intent, 0);*/
-				} catch (Exception e) {
-					ActionUtils.displayError(HomeActivity.this, "Aucune Application installé");
-				}
-		        
-		    }
+				startActivity(new Intent(HomeActivity.this, CmisFilter.class));
+			}
 		});
         
         ((Button) findViewById(R.id.repository)).setOnClickListener(new OnClickListener() {
@@ -57,19 +45,4 @@ public class HomeActivity extends Activity {
 			}
 		});
     }
-    
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-    	
-    	IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-	    if (scanResult != null) {
-	    	ActionUtils.displayError(HomeActivity.this,scanResult.getContents());
-	    	ActionUtils.displayError(HomeActivity.this,scanResult.getFormatName());
-	      // handle scan result
-	    }
-    	    // else continue with any other code you need in the method
-
-	}
-    
-    
-    
 }
