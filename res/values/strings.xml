@@ -87,6 +87,7 @@
     <string name="quit">Quit</string>
     <string name="loading">Loading...</string>
     <string name="data_empty">No data found...</string>
+    <string name="qrcode">QRCode</string>
     
 
 	<!-- Preferences -->

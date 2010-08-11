@@ -31,12 +31,13 @@ import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.CmisTypeDefinition;
 import de.fmaul.android.cmis.utils.ActionUtils;
+import de.fmaul.android.cmis.utils.IntentIntegrator;
 import de.fmaul.android.cmis.utils.ListUtils;
 
 public class DocumentDetailsActivity extends ListActivity {
 
 	private CmisItem item;
-	private Button download, share, edit, delete;
+	private Button download, share, edit, delete, qrcode;
 	private String objectTypeId;
 
 	@Override
@@ -56,6 +57,7 @@ public class DocumentDetailsActivity extends ListActivity {
 		share = (Button) findViewById(R.id.share);
 		edit = (Button) findViewById(R.id.editmetadata);
 		delete = (Button) findViewById(R.id.delete);
+		qrcode = (Button) findViewById(R.id.qrcode);
 		
 		//File
 		if (item != null && getContentFromIntent() != null){
@@ -66,14 +68,23 @@ public class DocumentDetailsActivity extends ListActivity {
 				}
 			});
 			
+			qrcode.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					IntentIntegrator.shareText(DocumentDetailsActivity.this, DocumentDetailsActivity.this.getIntent().getStringExtra("self"));
+				}
+			});
+			
 			edit.setVisibility(View.GONE);
 			delete.setVisibility(View.GONE);
+			//qrcode.setVisibility(View.GONE);
 			
 		} else {
 			//FOLDER
 			download.setVisibility(View.GONE);
-			edit.setVisibility(View.GONE);
+			//edit.setVisibility(View.GONE);
 			//share.setVisibility(View.GONE);
+			//qrcode.setVisibility(View.GONE);
 			delete.setVisibility(View.GONE);
 		}
 		
