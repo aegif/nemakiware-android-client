@@ -2,6 +2,8 @@ package de.fmaul.android.cmis.asynctask;
 
 import android.app.Application;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import de.fmaul.android.cmis.CmisApp;
 import de.fmaul.android.cmis.ListCmisFeedActivity;
@@ -27,7 +29,13 @@ public class ServerInitTask extends AsyncTask<String, Void, CmisRepository> {
 
 	@Override
 	protected void onPreExecute() {
-		pg = ProgressDialog.show(activity, "", activity.getText(R.string.loading), true);
+		pg = ProgressDialog.show(activity, "", activity.getText(R.string.loading), true, true, new OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				activity.finish();
+				dialog.dismiss();
+			}
+		});
 	}
 
 	@Override
@@ -50,6 +58,7 @@ public class ServerInitTask extends AsyncTask<String, Void, CmisRepository> {
 
 	@Override
 	protected void onCancelled() {
+		activity.finish();
 		pg.dismiss();
 	}
 }
