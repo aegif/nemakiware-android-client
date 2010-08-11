@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!-- APP STRING -->
+	<string name="app_name">CMIS Navigateur</string>
+	
+	<!-- HOME ACTIVITY -->
+	<string name="home_menu_repository">Entrepôt de données</string>
+	<string name="home_menu_favorites">Favoris</string>
+	<string name="home_menu_about">A Propos</string>
+	
+	<!-- SERVER ACTIVITY -->
+	<string name="menu_item_server_add">Ajouter un entrepôt</string>
+	
+	<string name="context_menu_title">Options de l\'entrepôt</string>
+	
+	<string name="server_delete">La suppression de l\'entrepôt est effectuée</string>
+    <string name="server_delete_error">Un problème a été rencontré durant la suppression. Veuillez réessayer.</string>
+	
+	
+	<!-- SERVER EDIT ACTIVITY -->
+	<string name="cmis_repo_server_name">Nom de l\'entrepôt</string>
+	<string name="cmis_repo_server_url">URL</string>
+	<string name="cmis_repo_user">Utilisateur</string>
+	<string name="cmis_repo_password">Mot de passe</string>
+	<string name="cmis_repo_workspace">Espace de travail par défaut</string>
+	
+	<string name="cmis_repo_choose_workspace">Choisir un espace de travail</string>
+	
+	<string name="error_repo_connexion">Les paramètres de l\'entrepôt ont été mal défini. Veuillez les vérifier.</string>
+	
+	
+	<!-- LIST CMIS FEED ACTIVITY -->
+	<string name="feed_menu_title">Option de l\'élément</string>
+	
+	<string name="menu_item_settings">Paramètres</string>
+    <string name="menu_item_settings_reload">Recharger le contexte</string>
+    <string name="menu_item_settings_repo">Changer d\'entrepôt</string>
+    <string name="menu_item_settings_ws">Changer d\'espace de travail</string>
+    <string name="menu_item_about">A Propos</string>
+	<string name="menu_item_search">Recherche</string>
+	<string name="menu_item_search_cmis">Requête CMIS</string>
+    <string name="menu_item_search_fulltext">Recherche plein texte</string>
+    <string name="menu_item_search_title">Recherche par titre</string>
+    
+    <string name="menu_item_details">Afficher les details</string>
+	<string name="menu_item_share">Partager...</string>
+	
+	
+	<!-- SEARCH RESULT -->
+	<string name="search_results_for">Resultats de la recherche : </string>
+	
+	
+	<!-- DOCUMENT DETAILS ACTIVITY -->
+	<string name="title_details">Les détails pour</string>
+	
+	<string name="download_progress">Téléchargement du contenu...</string>
+	<string name="main_no_items">Aucun document à afficher</string>
+	<string name="error_file_does_not_exists">Le contenu du fichier téléchargé n\'existe pas</string>
+	<string name="application_not_available">Il n\'y a pas d\'application pour ce type de fichier.</string>
+	<string name="error_downloading_content">Une erreur s\'est produite lors du téléchargement du fichier.</string>
+	
+	
+	<!-- GENERIC ACTION STRING -->
+	<string name="delete">Supprimer...</string>
+    <string name="edit">Editer</string>
+    <string name="validate">Valider</string>
+    <string name="download">Télécharger</string>
+    <string name="share">Partager</string>
+    <string name="quit">Quitter</string>
+    <string name="loading">Chargement...</string>
+
+</resources>
