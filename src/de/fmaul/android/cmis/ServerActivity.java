@@ -19,9 +19,7 @@ import java.util.ArrayList;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -39,8 +37,6 @@ public class ServerActivity extends ListActivity {
 
 	private ServerAdapter cmisSAdapter;
 	
-	private SharedPreferences preferences;
-	private SharedPreferences.Editor editor;
 	
 	private ArrayList<Server> listServer;
 	
@@ -48,9 +44,6 @@ public class ServerActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		editor = preferences.edit();
 		
 		setContentView(R.layout.server);
 
