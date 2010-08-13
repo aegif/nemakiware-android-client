@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"  android:key="mainPreferences">
-	<PreferenceCategory android:title="Repository Preferences">
+	<PreferenceCategory android:title="Data">
 		<CheckBoxPreference 
-			android:key="@string/cmis_repo_params"
-			android:title="Activer Params" 
+			android:key="cache"
+			android:title="Delete cache" 
 			android:summary="Allow activer Params"
 			android:defaultValue="false" />
 		<EditTextPreference 
-			android:key="@string/cmis_repo_maxitems"
-			android:title="Max Items" 
-			android:summary="Max Items"
+			android:key="cache_directory"
+			android:title="Change Directory" 
+			android:summary="Directory where we store feed and document cache."
 			android:defaultValue="-1" />
 		<EditTextPreference 
 			android:key="@string/cmis_repo_filter"

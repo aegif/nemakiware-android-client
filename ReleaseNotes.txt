@@ -1,0 +1,10 @@
+V 0.92
+
+Bug Fix : 
+QRCode for folders.
+Unique Favorite.
+Up when you come from favorite.
+
+New Features : 
+Breadcrumbs
+Improve ListCMIS behaviour during screen rotation

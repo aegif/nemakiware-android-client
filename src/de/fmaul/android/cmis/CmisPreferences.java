@@ -23,6 +23,17 @@ public class CmisPreferences extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
+		
+		/*getPreferenceManager().findPreference("pref_key").setOnPreferenceClickListener(new OnPreferenceClickListener()
+		{
+		    @Override
+		    public boolean onPreferenceClick(Preference preference)
+		    {
+		        // Do stuff here
+		    }
+		});
+		
+		android.preference.CheckBoxPreference*/
 	}
 	
 }

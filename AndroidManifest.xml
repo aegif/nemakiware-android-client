@@ -24,8 +24,14 @@
      	<activity android:name=".FavoriteActivity"></activity>
      	
      	<activity android:name=".CmisPreferences" android:label="@string/app_name"></activity>
-     	<activity android:name=".CmisFilter" android:label="@string/app_name"></activity>
+     	<activity android:name=".CmisFilterActivity"></activity>
      	
+     	       
+ 
+		<activity android:name=".CustomDialogActivity"
+               android:label="@string/app_name"
+               android:theme="@style/Theme.CustomDialog">
+        </activity>
 		
 		<activity android:name=".ListCmisFeedActivity" android:label="@string/app_name">
             <!-- Receives the search request. -->

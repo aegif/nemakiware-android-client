@@ -18,7 +18,9 @@ package de.fmaul.android.cmis;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -70,16 +72,26 @@ public class FavoriteActivity extends ListActivity {
 
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 
-		Favorite f = listFavorite.get(position);
+		final Favorite f = listFavorite.get(position);
 		if (f != null){
-			Intent intent;
 			if (f.getMimetype() != null && f.getMimetype().length() != 0){
 				new FeedItemDisplayTask(activity, currentServer, f.getUrl()).execute();
 			} else {
-				intent = new Intent(this, ListCmisFeedActivity.class);
-				intent.putExtra("title", f.getName());
-				intent.putExtra("feed", f.getUrl());
-				startActivity(intent);
+				
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+				builder.setMessage("Choose your view...").setCancelable(false)
+						.setPositiveButton("Details", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								new FeedItemDisplayTask(activity, currentServer, f.getUrl()).execute();
+							}
+
+						}).setNegativeButton("Folder", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								new FeedItemDisplayTask(activity, currentServer, f.getUrl(), 1).execute();
+							}
+						});
+				AlertDialog alert = builder.create();
+				alert.show();
 			}
 		} else {
 			ActionUtils.displayError(this, R.string.favorite_error);
@@ -128,4 +140,5 @@ public class FavoriteActivity extends ListActivity {
 		}
 		db.close();
 	}
+	
 }

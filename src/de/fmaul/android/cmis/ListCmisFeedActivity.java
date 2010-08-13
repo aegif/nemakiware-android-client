@@ -27,6 +27,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -38,12 +39,15 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import de.fmaul.android.cmis.asynctask.FeedDisplayTask;
 import de.fmaul.android.cmis.asynctask.FeedItemDisplayTask;
 import de.fmaul.android.cmis.asynctask.ServerInitTask;
 import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.CmisItem;
+import de.fmaul.android.cmis.repo.CmisItemCollection;
+import de.fmaul.android.cmis.repo.CmisItemLazy;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.repo.QueryType;
 import de.fmaul.android.cmis.utils.ActionUtils;
@@ -55,11 +59,15 @@ import de.fmaul.android.cmis.utils.StorageUtils;
 
 public class ListCmisFeedActivity extends ListActivity {
 
+	private static final String TAG = "ListCmisFeedActivity";
+	
 	private List<String> workspaces;
 	private CharSequence[] cs;
 	private Context context = this;
 	private ListActivity activity = this;
 	private OnSharedPreferenceChangeListener listener;
+	private CmisItemLazy item;
+	private CmisItemCollection items;
 
 	/**
 	 * Contains the current connection information and methods to access the
@@ -73,9 +81,15 @@ public class ListCmisFeedActivity extends ListActivity {
 		
 		initWindow();
 		initActionIcon();
+		
+		//Restart
+		items = (CmisItemCollection) getLastNonConfigurationInstance();
+		
 		if (initRepository() == false){
+			item = (CmisItemLazy) getIntent().getExtras().getSerializable("item");
 			processSearchOrDisplayIntent();
 		}
+		//Filter Management
 		listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 			  public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
 				  if (prefs.getBoolean(activity.getString(R.string.cmis_repo_params), false)){
@@ -85,6 +99,18 @@ public class ListCmisFeedActivity extends ListActivity {
 			};
 		PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(listener);
 
+		//Set Breadcrumbs
+		if (item != null){
+			((TextView) activity.findViewById(R.id.path)).setText(item.getPath());
+		} else {
+			((TextView) activity.findViewById(R.id.path)).setText("/");
+		}
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+	    final CmisItemCollection data = getItems();
+	    return data;
 	}
 	
 	private void initActionIcon() {
@@ -107,14 +133,20 @@ public class ListCmisFeedActivity extends ListActivity {
 		up.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				activity.finish();
+				if (item != null && item.getPath().equals("/") == false){
+					new FeedItemDisplayTask(activity, getRepository().getServer(), item.getParentUrl(), 1).execute();
+				} else {
+					Intent intent = new Intent(activity, ServerActivity.class);
+					intent.putExtra("EXIT", false);
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				}
 			}
 		});
 		
 		pref.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(activity, CmisFilter.class));
+				startActivity(new Intent(activity, CmisFilterActivity.class));
 			}
 		});
 		
@@ -153,9 +185,7 @@ public class ListCmisFeedActivity extends ListActivity {
 				doSearchWithIntent(getIntent());
 			} else {
 				// display the feed that is passed in through the intent
-				String feed = getFeedFromIntent();
-				String title = getTitleFromIntent();
-				displayFeedInListView(feed, title);
+				displayFeedInListView();
 			}
 		} else {
 			Toast.makeText(this, getText(R.string.error_repo_connexion), 5);
@@ -273,7 +303,7 @@ public class ListCmisFeedActivity extends ListActivity {
 
 		QueryType queryType = getQueryTypeFromIntent(queryIntent);
 		String searchFeed = getRepository().getSearchFeed(queryType, queryString);
-		displayFeedInListView(searchFeed, getString(R.string.search_results_for) + " '" + queryString + "'");
+		new FeedDisplayTask(this, getRepository(), getString(R.string.search_results_for) + " '" + queryString + "'").execute(searchFeed);
 	}
 
 	/**
@@ -322,18 +352,24 @@ public class ListCmisFeedActivity extends ListActivity {
 	}
 	
 	private void refresh() {
-		String feed = getFeedFromIntent();
-		if (feed == null){
+		
+		String feed = "";
+		if (item != null){
+			feed = item.getDownLink();
+		} else {
 			feed = getRepository().getFeedRootCollection();
 		}
 		
 		if (StorageUtils.deleteFeedFile(getRepository().getServer().getWorkspace(), feed)){
 			activity.finish();
-			Intent intent = new Intent(activity, ListCmisFeedActivity.class);
-			intent.putExtra("feed", feed);
-			intent.putExtra("title", getTitleFromIntent());
-			startActivity(intent);
-			//activity.finish();
+			if (item != null){
+				ActionUtils.openNewListViewActivity(activity, item);
+			} else {
+				Intent intent = new Intent(activity, ListCmisFeedActivity.class);
+				intent.putExtra("feed", feed);
+				intent.putExtra("title", getTitleFromIntent());
+				startActivity(intent);
+			}
 		} else {
 			displayError(R.string.application_not_available);
 		}
@@ -352,9 +388,17 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * 
 	 * @param feed
 	 */
-	private void displayFeedInListView(final String feed, String title) {
+	private void displayFeedInListView() {
 		setTitle(R.string.loading);
-		new FeedDisplayTask(this, getRepository(), title).execute(feed);
+		if (items != null){
+			Log.d(TAG, "Start FeedDisplayTask : Items");
+			new FeedDisplayTask(this, getRepository(), null, item, items).execute();
+		} else if (item != null){
+			new FeedDisplayTask(this, getRepository(), item).execute(item.getDownLink());
+		}  else {
+			Log.d(TAG, "Start FeedDisplayTask : title");
+			new FeedDisplayTask(this, getRepository(), getTitleFromIntent()).execute(getFeedFromIntent());
+		}
 	}
 
 	private void displayError(int messageId) {
@@ -372,9 +416,10 @@ public class ListCmisFeedActivity extends ListActivity {
 			CmisItem doc = (CmisItem) parent.getItemAtPosition(position);
 
 			if (doc.hasChildren()) {
-				openNewListViewActivity(doc);
+				//new FeedDisplayTask(ListCmisFeedActivity.this, getRepository(), doc).execute(doc.getDownLink());
+				ActionUtils.openNewListViewActivity(ListCmisFeedActivity.this, doc);
 			} else {
-				ActionUtils.displayDocumentDetails(activity, doc);
+				ActionUtils.displayDocumentDetails(ListCmisFeedActivity.this, doc);
 			}
 		}
 	}
@@ -385,12 +430,11 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * 
 	 * @param item
 	 */
-	private void openNewListViewActivity(CmisItem item) {
+	/*private void openNewListViewActivity(CmisItem item) {
 		Intent intent = new Intent(this, ListCmisFeedActivity.class);
-		intent.putExtra("feed", item.getDownLink());
-		intent.putExtra("title", item.getTitle());
+		intent.putExtra("item", new CmisItemLazy(item));
 		startActivity(intent);
-	}
+	}*/
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -516,6 +560,14 @@ public class ListCmisFeedActivity extends ListActivity {
 
 	void setRepository(CmisRepository repo) {
 		((CmisApp) getApplication()).setRepository(repo);
+	}
+	
+	CmisItemCollection getItems() {
+		return ((CmisApp) getApplication()).getItems();
+	}
+
+	void setItems(CmisItemCollection items) {
+		((CmisApp) getApplication()).setItems(items);
 	}
 
 }

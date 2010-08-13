@@ -25,6 +25,7 @@ import android.net.Uri;
 import android.widget.Toast;
 import de.fmaul.android.cmis.CmisApp;
 import de.fmaul.android.cmis.DocumentDetailsActivity;
+import de.fmaul.android.cmis.ListCmisFeedActivity;
 import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.asynctask.AbstractDownloadTask;
 import de.fmaul.android.cmis.database.Database;
@@ -154,23 +155,24 @@ public class ActionUtils {
 		try {
 			Database database = Database.create(activity);
 			FavoriteDAO favDao = new FavoriteDAO(database.open());
-			long result;
-			if (item.hasChildren()){
-				result = favDao.insert(item.getTitle(), item.getDownLink(), server.getId(), "");
-			} else {
+			long result = 1L;
+			
+			if (favDao.isPresentByURL(item.getSelfUrl()) == false){
 				result = favDao.insert(item.getTitle(), item.getSelfUrl(), server.getId(), item.getMimeType());
+				if (result == -1){
+					Toast.makeText(activity, R.string.favorite_create_error, Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(activity, R.string.favorite_create, Toast.LENGTH_LONG).show();
+				}
+			} else {
+				Toast.makeText(activity, R.string.favorite_present, Toast.LENGTH_LONG).show();
 			}
+			
 			database.close();
 			
-			if (result == -1){
-				Toast.makeText(activity, R.string.favorite_create_error, Toast.LENGTH_LONG).show();
-			} else {
-				Toast.makeText(activity, R.string.favorite_create, Toast.LENGTH_LONG).show();
-			}
 		} catch (Exception e) {
 			displayError(activity, R.string.generic_error);
 		}
-		
 	}
 	
 	public static void displayDocumentDetails(Activity activity, CmisItem doc) {
@@ -195,4 +197,15 @@ public class ActionUtils {
 			displayError(activity, R.string.generic_error);
 		}
 	}
+	
+	public static void openNewListViewActivity(Activity activity, CmisItem item) {
+		openNewListViewActivity(activity, new CmisItemLazy(item));
+	}
+	
+	public static void openNewListViewActivity(Activity activity, CmisItemLazy item) {
+		Intent intent = new Intent(activity, ListCmisFeedActivity.class);
+		intent.putExtra("item", item);
+		activity.startActivity(intent);
+	}
+	
 }

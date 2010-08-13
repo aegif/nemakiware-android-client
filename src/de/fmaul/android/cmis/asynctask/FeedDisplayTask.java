@@ -21,9 +21,12 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
+import de.fmaul.android.cmis.CmisApp;
 import de.fmaul.android.cmis.CmisItemCollectionAdapter;
 import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.repo.CmisItemCollection;
+import de.fmaul.android.cmis.repo.CmisItemLazy;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.utils.FeedLoadException;
 
@@ -34,24 +37,46 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 	private final String title;
 	private String feedParams = "";
 	private View layout;
+	private CmisItemLazy item;
+	private CmisItemCollection items;
+	private View layoutListing;
 
 	public FeedDisplayTask(ListActivity activity, CmisRepository repository) {
-		this(activity, repository, null);
+		this(activity, repository, null, null, null);
+	}
+	
+	public FeedDisplayTask(ListActivity activity, CmisRepository repository, String title) {
+		this(activity, repository, title, null, null);
+	}
+	
+	public FeedDisplayTask(ListActivity activity, CmisRepository repository, CmisItemLazy item) {
+		this(activity, repository, item.getTitle(), item, null);
+	}
+	
+	public FeedDisplayTask(ListActivity activity, CmisRepository repository, CmisItemLazy item, CmisItemCollection items) {
+		this(activity, repository, item.getTitle(), item, items);
 	}
 
-	public FeedDisplayTask(ListActivity activity, CmisRepository repository, String title) {
+	public FeedDisplayTask(ListActivity activity, CmisRepository repository, String title, CmisItemLazy item,  CmisItemCollection items) {
 		super();
 		this.activity = activity;
 		this.repository = repository;
 		this.title = title;
+		this.item = item;
+		this.items = items;
 	}
 
 	@Override
 	protected void onPreExecute() {
 		activity.setProgressBarIndeterminateVisibility(true);
-		if (repository != null && repository.getUseFeedParams()){
-			feedParams = repository.getFeedParams();
+		
+		if (items == null && repository != null && repository.getUseFeedParams()){
+				feedParams = repository.getFeedParams();
 		}
+		
+		//Loading Animation
+		layoutListing = activity.findViewById(R.id.listing);
+		layoutListing.setVisibility(View.GONE);
 		
 		layout = activity.findViewById(R.id.animation);
 		layout.setVisibility(View.VISIBLE);
@@ -64,11 +89,20 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 	@Override
 	protected CmisItemCollection doInBackground(String... params) {
 		try {
-			String feed = params[0];
-			if (feed == null) {
-				return repository.getRootCollection(feedParams);
+			if (items != null){
+				return items;
 			} else {
-				return repository.getCollectionFromFeed(feed + feedParams);
+				String feed = params[0];
+				/*if (item != null){
+					feed = item.getDownLink();
+				} else {
+					feed = params[0];
+				}*/
+				if (feed == null) {
+					return repository.getRootCollection(feedParams);
+				} else {
+					return repository.getCollectionFromFeed(feed + feedParams);
+				}
 			}
 		} catch (FeedLoadException fle) {
 			return CmisItemCollection.emptyCollection();
@@ -77,6 +111,8 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 
 	@Override
 	protected void onPostExecute(CmisItemCollection itemCollection) {
+		((CmisApp) activity.getApplication()).setItems(itemCollection);
+		
 		activity.setListAdapter(new CmisItemCollectionAdapter(activity, R.layout.feed_list_row, itemCollection));
 		if (title == null) {
 			activity.getWindow().setTitle(itemCollection.getTitle());
@@ -86,10 +122,18 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 		activity.setProgressBarIndeterminateVisibility(false);
 		
 		layout.setVisibility(View.GONE);
+		layoutListing.setVisibility(View.VISIBLE);
+		
 		if (itemCollection.getItems().size() == 0 ){
 			activity.findViewById(R.id.empty).setVisibility(View.VISIBLE);
 		}
 		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+		
+		if (item != null){
+			((TextView) activity.findViewById(R.id.path)).setText(item.getPath());
+		} else {
+			((TextView) activity.findViewById(R.id.path)).setText("/");
+		}
 	}
 
 	@Override
