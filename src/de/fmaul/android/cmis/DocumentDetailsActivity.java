@@ -72,13 +72,6 @@ public class DocumentDetailsActivity extends ListActivity {
 				}
 			});
 			
-			qrcode.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					IntentIntegrator.shareText(activity, item.getSelfUrl());
-				}
-			});
-			
 			edit.setVisibility(View.GONE);
 			delete.setVisibility(View.GONE);
 			//qrcode.setVisibility(View.GONE);
@@ -97,6 +90,13 @@ public class DocumentDetailsActivity extends ListActivity {
 			@Override
 			public void onClick(View v) {
 				ActionUtils.shareDocument(activity, activity.getIntent().getStringExtra("workspace"), item);
+			}
+		});
+		
+		qrcode.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				IntentIntegrator.shareText(activity, item.getSelfUrl());
 			}
 		});
 	}

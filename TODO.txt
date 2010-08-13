@@ -1,0 +1,12 @@
+
+
+Ability to cancel Download process.
+
+After break activity, return to the last one, not home.
+
+Search Center (Multi repo, Single Repo)
+
+Improve Property display
+
+Improve details actions. (Download, View, Share Content, Share URL...)
+

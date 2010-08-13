@@ -18,7 +18,6 @@ package de.fmaul.android.cmis.repo;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,13 +68,14 @@ public class CmisItem extends CmisItemLazy {
 		}
 
 		for (Element link : (List<Element>) entry.elements("link")) {
-			if ("down".equals(link.attribute("rel").getText())) {
-
+			if (CmisModel.ITEM_LINK_DOWN.equals(link.attribute("rel").getText())) {
 				if (link.attribute("type").getText().startsWith("application/atom+xml")) {
 					downLink = link.attribute("href").getText();
 				}
-			} else if ("self".equals(link.attribute("rel").getText())) {
+			} else if (CmisModel.ITEM_LINK_SELF.equals(link.attribute("rel").getText())) {
 				selfUrl = link.attribute("href").getText();
+			} else if (CmisModel.ITEM_LINK_UP.equals(link.attribute("rel").getText())) {
+				parentUrl = link.attribute("href").getText();
 			}
 		}
 		
@@ -86,6 +86,10 @@ public class CmisItem extends CmisItemLazy {
 		} else {
 			size = null;
 		}
+		if (properties.get("cmis:path") != null){
+			path = properties.get("cmis:path").getValue();
+		}
+		
 	}
 
 	private Date parseXmlDate(String date) {

@@ -31,6 +31,7 @@ import org.dom4j.Element;
 import android.app.Activity;
 import android.app.Application;
 import android.text.TextUtils;
+import de.fmaul.android.cmis.FilterPrefs;
 import de.fmaul.android.cmis.Prefs;
 import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.utils.FeedUtils;
@@ -201,7 +202,7 @@ public class CmisRepository {
 	}
 	
 	public void generateParams(Activity activity){
-		Prefs pref = new Prefs(activity);
+		FilterPrefs pref = new FilterPrefs(activity);
 		if (pref.getParams()){
 			setUseFeedParams(true);
 			setFeedParams(createParams(pref));
@@ -210,7 +211,7 @@ public class CmisRepository {
 		}
 	}
 	
-	private String createParams(Prefs pref){
+	private String createParams(FilterPrefs pref){
 		String params = "";
 		String value = "";
 		ArrayList<String> listParams = new ArrayList<String>(4);

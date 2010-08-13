@@ -29,10 +29,12 @@ public class CmisItemLazy implements Serializable {
 	protected String downLink;
 	protected String author;
 	protected String contentUrl;
-	protected String selfUrl;	
+	protected String selfUrl;
+	protected String parentUrl;
 	protected String id;
 	protected String mimeType;
 	protected String size;
+	protected String path;
 
 	protected Date modificationDate;
 	
@@ -43,6 +45,7 @@ public class CmisItemLazy implements Serializable {
 		super();
 		this.title = item.getTitle();
 		this.downLink =  item.getDownLink();
+		this.parentUrl =  item.getParentUrl();
 		this.author =  item.getAuthor();
 		this.contentUrl =  item.getContentUrl();
 		this.selfUrl =  item.getSelfUrl();
@@ -50,6 +53,7 @@ public class CmisItemLazy implements Serializable {
 		this.mimeType =  item.getMimeType();
 		this.size =  item.getSize();
 		this.modificationDate =  item.getModificationDate();
+		this.path = item.getPath();
 	}
 
 	public String getTitle() {
@@ -95,6 +99,14 @@ public class CmisItemLazy implements Serializable {
 	
 	public String getSize() {
 		return size;
+	}
+	
+	public String getPath() {
+		return path;
+	}
+	
+	public String getParentUrl() {
+		return parentUrl;
 	}
 	
 	public File getContent(String repositoryWorkspace){

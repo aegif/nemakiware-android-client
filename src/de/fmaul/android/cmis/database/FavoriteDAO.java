@@ -63,6 +63,18 @@ public class FavoriteDAO implements DAO<Favorite> {
 		}		
 		return cursorToFavorite(c);
 	}
+	
+	public boolean isPresentByURL(String url) {
+		Cursor c = db.query(FavoriteSchema.TABLENAME, null, FavoriteSchema.COLUMN_URL + " = '" + url + "'", null, null, null, null);
+		if (c != null) {
+			if (c.getCount() == 1){
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
 
 	private ContentValues createContentValues(String name, String url, long repoId, String mimetype) {
 		ContentValues updateValues = new ContentValues();

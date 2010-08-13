@@ -64,35 +64,26 @@
         </LinearLayout>
 	</HorizontalScrollView>
    
-   <LinearLayout android:orientation="vertical"
-		android:layout_width="fill_parent" 
-		android:layout_height="1sp"
-		android:background="#ffffff"
-		/>
-   
-   <LinearLayout android:orientation="vertical"
-		android:layout_width="fill_parent" 
-		android:layout_weight="1"
-		android:layout_height="0px"
+		<HorizontalScrollView 
+        android:id="@+id/my_scrollview2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:background="#404040"
 		>
+
+           <TextView
+            android:id="@+id/path"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left" 
+            android:textSize="12dip"
+            android:textColor="#ffffff"
+            android:text="qsdqsdqsdsqlkjfsmqljfdmlksjfdmlksqjflksqjfdmlksqjfmlsqkjfmlsk"/>
+                    
+    </HorizontalScrollView>
    
-		<ListView
-		    android:id="@+id/android:list"
-		    android:layout_width="fill_parent"
-		    android:layout_height="fill_parent"
-		    />
-		
-		<TextView
-		    android:id="@+id/empty"
-		    android:layout_width="fill_parent"
-		    android:layout_height="fill_parent"
-		    android:text="@string/main_no_items"
-		    android:visibility="gone"
-		    />
-		    
-    </LinearLayout>
-    
-    <LinearLayout android:id="@+id/animation"
+   <LinearLayout android:id="@+id/animation"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -122,5 +113,29 @@
 		        android:src="@drawable/phone"
 		         />
         </LinearLayout>
+   
+   
+   <LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" 
+		android:layout_weight="1"
+		android:layout_height="0px"
+		android:id="@+id/listing"
+		>
+   
+		<ListView
+		    android:id="@+id/android:list"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    />
+		
+		<TextView
+		    android:id="@+id/empty"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:text="@string/main_no_items"
+		    android:visibility="gone"
+		    />
+		    
+    </LinearLayout>
     
 </LinearLayout>

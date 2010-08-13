@@ -79,7 +79,8 @@
 	<string name="error_downloading_content">Error downloading content from CMIS repository.</string>
 	
 	<string name="no_properties">No properties found.</string>
-	
+	<string name="confirm_donwload">Are you sure you want to download this </string>
+	<string name="confirm_donwload2">MB file ?</string>
 	
 	<!-- GENERIC ACTION STRING -->
 	<string name="delete">Delete...</string>
@@ -92,6 +93,10 @@
     <string name="data_empty">No data found.</string>
     <string name="qrcode">QRCode</string>
     <string name="generic_error">An error occured during the treatment. Please try again...</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Developers</string>
@@ -101,6 +106,7 @@
 	
 	<!-- FAVORITE ACTIVITY -->
     <string name="favorite_create">Favorite added : OK</string>
+    <string name="favorite_present">Favorite already present</string>
     <string name="favorite_create_error">A problem occured during creation action. Please try again...</string>
 	
 	<string name="favorite_delete">Favorite removed : OK</string>

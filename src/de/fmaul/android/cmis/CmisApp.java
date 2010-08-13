@@ -16,11 +16,16 @@
 package de.fmaul.android.cmis;
 
 import android.app.Application;
+import de.fmaul.android.cmis.repo.CmisItemCollection;
 import de.fmaul.android.cmis.repo.CmisRepository;
 
 public class CmisApp extends Application {
 
+	private static final String TAG = "CmisApp";
+	
 	private CmisRepository repository;
+	private Prefs prefs;
+	private CmisItemCollection items;
 	
 	public CmisRepository getRepository() {
 		return repository;
@@ -29,4 +34,21 @@ public class CmisApp extends Application {
 	public void setRepository(CmisRepository repository) {
 		this.repository = repository;
 	}
+	
+	public Prefs getPrefs() {
+		return prefs;
+	}
+
+	public void setPrefs(Prefs prefs) {
+		this.prefs = prefs;
+	}
+
+	public void setItems(CmisItemCollection items) {
+		this.items = items;
+	}
+
+	public CmisItemCollection getItems() {
+		return items;
+	}
+	
 }
