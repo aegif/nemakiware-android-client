@@ -39,6 +39,8 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.fmaul.android.cmis.asynctask.FeedDisplayTask;
@@ -226,12 +228,22 @@ public class ListCmisFeedActivity extends ListActivity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		
 		setContentView(R.layout.feed_list_main);
-		getListView().setTextFilterEnabled(true);
-		getListView().setItemsCanFocus(true);
-		getListView().setClickable(true);
-		getListView().setOnItemClickListener(new CmisDocSelectedListener());
-		getListView().setOnCreateContextMenuListener(this);
 		
+		Prefs prefs = ((CmisApp) activity.getApplication()).getPrefs();
+		if(prefs != null && prefs.getDataView() == Prefs.GRIDVIEW){
+			GridView gridview = (GridView) activity.findViewById(R.id.gridview);
+			gridview.setOnItemClickListener(new CmisDocSelectedListener());
+			gridview.setTextFilterEnabled(true);
+			gridview.setClickable(true);
+			gridview.setOnCreateContextMenuListener(this);
+		} else {
+			ListView layoutListing = activity.getListView();
+			layoutListing.setTextFilterEnabled(true);
+			layoutListing.setItemsCanFocus(true);
+			layoutListing.setClickable(true);
+			layoutListing.setOnItemClickListener(new CmisDocSelectedListener());
+			layoutListing.setOnCreateContextMenuListener(this);
+		}
 	}
 
 	@Override
@@ -360,18 +372,22 @@ public class ListCmisFeedActivity extends ListActivity {
 			feed = getRepository().getFeedRootCollection();
 		}
 		
-		if (StorageUtils.deleteFeedFile(getRepository().getServer().getWorkspace(), feed)){
-			activity.finish();
-			if (item != null){
-				ActionUtils.openNewListViewActivity(activity, item);
+		try {
+			if (StorageUtils.deleteFeedFile(getApplication(), getRepository().getServer().getWorkspace(), feed)){
+				activity.finish();
+				if (item != null){
+					ActionUtils.openNewListViewActivity(activity, item);
+				} else {
+					Intent intent = new Intent(activity, ListCmisFeedActivity.class);
+					intent.putExtra("feed", feed);
+					intent.putExtra("title", getTitleFromIntent());
+					startActivity(intent);
+				}
 			} else {
-				Intent intent = new Intent(activity, ListCmisFeedActivity.class);
-				intent.putExtra("feed", feed);
-				intent.putExtra("title", getTitleFromIntent());
-				startActivity(intent);
+				displayError(R.string.application_not_available);
 			}
-		} else {
-			displayError(R.string.application_not_available);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -423,6 +439,7 @@ public class ListCmisFeedActivity extends ListActivity {
 			}
 		}
 	}
+	
 
 	/**
 	 * Opens a feed url in a new listview. This enables the user to use the
@@ -451,8 +468,15 @@ public class ListCmisFeedActivity extends ListActivity {
 		item = menu.add(Menu.NONE, 10, 0, R.string.menu_item_scanner);
 		item.setIcon(R.drawable.scanner);
 		
+		item = menu.add(Menu.NONE, 11, 0, R.string.menu_item_view);
+		
+		Prefs prefs = ((CmisApp) activity.getApplication()).getPrefs();
+		if(prefs != null && prefs.getDataView() == Prefs.GRIDVIEW){
+			item.setIcon(R.drawable.viewlisting);
+		} else {
+			item.setIcon(R.drawable.viewicons);
+		}
 		return true;
-
 	}
 
 	private void createRepoMenu(Menu menu) {
@@ -508,6 +532,15 @@ public class ListCmisFeedActivity extends ListActivity {
 			return true;
 		case 10:
 			IntentIntegrator.initiateScan(this);
+			return true;
+		case 11:
+			Prefs prefs = ((CmisApp) getApplication()).getPrefs();
+			if(prefs.getDataView() == Prefs.GRIDVIEW){
+				prefs.setDataView(Prefs.LISTVIEW);
+			} else {
+				prefs.setDataView(Prefs.GRIDVIEW);
+			}
+			refresh();
 			return true;
 		}
 		return false;

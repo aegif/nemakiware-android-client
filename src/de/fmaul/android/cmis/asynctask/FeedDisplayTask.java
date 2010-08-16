@@ -21,14 +21,20 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 import de.fmaul.android.cmis.CmisApp;
 import de.fmaul.android.cmis.CmisItemCollectionAdapter;
+import de.fmaul.android.cmis.GridAdapter;
+import de.fmaul.android.cmis.Prefs;
 import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.repo.CmisItemCollection;
 import de.fmaul.android.cmis.repo.CmisItemLazy;
 import de.fmaul.android.cmis.repo.CmisRepository;
+import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.FeedLoadException;
+import de.fmaul.android.cmis.utils.StorageException;
 
 public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection> {
 
@@ -39,7 +45,7 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 	private View layout;
 	private CmisItemLazy item;
 	private CmisItemCollection items;
-	private View layoutListing;
+	private ListView layoutListing;
 
 	public FeedDisplayTask(ListActivity activity, CmisRepository repository) {
 		this(activity, repository, null, null, null);
@@ -75,7 +81,7 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 		}
 		
 		//Loading Animation
-		layoutListing = activity.findViewById(R.id.listing);
+		layoutListing = activity.getListView();
 		layoutListing.setVisibility(View.GONE);
 		
 		layout = activity.findViewById(R.id.animation);
@@ -106,6 +112,9 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 			}
 		} catch (FeedLoadException fle) {
 			return CmisItemCollection.emptyCollection();
+		} catch (StorageException e) {
+			ActionUtils.displayError(activity, R.string.generic_error);
+			return CmisItemCollection.emptyCollection();
 		}
 	}
 
@@ -113,7 +122,14 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 	protected void onPostExecute(CmisItemCollection itemCollection) {
 		((CmisApp) activity.getApplication()).setItems(itemCollection);
 		
-		activity.setListAdapter(new CmisItemCollectionAdapter(activity, R.layout.feed_list_row, itemCollection));
+		Prefs prefs = ((CmisApp) activity.getApplication()).getPrefs();
+		if(prefs != null && prefs.getDataView() == Prefs.GRIDVIEW){
+			GridView gridview = (GridView) activity.findViewById(R.id.gridview);
+		    gridview.setAdapter(new GridAdapter(activity, R.layout.feed_grid_row, itemCollection));
+		} else {
+			layoutListing.setAdapter(new CmisItemCollectionAdapter(activity, R.layout.feed_list_row, itemCollection));
+		}
+		
 		if (title == null) {
 			activity.getWindow().setTitle(itemCollection.getTitle());
 		} else {

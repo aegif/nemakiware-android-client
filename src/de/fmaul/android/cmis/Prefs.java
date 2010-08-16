@@ -15,39 +15,24 @@
  */
 package de.fmaul.android.cmis;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 public class Prefs {
 
-	private final Activity activity;
+	public Prefs(int dataView) {
+		super();
+		this.dataView = dataView;
+	}
 
-	public Prefs(Activity activity) {
-		this.activity = activity;
+	public static  final int LISTVIEW = 1;
+	public static final int GRIDVIEW = 2;
+	
+	private int dataView;
+
+	
+	public int getDataView() {
+		return dataView;
 	}
 	
-	public String getMaxItems() {
-		return getPrefs().getString(activity.getString(R.string.cmis_repo_maxitems), "");
-	}
-
-	public String getFilter() {
-		return getPrefs().getString(activity.getString(R.string.cmis_repo_filter), "");
-	}
-
-	public String getTypes() {
-		return getPrefs().getString(activity.getString(R.string.cmis_repo_types), "");
-	}
-
-	public String getOrder() {
-		return getPrefs().getString(activity.getString(R.string.cmis_repo_orderby), "");	
-	}
-	
-	public Boolean getParams() {
-		return getPrefs().getBoolean(activity.getString(R.string.cmis_repo_params), false);	
-	}
-
-	private SharedPreferences getPrefs() {
-		return PreferenceManager.getDefaultSharedPreferences(activity);
+	public void setDataView(int dataView) {
+		this.dataView = dataView;
 	}
 }

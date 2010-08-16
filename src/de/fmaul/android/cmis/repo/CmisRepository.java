@@ -34,8 +34,10 @@ import android.text.TextUtils;
 import de.fmaul.android.cmis.FilterPrefs;
 import de.fmaul.android.cmis.Prefs;
 import de.fmaul.android.cmis.model.Server;
+import de.fmaul.android.cmis.utils.FeedLoadException;
 import de.fmaul.android.cmis.utils.FeedUtils;
 import de.fmaul.android.cmis.utils.HttpUtils;
+import de.fmaul.android.cmis.utils.StorageException;
 import de.fmaul.android.cmis.utils.StorageUtils;
 
 /**
@@ -114,12 +116,14 @@ public class CmisRepository {
 	 * Returns the root collection with documents and folders.
 	 * 
 	 * @return
+	 * @throws Exception 
+	 * @throws FeedLoadException 
 	 */
-	public CmisItemCollection getRootCollection() {
+	public CmisItemCollection getRootCollection() throws FeedLoadException, Exception {
 		return getCollectionFromFeed(feedRootCollection);
 	}
 	
-	public CmisItemCollection getRootCollection(String params) {
+	public CmisItemCollection getRootCollection(String params) throws FeedLoadException, StorageException {
 		return getCollectionFromFeed(feedRootCollection + params);
 	}
 
@@ -151,8 +155,10 @@ public class CmisRepository {
 	 * 
 	 * @param feedUrl
 	 * @return
+	 * @throws Exception 
+	 * @throws FeedLoadException 
 	 */
-	public CmisItemCollection getCollectionFromFeed(final String feedUrl) {
+	public CmisItemCollection getCollectionFromFeed(final String feedUrl) throws FeedLoadException, StorageException {
 		Document doc;
 
 		if (StorageUtils.isFeedInCache(application, feedUrl, repositoryWorkspace)) {
@@ -172,8 +178,8 @@ public class CmisRepository {
 		return CmisTypeDefinition.createFromFeed(doc);
 	}
 
-	public File retreiveContent(CmisItemLazy item) {
-		File contentFile = StorageUtils.getStorageFile(repositoryWorkspace, StorageUtils.TYPE_CONTENT, item.getId(), item.getTitle());
+	public File retreiveContent(CmisItemLazy item) throws StorageException {
+		File contentFile = StorageUtils.getStorageFile(application, repositoryWorkspace, StorageUtils.TYPE_CONTENT, item.getId(), item.getTitle());
 
 		try {
 			contentFile.getParentFile().mkdirs();
@@ -197,7 +203,7 @@ public class CmisRepository {
 		HttpUtils.getWebRessource(item.getContentUrl(), repositoryUser, repositoryPassword).getEntity().writeTo(os);
 	}
 
-	public void clearCache(String workspace) {
+	public void clearCache(String workspace) throws StorageException {
 		StorageUtils.deleteRepositoryFiles(application, workspace);
 	}
 	

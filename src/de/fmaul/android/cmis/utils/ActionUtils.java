@@ -40,7 +40,7 @@ public class ActionUtils {
 
 	public static void openDocument(final Activity contextActivity, final CmisItemLazy item) {
 		try {
-			File content = item.getContent(contextActivity.getIntent().getStringExtra("workspace"));
+			File content = item.getContent(contextActivity.getApplication(), contextActivity.getIntent().getStringExtra("workspace"));
 			if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getSize())){
 				viewFileInAssociatedApp(contextActivity, content, item.getMimeType());
 			} else {
@@ -114,7 +114,7 @@ public class ActionUtils {
 	public static void shareDocument(final Activity contextActivity, final String workspace, final CmisItemLazy item) {
 		
 		try {
-			File content = item.getContent(workspace);
+			File content = item.getContent(contextActivity.getApplication(), workspace);
 			if (item.getMimeType().length() == 0){
 				shareFileInAssociatedApp(contextActivity, content, item);
 			} else if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getSize())) {
