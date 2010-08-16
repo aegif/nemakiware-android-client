@@ -71,6 +71,10 @@ public class ListCmisFeedActivity extends ListActivity {
 	private CmisItemLazy item;
 	private CmisItemCollection items;
 
+	private GridView gridview;
+
+	private ListView listView;
+
 	/**
 	 * Contains the current connection information and methods to access the
 	 * CMIS repository.
@@ -229,6 +233,9 @@ public class ListCmisFeedActivity extends ListActivity {
 		
 		setContentView(R.layout.feed_list_main);
 		
+		gridview = (GridView) activity.findViewById(R.id.gridview);
+		listView = activity.getListView();
+		
 		Prefs prefs = ((CmisApp) activity.getApplication()).getPrefs();
 		if(prefs != null && prefs.getDataView() == Prefs.GRIDVIEW){
 			GridView gridview = (GridView) activity.findViewById(R.id.gridview);
@@ -237,12 +244,11 @@ public class ListCmisFeedActivity extends ListActivity {
 			gridview.setClickable(true);
 			gridview.setOnCreateContextMenuListener(this);
 		} else {
-			ListView layoutListing = activity.getListView();
-			layoutListing.setTextFilterEnabled(true);
-			layoutListing.setItemsCanFocus(true);
-			layoutListing.setClickable(true);
-			layoutListing.setOnItemClickListener(new CmisDocSelectedListener());
-			layoutListing.setOnCreateContextMenuListener(this);
+			listView.setTextFilterEnabled(true);
+			listView.setItemsCanFocus(true);
+			listView.setClickable(true);
+			listView.setOnItemClickListener(new CmisDocSelectedListener());
+			listView.setOnCreateContextMenuListener(this);
 		}
 	}
 
@@ -276,8 +282,14 @@ public class ListCmisFeedActivity extends ListActivity {
 			return false;
 		}
 
+		Prefs prefs = ((CmisApp) activity.getApplication()).getPrefs();
 		CmisItem item = (CmisItem) getListView().getItemAtPosition(menuInfo.position);
-
+		if(prefs != null && prefs.getDataView() == Prefs.GRIDVIEW){
+			item = (CmisItem) gridview.getItemAtPosition(menuInfo.position);
+		} else {
+			item = (CmisItem) listView.getItemAtPosition(menuInfo.position);
+		}
+		
 		switch (menuItem.getItemId()) {
 		case 1:
 			if (item != null && item.hasChildren() == false) {
