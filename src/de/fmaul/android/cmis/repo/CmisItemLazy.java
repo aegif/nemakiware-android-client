@@ -19,6 +19,9 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
 
+import android.app.Application;
+
+import de.fmaul.android.cmis.utils.StorageException;
 import de.fmaul.android.cmis.utils.StorageUtils;
 
 public class CmisItemLazy implements Serializable {
@@ -109,8 +112,8 @@ public class CmisItemLazy implements Serializable {
 		return parentUrl;
 	}
 	
-	public File getContent(String repositoryWorkspace){
-		return StorageUtils.getStorageFile(repositoryWorkspace, StorageUtils.TYPE_CONTENT, getId(), getTitle());
+	public File getContent(Application application, String repositoryWorkspace) throws StorageException {
+		return StorageUtils.getStorageFile(application, repositoryWorkspace, StorageUtils.TYPE_CONTENT, getId(), getTitle());
 	}
 	
 }

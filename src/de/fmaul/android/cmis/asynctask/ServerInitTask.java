@@ -7,10 +7,13 @@ import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import de.fmaul.android.cmis.CmisApp;
 import de.fmaul.android.cmis.ListCmisFeedActivity;
+import de.fmaul.android.cmis.Prefs;
 import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.CmisRepository;
+import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.FeedLoadException;
+import de.fmaul.android.cmis.utils.StorageException;
 
 public class ServerInitTask extends AsyncTask<String, Void, CmisRepository> {
 
@@ -49,11 +52,17 @@ public class ServerInitTask extends AsyncTask<String, Void, CmisRepository> {
 
 	@Override
 	protected void onPostExecute(CmisRepository repo) {
-		repo.generateParams(activity);
-		((CmisApp) activity.getApplication()).setRepository(repo);
-		((CmisApp) activity.getApplication()).getRepository().clearCache(repo.getServer().getWorkspace());
-		activity.processSearchOrDisplayIntent();
-		pg.dismiss();
+		try {
+			repo.generateParams(activity);
+			((CmisApp) activity.getApplication()).setRepository(repo);
+			((CmisApp) activity.getApplication()).getRepository().clearCache(repo.getServer().getWorkspace());
+			((CmisApp) activity.getApplication()).setPrefs(new Prefs(Prefs.LISTVIEW));
+			activity.processSearchOrDisplayIntent();
+			pg.dismiss();
+		} catch (StorageException e) {
+			ActionUtils.displayError(activity, R.string.generic_error);
+			pg.dismiss();
+		}
 	}
 
 	@Override

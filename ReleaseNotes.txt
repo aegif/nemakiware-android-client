@@ -8,3 +8,4 @@ Up when you come from favorite.
 New Features : 
 Breadcrumbs
 Improve ListCMIS behaviour during screen rotation
+GridView on ListCMIS
