@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.SimpleAdapter;
+import de.fmaul.android.cmis.asynctask.ItemPropertiesDisplayTask;
 import de.fmaul.android.cmis.repo.CmisItemLazy;
 import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
@@ -38,7 +39,7 @@ import de.fmaul.android.cmis.utils.ListUtils;
 public class DocumentDetailsActivity extends ListActivity {
 
 	private CmisItemLazy item;
-	private Button download, share, edit, delete, qrcode;
+	private Button view, download, share, edit, delete, qrcode;
 	private String objectTypeId;
 	private Activity activity;
 
@@ -51,13 +52,14 @@ public class DocumentDetailsActivity extends ListActivity {
 		item = (CmisItemLazy) getIntent().getExtras().getSerializable("item");
 		
 		setTitleFromIntent();
-		displayPropertiesFromIntent();
 		displayActionIcons();
+		displayPropertiesFromIntent();
 	}
 	
 	private void displayActionIcons(){
 		
 		download = (Button) findViewById(R.id.download);
+		view = (Button) findViewById(R.id.view);
 		share = (Button) findViewById(R.id.share);
 		edit = (Button) findViewById(R.id.editmetadata);
 		delete = (Button) findViewById(R.id.delete);
@@ -65,10 +67,18 @@ public class DocumentDetailsActivity extends ListActivity {
 		
 		//File
 		if (item != null && item.getSize() != null){
-			download.setOnClickListener(new OnClickListener() {
+			
+			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					ActionUtils.openDocument(activity, item);
+				}
+			});
+			
+			download.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					ActionUtils.saveAs(activity, activity.getIntent().getStringExtra("workspace"), item);
 				}
 			});
 			
@@ -78,6 +88,7 @@ public class DocumentDetailsActivity extends ListActivity {
 			
 		} else {
 			//FOLDER
+			view.setVisibility(View.GONE);
 			download.setVisibility(View.GONE);
 			edit.setVisibility(View.GONE);
 			//share.setVisibility(View.GONE);
@@ -106,11 +117,13 @@ public class DocumentDetailsActivity extends ListActivity {
 	}
 
 	private void displayPropertiesFromIntent() {
-		List<CmisProperty> propList = getPropertiesFromIntent();
+		new ItemPropertiesDisplayTask(this).execute();
+		
+		/*List<CmisProperty> propList = getPropertiesFromIntent();
 		objectTypeId = getObjectTypeIdFromIntent();
 		CmisTypeDefinition typeDefinition = getRepository().getTypeDefinition(objectTypeId);
 		List<Map<String, ?>> list = buildListOfNameValueMaps(propList, typeDefinition);
-		initListAdapter(list);
+		initListAdapter(list);*/
 	}
 
 	private String getObjectTypeIdFromIntent() {

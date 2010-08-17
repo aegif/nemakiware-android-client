@@ -29,6 +29,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 
+import de.fmaul.android.cmis.CmisApp;
+
 import android.app.Application;
 import android.os.Environment;
 
@@ -36,6 +38,7 @@ public class StorageUtils {
 
 	public static final String TYPE_FEEDS = "cache";
 	public static final String TYPE_CONTENT = "files";
+	public static final String TYPE_DOWNLOAD = "download";
 
 	public static boolean isFeedInCache(Application app, String url, String workspace) throws StorageException {
 		File cacheFile = getFeedFile(app, workspace, md5(url));
@@ -79,6 +82,26 @@ public class StorageUtils {
 		}
 
 	}
+	
+	public static File getStorageFile(Application app, String saveFolder, String filename) throws StorageException {
+		String state = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			StringBuilder builder = new StringBuilder();
+			builder.append(saveFolder);
+			builder.append("/");
+			builder.append(((CmisApp) app).getRepository().getServer().getName());
+			if (filename != null) {
+				builder.append("/");
+				builder.append(filename);
+			}
+			return new File(builder.toString());
+		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+			throw new StorageException("Storage in Read Only Mode");
+		} else {
+			throw new StorageException("Storage is unavailable");
+		}
+	}
+	
 
 	public static File getStorageFile(Application app, String repoId, String storageType, String itemId, String filename) throws StorageException {
 		String state = Environment.getExternalStorageState();
@@ -96,8 +119,10 @@ public class StorageUtils {
 				builder.append("/");
 				builder.append(storageType);
 			}
-			builder.append("/");
-			builder.append(repoId);
+			if (repoId != null) {
+				builder.append("/");
+				builder.append(repoId);
+			}
 			if (itemId != null) {
 				builder.append("/");
 				builder.append(itemId.replaceAll(":", "_"));
@@ -152,6 +177,19 @@ public class StorageUtils {
 		}
 	}
 
+	public static boolean deleteCacheFolder(Application app) throws StorageException {
+		File contentDir = getStorageFile(app, null, TYPE_CONTENT, null, null);
+		File feedsDir = getStorageFile(app, null, TYPE_FEEDS, null, null);
+		try {
+			FileUtils.deleteDirectory(contentDir);
+			FileUtils.deleteDirectory(feedsDir);
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
+	
+	
 	public static boolean deleteRepositoryCacheFiles(Application app, String repoId) throws StorageException {
 		File contentDir = getStorageFile(app, repoId, TYPE_CONTENT, null, null);
 		File feedsDir = getStorageFile(app, repoId, TYPE_FEEDS, null, null);
