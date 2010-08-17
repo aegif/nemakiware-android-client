@@ -79,7 +79,7 @@ public class FavoriteActivity extends ListActivity {
 			} else {
 				
 				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-				builder.setMessage("Choose your view...").setCancelable(false)
+				builder.setMessage("Choose your view...").setCancelable(true)
 						.setPositiveButton("Details", new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								new FeedItemDisplayTask(activity, currentServer, f.getUrl()).execute();

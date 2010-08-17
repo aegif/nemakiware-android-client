@@ -180,7 +180,15 @@ public class CmisRepository {
 
 	public File retreiveContent(CmisItemLazy item) throws StorageException {
 		File contentFile = StorageUtils.getStorageFile(application, repositoryWorkspace, StorageUtils.TYPE_CONTENT, item.getId(), item.getTitle());
-
+		return retreiveContent(item, contentFile);
+	}
+	
+	public File retreiveContent(CmisItemLazy item, String downloadFolder) throws StorageException {
+		File contentFile = item.getContentDownload(application, downloadFolder);
+		return retreiveContent(item, contentFile);
+	}
+	
+	private File retreiveContent(CmisItemLazy item, File contentFile) throws StorageException {
 		try {
 			contentFile.getParentFile().mkdirs();
 			contentFile.createNewFile();

@@ -75,6 +75,8 @@ public class ListCmisFeedActivity extends ListActivity {
 
 	private ListView listView;
 
+	private Prefs prefs;
+
 	/**
 	 * Contains the current connection information and methods to access the
 	 * CMIS repository.
@@ -236,7 +238,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		gridview = (GridView) activity.findViewById(R.id.gridview);
 		listView = activity.getListView();
 		
-		Prefs prefs = ((CmisApp) activity.getApplication()).getPrefs();
+		prefs = ((CmisApp) activity.getApplication()).getPrefs();
 		if(prefs != null && prefs.getDataView() == Prefs.GRIDVIEW){
 			GridView gridview = (GridView) activity.findViewById(R.id.gridview);
 			gridview.setOnItemClickListener(new CmisDocSelectedListener());
@@ -282,7 +284,6 @@ public class ListCmisFeedActivity extends ListActivity {
 			return false;
 		}
 
-		Prefs prefs = ((CmisApp) activity.getApplication()).getPrefs();
 		CmisItem item = (CmisItem) getListView().getItemAtPosition(menuInfo.position);
 		if(prefs != null && prefs.getDataView() == Prefs.GRIDVIEW){
 			item = (CmisItem) gridview.getItemAtPosition(menuInfo.position);
@@ -482,7 +483,6 @@ public class ListCmisFeedActivity extends ListActivity {
 		
 		item = menu.add(Menu.NONE, 11, 0, R.string.menu_item_view);
 		
-		Prefs prefs = ((CmisApp) activity.getApplication()).getPrefs();
 		if(prefs != null && prefs.getDataView() == Prefs.GRIDVIEW){
 			item.setIcon(R.drawable.viewlisting);
 		} else {
@@ -546,7 +546,6 @@ public class ListCmisFeedActivity extends ListActivity {
 			IntentIntegrator.initiateScan(this);
 			return true;
 		case 11:
-			Prefs prefs = ((CmisApp) getApplication()).getPrefs();
 			if(prefs.getDataView() == Prefs.GRIDVIEW){
 				prefs.setDataView(Prefs.LISTVIEW);
 			} else {

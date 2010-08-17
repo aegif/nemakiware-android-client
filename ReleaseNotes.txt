@@ -9,3 +9,6 @@ New Features :
 Breadcrumbs
 Improve ListCMIS behaviour during screen rotation
 GridView on ListCMIS
+Share Links or Links + Content
+Download in background
+Preferences

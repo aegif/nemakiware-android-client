@@ -35,6 +35,7 @@ public class ServerInitTask extends AsyncTask<String, Void, CmisRepository> {
 		pg = ProgressDialog.show(activity, "", activity.getText(R.string.loading), true, true, new OnCancelListener() {
 			@Override
 			public void onCancel(DialogInterface dialog) {
+				ServerInitTask.this.cancel(true);
 				activity.finish();
 				dialog.dismiss();
 			}
@@ -56,11 +57,14 @@ public class ServerInitTask extends AsyncTask<String, Void, CmisRepository> {
 			repo.generateParams(activity);
 			((CmisApp) activity.getApplication()).setRepository(repo);
 			((CmisApp) activity.getApplication()).getRepository().clearCache(repo.getServer().getWorkspace());
-			((CmisApp) activity.getApplication()).setPrefs(new Prefs(Prefs.LISTVIEW));
 			activity.processSearchOrDisplayIntent();
 			pg.dismiss();
 		} catch (StorageException e) {
 			ActionUtils.displayError(activity, R.string.generic_error);
+			pg.dismiss();
+		} catch (Exception e) {
+			ActionUtils.displayError(activity, R.string.generic_error);
+			activity.finish();
 			pg.dismiss();
 		}
 	}

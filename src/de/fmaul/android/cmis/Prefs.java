@@ -17,17 +17,26 @@ package de.fmaul.android.cmis;
 
 public class Prefs {
 
+	public static  final int LISTVIEW = 1;
+	public static final int GRIDVIEW = 2;
+	
+	private int dataView;
+	private String downloadFolder;
+	
+	
 	public Prefs(int dataView) {
 		super();
 		this.dataView = dataView;
 	}
 
-	public static  final int LISTVIEW = 1;
-	public static final int GRIDVIEW = 2;
 	
-	private int dataView;
+	public Prefs(int dataView, String downloadFolder) {
+		super();
+		this.dataView = dataView;
+		this.setDownloadFolder(downloadFolder);
+	}
 
-	
+
 	public int getDataView() {
 		return dataView;
 	}
@@ -35,4 +44,18 @@ public class Prefs {
 	public void setDataView(int dataView) {
 		this.dataView = dataView;
 	}
+
+
+	public void setDownloadFolder(String downloadFolder) {
+		this.downloadFolder = downloadFolder;
+	}
+
+
+	public String getDownloadFolder() {
+		return downloadFolder;
+	}
+	
+	
+	
+	
 }

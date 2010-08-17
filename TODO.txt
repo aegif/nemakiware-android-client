@@ -10,3 +10,7 @@ Improve Property display
 
 Improve details actions. (Download, View, Share Content, Share URL...)
 
+Improve preferences
+
+Paging.
+

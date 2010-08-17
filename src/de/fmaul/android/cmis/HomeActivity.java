@@ -17,10 +17,14 @@ package de.fmaul.android.cmis;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
+import de.fmaul.android.cmis.repo.CmisItemCollection;
 
 public class HomeActivity extends Activity {
     
@@ -35,6 +39,9 @@ public class HomeActivity extends Activity {
         
         setContentView(R.layout.main);
         
+        
+        initPrefs();
+        
         ((Button) findViewById(R.id.about)).setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -47,7 +54,18 @@ public class HomeActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, CmisFilterActivity.class));
+				
+				/*int PICK_REQUEST_CODE = 0;
+				Intent intent = new Intent();
+				intent.setAction(Intent.ACTION_PICK);
+				Uri startDir = Uri.fromFile(new File("/sdcard"));
+				// Files and directories !
+				intent.setDataAndType(startDir, "vnd.android.cursor.dir/*");
+				//intent.setData(startDir);
+				startActivityForResult(intent, PICK_REQUEST_CODE);*/
+				
+				startActivity(new Intent(HomeActivity.this, CmisPreferences.class));
+				//startActivity(new Intent(HomeActivity.this, FileChooserActivity.class));
 			}
 		});
         
@@ -58,5 +76,23 @@ public class HomeActivity extends Activity {
 				startActivity(new Intent(HomeActivity.this, ServerActivity.class));
 			}
 		});
+    }
+    
+    private void initPrefs() {
+    	SharedPreferences sharePrefs = PreferenceManager.getDefaultSharedPreferences(this);
+    	((CmisApp) getApplication()).setPrefs(
+    			new Prefs(
+    				Integer.parseInt(sharePrefs.getString("default_view", "1")),
+	    			sharePrefs.getString("download_folder", "/sdcard/Download")
+	    			)
+    			);
+	}
+
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+       if (requestCode == 0) {
+    	   if (resultCode == RESULT_OK) {
+    		   Toast.makeText(this, "Hello ! ", Toast.LENGTH_LONG);
+    	   }
+       }
     }
 }

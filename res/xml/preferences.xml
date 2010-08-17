@@ -4,27 +4,28 @@
 		<CheckBoxPreference 
 			android:key="cache"
 			android:title="Delete cache" 
-			android:summary="Allow activer Params"
+			android:summary="Directory where we store feed and document cache."
 			android:defaultValue="false" />
 		<EditTextPreference 
-			android:key="cache_directory"
+			android:key="download_folder"
 			android:title="Change Directory" 
-			android:summary="Directory where we store feed and document cache."
-			android:defaultValue="-1" />
-		<EditTextPreference 
-			android:key="@string/cmis_repo_filter"
-			android:title="Filter" 
-			android:summary="Filter"
-			android:defaultValue="*" />
-		<EditTextPreference 
-			android:key="@string/cmis_repo_types"
-			android:title="Types" 
-			android:summary="Types"
-			android:defaultValue="" />
-		<EditTextPreference 
-			android:key="@string/cmis_repo_orderby"
-			android:title="Order By" 
-			android:summary="Order By"
-			android:defaultValue="cmis:name ASC" />
+			android:summary="Directory where we store file download."
+			android:defaultValue="/sdcard/Download" />
 	</PreferenceCategory>
+	
+	<PreferenceCategory android:title="View">
+		<ListPreference
+           android:title="Default View"
+           android:summary="This preference allows to select an item in an array"
+           android:key="default_view"
+           android:defaultValue="1"
+           android:entries="@array/view"
+           android:entryValues="@array/view_values" />   
+       <CheckBoxPreference 
+			android:key="scan"
+			android:title="Enable scan" 
+			android:summary="Not Available"
+			android:defaultValue="true"
+			android:enabled="false" />  
+    </PreferenceCategory>
 </PreferenceScreen>

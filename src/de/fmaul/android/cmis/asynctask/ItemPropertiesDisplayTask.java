@@ -18,7 +18,7 @@ import de.fmaul.android.cmis.repo.CmisTypeDefinition;
 import de.fmaul.android.cmis.utils.FeedLoadException;
 import de.fmaul.android.cmis.utils.ListUtils;
 
-public class ItemPropertiesDisplayTask extends AsyncTask<String, Void, Boolean> {
+public class ItemPropertiesDisplayTask extends AsyncTask<String, Void, List<Map<String, ?>>> {
 
 	private final DocumentDetailsActivity activity;
 	private ProgressDialog pg;
@@ -34,25 +34,23 @@ public class ItemPropertiesDisplayTask extends AsyncTask<String, Void, Boolean> 
 	}
 
 	@Override
-	protected Boolean doInBackground(String... params) {
+	protected List<Map<String, ?>> doInBackground(String... params) {
 		try {
-			activity.setContentView(R.layout.document_details_main);
 			CmisItemLazy item = (CmisItemLazy) activity.getIntent().getExtras().getSerializable("item");
-			activity.setTitle(activity.getString(R.string.title_details) + " '" + item.getTitle() + "'");
 			List<CmisProperty> propList = getPropertiesFromIntent();
 			CmisTypeDefinition typeDefinition = getRepository().getTypeDefinition(getObjectTypeIdFromIntent());
-			SimpleAdapter props = new SimpleAdapter(activity, buildListOfNameValueMaps(propList, typeDefinition), R.layout.document_details_row, new String[] { "name", "value" }, new int[] {
-					R.id.propertyName, R.id.propertyValue });
-			activity.setListAdapter(props);
-			//activity.displayActionIcons();
-			return true;
+			
+			return buildListOfNameValueMaps(propList, typeDefinition);
 		} catch (FeedLoadException fle) {
 			return null;
 		}
 	}
 
 	@Override
-	protected void onPostExecute(Boolean list) {
+	protected void onPostExecute(List<Map<String, ?>> list) {
+		SimpleAdapter props = new SimpleAdapter(activity, list, R.layout.document_details_row, new String[] { "name", "value" }, new int[] {
+			R.id.propertyName, R.id.propertyValue });
+		activity.setListAdapter(props);
 		pg.dismiss();
 	}
 

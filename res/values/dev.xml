@@ -5,4 +5,15 @@
 		<item>Florian Maul</item>
 		<item>Jean Marie PASCAL</item>
 	</string-array>
+	
+	<string-array name="view">
+        <item>list</item>
+        <item>grid</item>
+    </string-array>
+    
+    <string-array name="view_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+	
 </resources>

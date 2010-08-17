@@ -19,7 +19,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
@@ -40,11 +42,10 @@ public class ActionUtils {
 
 	public static void openDocument(final Activity contextActivity, final CmisItemLazy item) {
 		try {
-			File content = item.getContent(contextActivity.getApplication(), contextActivity.getIntent().getStringExtra("workspace"));
+			File content = getItemFile(contextActivity,  contextActivity.getIntent().getStringExtra("workspace"), item);
 			if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getSize())){
 				viewFileInAssociatedApp(contextActivity, content, item.getMimeType());
 			} else {
-				
 				new AbstractDownloadTask(getRepository(contextActivity), contextActivity) {
 					@Override
 					public void onDownloadFinished(File contentFile) {
@@ -98,7 +99,7 @@ public class ActionUtils {
 		Toast.makeText(contextActivity, messageId, Toast.LENGTH_LONG).show();
 	}
 	
-	private static void viewFileInAssociatedApp(Activity contextActivity, File tempFile, String mimeType) {
+	public static void viewFileInAssociatedApp(Activity contextActivity, File tempFile, String mimeType) {
 		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
 		Uri data = Uri.fromFile(tempFile);
 		viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -111,21 +112,65 @@ public class ActionUtils {
 		}
 	}
 	
+	public static void saveAs(final Activity contextActivity, final String workspace, final CmisItemLazy item){
+		try {
+			File content = item.getContentDownload(contextActivity.getApplication(), ((CmisApp) contextActivity.getApplication()).getPrefs().getDownloadFolder());
+			if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getSize())){
+				viewFileInAssociatedApp(contextActivity, content, item.getMimeType());
+			} else {
+				NotificationUtils.downloadNotification(contextActivity);
+				new AbstractDownloadTask(getRepository(contextActivity), contextActivity, true) {
+					@Override
+					public void onDownloadFinished(File contentFile) {
+						if (contentFile != null && contentFile.exists()) {
+							NotificationUtils.downloadNotification(contextActivity, contentFile, item.getMimeType());	
+						} else {
+							displayError(contextActivity, R.string.error_file_does_not_exists);
+						}
+					}
+				}.execute(item);
+			}
+		} catch (Exception e) {
+			displayError(contextActivity, e.getMessage());
+		}
+	}
+	
 	public static void shareDocument(final Activity contextActivity, final String workspace, final CmisItemLazy item) {
 		
 		try {
-			File content = item.getContent(contextActivity.getApplication(), workspace);
+			File content = getItemFile(contextActivity, workspace, item);
 			if (item.getMimeType().length() == 0){
 				shareFileInAssociatedApp(contextActivity, content, item);
-			} else if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getSize())) {
-				shareFileInAssociatedApp(contextActivity, content, item);
+			//} else if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getSize())) {
+			//	shareFileInAssociatedApp(contextActivity, content, item);
 			} else {
-				new AbstractDownloadTask(getRepository(contextActivity), contextActivity) {
-					@Override
-					public void onDownloadFinished(File contentFile) {
-							shareFileInAssociatedApp(contextActivity, contentFile, item);
-					}
-				}.execute(item);
+				AlertDialog.Builder builder = new AlertDialog.Builder(contextActivity);
+				builder.setMessage("You wan to share...").setCancelable(true)
+						.setPositiveButton("Link", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								shareFileInAssociatedApp(contextActivity, null, item);
+							}
+						}).setNegativeButton("Content", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								try {
+									File content = getItemFile(contextActivity, workspace, item);
+									if (content != null) {
+										shareFileInAssociatedApp(contextActivity, content, item);
+									} else {
+										new AbstractDownloadTask(getRepository(contextActivity), contextActivity) {
+											@Override
+											public void onDownloadFinished(File contentFile) {
+												shareFileInAssociatedApp(contextActivity, contentFile, item);
+											}
+										}.execute(item);
+									}
+								} catch (StorageException e) {
+									displayError(contextActivity, R.string.generic_error);
+								}
+							}
+						});
+				AlertDialog alert = builder.create();
+				alert.show();
 			}
 		} catch (Exception e) {
 			displayError(contextActivity, R.string.generic_error);
@@ -145,6 +190,20 @@ public class ActionUtils {
 			i.setType("text/plain");
 		}
 		contextActivity.startActivity(Intent.createChooser(i, contextActivity.getText(R.string.share)));
+	}
+	
+	private static File getItemFile(final Activity contextActivity, final String workspace, final CmisItemLazy item) throws StorageException{
+			File content = item.getContent(contextActivity.getApplication(), workspace);
+			if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getSize())) {
+				return content; 
+			} 
+			
+			content = item.getContentDownload(contextActivity.getApplication(), ((CmisApp) contextActivity.getApplication()).getPrefs().getDownloadFolder());
+			if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getSize())) {
+				return content; 
+			} 
+			
+			return null;
 	}
 	
 	private static CmisRepository getRepository(Activity activity) {
@@ -181,6 +240,16 @@ public class ActionUtils {
 	
 	public static void displayDocumentDetails(Activity activity, Server server, CmisItem doc) {
 		try {
+			Intent intent =getDocumentDetailsIntent(activity, server,  doc);
+			
+			activity.startActivity(intent);
+		} catch (Exception e) {
+			displayError(activity, R.string.generic_error);
+		}
+	}
+	
+	public static Intent getDocumentDetailsIntent(Activity activity, Server server, CmisItem doc) {
+		try {
 			Intent intent = new Intent(activity, DocumentDetailsActivity.class);
 	
 			ArrayList<CmisProperty> propList = new ArrayList<CmisProperty>(doc.getProperties().values());
@@ -192,9 +261,9 @@ public class ActionUtils {
 			intent.putExtra("baseTypeId", doc.getProperties().get("cmis:baseTypeId").getValue());
 			intent.putExtra("item", new CmisItemLazy(doc));
 			
-			activity.startActivity(intent);
+			return intent;
 		} catch (Exception e) {
-			displayError(activity, R.string.generic_error);
+			return null;
 		}
 	}
 	

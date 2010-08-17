@@ -116,4 +116,8 @@ public class CmisItemLazy implements Serializable {
 		return StorageUtils.getStorageFile(application, repositoryWorkspace, StorageUtils.TYPE_CONTENT, getId(), getTitle());
 	}
 	
+	public File getContentDownload(Application application, String saveFolder) throws StorageException {
+		return StorageUtils.getStorageFile(application, saveFolder, getTitle());
+	}
+	
 }
