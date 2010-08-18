@@ -273,8 +273,13 @@ public class ActionUtils {
 	
 	public static void openNewListViewActivity(Activity activity, CmisItemLazy item) {
 		Intent intent = new Intent(activity, ListCmisFeedActivity.class);
-		intent.putExtra("item", item);
+		if (item != null){
+			intent.putExtra("item", item);
+		} else {
+			intent.putExtra("title", getRepository(activity).getServer().getName());
+		}
+		
 		activity.startActivity(intent);
 	}
-	
+
 }

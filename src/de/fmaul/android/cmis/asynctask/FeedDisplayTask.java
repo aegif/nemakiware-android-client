@@ -139,35 +139,47 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 		Button back = ((Button)  activity.findViewById(R.id.back));
 		Button next = ((Button)  activity.findViewById(R.id.next));
 		
+		String title_paging = "";
+		
 		if (repository.isPaging() == false){
 			Log.d(TAG, "PAGING : NO");
 			back.setVisibility(View.GONE);
 			next.setVisibility(View.GONE);
 		} else {
-		//First Case
-			Log.d(TAG, "- SC" + repository.getSkipCount() + "- MI"  + repository.getMaxItems());
+			//First Case
 			if (repository.getSkipCount() == 0 && (repository.getSkipCount() + repository.getMaxItems()) >= repository.getNumItems()){
 				Log.d(TAG, "PAGING : UNIQUE");
 				back.setVisibility(View.GONE);
 				next.setVisibility(View.GONE);
 			} else if (repository.getSkipCount() == 0 && (repository.getSkipCount() + repository.getMaxItems()) < repository.getNumItems()){
 				Log.d(TAG, "PAGING : FIRST");
+				int nb_page = repository.getNumItems() > 0 ? ((int) Math.ceil((double) repository.getNumItems()/ (double) repository.getMaxItems())) : 0;
+				title_paging =  " [1/" + nb_page + "]";  
 				next.setVisibility(View.VISIBLE);
 			} else if (repository.getSkipCount() != 0 && (repository.getSkipCount() + repository.getMaxItems())  >= repository.getNumItems()){
+				int nb_page = repository.getNumItems() > 0 ? ((int) Math.ceil((double) repository.getNumItems()/ (double) repository.getMaxItems())) : 0;
+				title_paging =  " [" + nb_page + "/" + nb_page + "]";
 				Log.d(TAG, "PAGING : END");
 				((Button) activity.findViewById(R.id.back)).setVisibility(View.VISIBLE);
 			} else {
+				int nb_page = repository.getNumItems() > 0 ? ((int) Math.ceil((double) repository.getNumItems()/ (double) repository.getMaxItems())) : 0;
+				int currentPage = repository.getSkipCount() > 0 ? ((int) Math.floor((double) repository.getSkipCount()/ (double) repository.getMaxItems())) + 1 : 0;
+				
+				title_paging =  " [" + currentPage + "/" + nb_page + "]";  
+				
 				Log.d(TAG, "PAGING : MIDDLE");
 				back.setVisibility(View.VISIBLE);
 				next.setVisibility(View.VISIBLE);
 			}
 		}
 		
+		//TITLE
 		if (title == null) {
-			activity.getWindow().setTitle(itemCollection.getTitle());
+			activity.getWindow().setTitle(itemCollection.getTitle() + title_paging);
 		} else {
-			activity.getWindow().setTitle(title);
+			activity.getWindow().setTitle(title + title_paging);
 		}
+		
 		activity.setProgressBarIndeterminateVisibility(false);
 		
 		layout.setVisibility(View.GONE);
@@ -190,4 +202,6 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 		activity.setProgressBarIndeterminateVisibility(false);
 		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 	}
+	
+	
 }
