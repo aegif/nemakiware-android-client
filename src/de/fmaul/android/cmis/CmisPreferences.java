@@ -15,17 +15,16 @@
  */
 package de.fmaul.android.cmis;
 
+import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
+import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceActivity;
 import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.StorageException;
 import de.fmaul.android.cmis.utils.StorageUtils;
-import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
-import android.widget.Toast;
 
 public class CmisPreferences extends PreferenceActivity {
 
@@ -33,12 +32,11 @@ public class CmisPreferences extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
-		//setContentView(R.layout.feed_list_main);
 		
-		( (CheckBoxPreference) (getPreferenceManager().findPreference("cache"))).setChecked(false);
-		getPreferenceManager().findPreference("cache").setEnabled(true);
+		( (CheckBoxPreference) (getPreferenceManager().findPreference(this.getText(R.string.cmis_cache)))).setChecked(false);
+		getPreferenceManager().findPreference(this.getText(R.string.cmis_cache)).setEnabled(true);
 		
-		getPreferenceManager().findPreference("cache").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		getPreferenceManager().findPreference(this.getText(R.string.cmis_cache)).setOnPreferenceClickListener(new OnPreferenceClickListener() {
 		    @Override
 		    public boolean onPreferenceClick(Preference preference){
 		    	try {
@@ -52,18 +50,19 @@ public class CmisPreferences extends PreferenceActivity {
 		});
 		
 		
-		getPreferenceManager().findPreference("default_view").setOnPreferenceClickListener(new OnPreferenceClickListener() {
-		    @Override
-		    public boolean onPreferenceClick(Preference preference){
-		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setDataView(Integer.parseInt(((ListPreference) preference).getValue()));
-		    	return true;
-		    }
+		getPreferenceManager().findPreference("cmis_defaultview").setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setDataView(Integer.parseInt((String) newValue));
+		    	((ListPreference) preference).setValue((String) newValue);
+				return false;
+			}
 		});
 		
-		getPreferenceManager().findPreference("download_folder").setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		getPreferenceManager().findPreference(this.getText(R.string.cmis_dlfolder)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 		    @Override
-		    public boolean onPreferenceClick(Preference preference){
-		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setDownloadFolder(((EditTextPreference) preference).getText());
+		    public boolean onPreferenceChange(Preference preference, Object newValue) {
+		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setDownloadFolder((String) newValue);
 		    	return true;
 		    }
 		});

@@ -30,6 +30,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -116,6 +117,16 @@ public class ListCmisFeedActivity extends ListActivity {
 	}
 	
 	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK && getRepository().isPaging()) {
+	    	getRepository().generateParams(activity, false);
+	    	this.finish();
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
+	
+	@Override
 	public Object onRetainNonConfigurationInstance() {
 	    final CmisItemCollection data = getItems();
 	    return data;
@@ -124,6 +135,8 @@ public class ListCmisFeedActivity extends ListActivity {
 	private void initActionIcon() {
 		Button home = (Button) findViewById(R.id.home);
 		Button up = (Button) findViewById(R.id.up);
+		Button back = (Button) findViewById(R.id.back);
+		Button next = (Button) findViewById(R.id.next);
 		Button refresh = (Button) findViewById(R.id.refresh);
 		Button pref = (Button) findViewById(R.id.preference);
 		
@@ -150,6 +163,26 @@ public class ListCmisFeedActivity extends ListActivity {
 				}
 			}
 		});
+		
+		//if (getRepository().isPaging()){
+			back.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					getRepository().generateParams(activity, false);
+					//ActionUtils.openNewListViewActivity(ListCmisFeedActivity.this, item);
+					ListCmisFeedActivity.this.finish();
+					//ListCmisFeedActivity.this.finish();
+				}
+			});
+			
+			next.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					getRepository().generateParams(activity, true);
+					ActionUtils.openNewListViewActivity(ListCmisFeedActivity.this, item);
+				}
+			});
+		//}
 		
 		pref.setOnClickListener(new OnClickListener() {
 			@Override
@@ -240,7 +273,6 @@ public class ListCmisFeedActivity extends ListActivity {
 		
 		prefs = ((CmisApp) activity.getApplication()).getPrefs();
 		if(prefs != null && prefs.getDataView() == Prefs.GRIDVIEW){
-			GridView gridview = (GridView) activity.findViewById(R.id.gridview);
 			gridview.setOnItemClickListener(new CmisDocSelectedListener());
 			gridview.setTextFilterEnabled(true);
 			gridview.setClickable(true);
@@ -423,6 +455,7 @@ public class ListCmisFeedActivity extends ListActivity {
 			Log.d(TAG, "Start FeedDisplayTask : Items");
 			new FeedDisplayTask(this, getRepository(), null, item, items).execute();
 		} else if (item != null){
+			Log.d(TAG, "Start FeedDisplayTask : Item");
 			new FeedDisplayTask(this, getRepository(), item).execute(item.getDownLink());
 		}  else {
 			Log.d(TAG, "Start FeedDisplayTask : title");

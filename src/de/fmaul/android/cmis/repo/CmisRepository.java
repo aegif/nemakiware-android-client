@@ -31,6 +31,7 @@ import org.dom4j.Element;
 import android.app.Activity;
 import android.app.Application;
 import android.text.TextUtils;
+import android.util.Log;
 import de.fmaul.android.cmis.FilterPrefs;
 import de.fmaul.android.cmis.Prefs;
 import de.fmaul.android.cmis.model.Server;
@@ -45,6 +46,8 @@ import de.fmaul.android.cmis.utils.StorageUtils;
  */
 public class CmisRepository {
 
+	private static final String TAG = "CmisRepository";
+	
 	private final String feedRootCollection;
 	private final String feedTypesCollection;
 	private final String uriTemplateQuery;
@@ -58,7 +61,10 @@ public class CmisRepository {
 	private final String repositoryName;
 	private String repositoryUrl;
 	private final Server server;
-	
+	private int skipCount = 0;
+	private int maxItems = 0;
+	private Boolean paging;
+	private int numItems;
 	
 	/**
 	 * Connects to a CMIS Repository with the given connection information FIXME
@@ -160,7 +166,7 @@ public class CmisRepository {
 	 */
 	public CmisItemCollection getCollectionFromFeed(final String feedUrl) throws FeedLoadException, StorageException {
 		Document doc;
-
+		Log.d(TAG, "feedUrl : " + feedUrl);
 		if (StorageUtils.isFeedInCache(application, feedUrl, repositoryWorkspace)) {
 			doc = StorageUtils.getFeedFromCache(application, feedUrl, repositoryWorkspace);
 		} else {
@@ -169,6 +175,10 @@ public class CmisRepository {
 				StorageUtils.storeFeedInCache(application, feedUrl, doc, repositoryWorkspace);
 			}
 		}
+		
+		numItems = FeedUtils.getNumItemsFeed(doc);
+		Log.d(TAG, "NumItems : " + numItems);
+		
 		return CmisItemCollection.createFromFeed(doc);
 	}
 
@@ -219,17 +229,36 @@ public class CmisRepository {
 		FilterPrefs pref = new FilterPrefs(activity);
 		if (pref.getParams()){
 			setUseFeedParams(true);
+			if (pref.getPaging()){
+				setPaging(true);
+			} else {
+				setPaging(false);
+			}
 			setFeedParams(createParams(pref));
 		} else {
 			setUseFeedParams(false);
 		}
 	}
 	
-	private String createParams(FilterPrefs pref){
+	public void generateParams(Activity activity, Boolean isAdd){
+		FilterPrefs pref = new FilterPrefs(activity);
+		if (pref.getParams()){
+			setUseFeedParams(true);
+			if (pref.getPaging()){
+				setPaging(true);
+			} else {
+				setPaging(false);
+			}
+			setFeedParams(createParams(pref, isAdd, false));
+		} else {
+			setUseFeedParams(false);
+		}
+	}
+	
+	private String createParams(FilterPrefs pref, Boolean isAdd, Boolean isFirst){
 		String params = "";
 		String value = "";
 		ArrayList<String> listParams = new ArrayList<String>(4);
-		//List<String> listParams = new LinkedList<String>();
 		
 		if (pref != null && pref.getParams()){
 			
@@ -243,9 +272,36 @@ public class CmisRepository {
 				paramsList.put("filter", pref.getFilter());
 			}*/
 			
+			if (pref.getPaging()){
+				if (isFirst){
+					listParams.add("skipCount" + "=0");
+					setSkipCount(0);
+				} else {
+					value = pref.getMaxItems();
+					if (value != null) {
+						if (value.length() == 0 ){
+							value = "0";
+							setMaxItems(Integer.parseInt(value));
+						}
+						int skipCountValue = 0;
+						if (isAdd){
+							skipCountValue = getSkipCount() + getMaxItems() ;
+						} else {
+							skipCountValue = getSkipCount() - getMaxItems();
+						}
+						if (skipCountValue < 0){
+							skipCountValue = 0;
+						}
+						listParams.add("skipCount" + "=" + skipCountValue);
+						setSkipCount(skipCountValue);
+					}
+				}
+			}
+			
 			value = pref.getMaxItems();
-			if (value != null && value.length() > 0 && value.equals("-1") == false){
+			if (value != null && value.length() > 0 && Integer.parseInt(value) > 0){
 				listParams.add("maxItems" + "=" + pref.getMaxItems());
+				setMaxItems(Integer.parseInt(value));
 			}
 			
 			value = pref.getOrder() ;
@@ -260,8 +316,13 @@ public class CmisRepository {
 			params = new URI(null, params, null).toASCIIString();
 		} catch (URISyntaxException e) {
 		}
-		
+		Log.d(TAG, "Params : " + params);
 		return params;
+	}
+	
+	
+	private String createParams(FilterPrefs pref){
+		return  createParams(pref, true, true);
 	}
 	
 	public String getFeedParams() {
@@ -283,7 +344,42 @@ public class CmisRepository {
 	public Server getServer() {
 		return server;
 	}
-	
-	
 
+	public void setSkipCount(int skipCount) {
+		Log.d(TAG, "skipCount :" + skipCount);
+		this.skipCount = skipCount;
+	}
+
+	public int getSkipCount() {
+		return skipCount;
+	}
+
+	public void setPaging(Boolean paging) {
+		Log.d(TAG, "Paging :" + paging);
+		this.paging = paging;
+	}
+
+	public Boolean isPaging() {
+		if (paging == null){
+			paging = false;
+		}
+		return paging;
+	}
+
+	public void setNumItems(int numItems) {
+		this.numItems = numItems;
+	}
+
+	public int getNumItems() {
+		return numItems;
+	}
+
+	public void setMaxItems(int maxItems) {
+		Log.d(TAG, "MaxItems :" + maxItems);
+		this.maxItems = maxItems;
+	}
+
+	public int getMaxItems() {
+		return maxItems;
+	}
 }

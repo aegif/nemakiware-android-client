@@ -135,37 +135,37 @@ public class ActionUtils {
 		}
 	}
 	
-	public static void shareDocument(final Activity contextActivity, final String workspace, final CmisItemLazy item) {
+	public static void shareDocument(final Activity activity, final String workspace, final CmisItemLazy item) {
 		
 		try {
-			File content = getItemFile(contextActivity, workspace, item);
+			File content = getItemFile(activity, workspace, item);
 			if (item.getMimeType().length() == 0){
-				shareFileInAssociatedApp(contextActivity, content, item);
+				shareFileInAssociatedApp(activity, content, item);
 			//} else if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getSize())) {
 			//	shareFileInAssociatedApp(contextActivity, content, item);
 			} else {
-				AlertDialog.Builder builder = new AlertDialog.Builder(contextActivity);
-				builder.setMessage("You wan to share...").setCancelable(true)
-						.setPositiveButton("Link", new DialogInterface.OnClickListener() {
+				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+				builder.setMessage(activity.getText(R.string.share_question)).setCancelable(true)
+						.setPositiveButton(activity.getText(R.string.share_link), new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								shareFileInAssociatedApp(contextActivity, null, item);
+								shareFileInAssociatedApp(activity, null, item);
 							}
-						}).setNegativeButton("Content", new DialogInterface.OnClickListener() {
+						}).setNegativeButton(activity.getText(R.string.share_content), new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
 								try {
-									File content = getItemFile(contextActivity, workspace, item);
+									File content = getItemFile(activity, workspace, item);
 									if (content != null) {
-										shareFileInAssociatedApp(contextActivity, content, item);
+										shareFileInAssociatedApp(activity, content, item);
 									} else {
-										new AbstractDownloadTask(getRepository(contextActivity), contextActivity) {
+										new AbstractDownloadTask(getRepository(activity), activity) {
 											@Override
 											public void onDownloadFinished(File contentFile) {
-												shareFileInAssociatedApp(contextActivity, contentFile, item);
+												shareFileInAssociatedApp(activity, contentFile, item);
 											}
 										}.execute(item);
 									}
 								} catch (StorageException e) {
-									displayError(contextActivity, R.string.generic_error);
+									displayError(activity, R.string.generic_error);
 								}
 							}
 						});
@@ -173,7 +173,7 @@ public class ActionUtils {
 				alert.show();
 			}
 		} catch (Exception e) {
-			displayError(contextActivity, R.string.generic_error);
+			displayError(activity, R.string.generic_error);
 		}
 		
 	}

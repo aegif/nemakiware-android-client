@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"  android:key="mainPreferences">
-	<PreferenceCategory android:title="Data">
+	<PreferenceCategory android:title="@string/cmis_repo_data">
 		<CheckBoxPreference 
-			android:key="cache"
-			android:title="Delete cache" 
-			android:summary="Directory where we store feed and document cache."
+			android:key="@string/cmis_cache"
+			android:title="@string/cmis_cache_title"
+			android:summary="@string/cmis_cache_desc"
 			android:defaultValue="false" />
 		<EditTextPreference 
-			android:key="download_folder"
-			android:title="Change Directory" 
-			android:summary="Directory where we store file download."
+			android:key="@string/cmis_dlfolder"
+			android:title="@string/cmis_dlfolder_title" 
+			android:summary="@string/cmis_dlfolder_desc"
 			android:defaultValue="/sdcard/Download" />
 	</PreferenceCategory>
 	
-	<PreferenceCategory android:title="View">
-		<ListPreference
-           android:title="Default View"
-           android:summary="This preference allows to select an item in an array"
-           android:key="default_view"
+	<PreferenceCategory android:title="@string/cmis_repo_view">
+		 <ListPreference
+           android:title="@string/cmis_defaultview_title"
+           android:summary="@string/cmis_defaultview_desc"
+           android:key="cmis_defaultview"
            android:defaultValue="1"
            android:entries="@array/view"
-           android:entryValues="@array/view_values" />   
-       <CheckBoxPreference 
-			android:key="scan"
-			android:title="Enable scan" 
-			android:summary="Not Available"
+           android:entryValues="@array/view_values" />  
+        <CheckBoxPreference 
+			android:key="@string/cmis_scan"
+			android:title="@string/cmis_scan_title" 
+			android:summary="@string/cmis_scan_desc"
 			android:defaultValue="true"
 			android:enabled="false" />  
     </PreferenceCategory>

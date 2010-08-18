@@ -49,6 +49,7 @@ public class FeedUtils {
 	private static final QName CMISRA_TYPE = QName.get("type", CMISRA);
 	private static final QName CMISRA_TEMPLATE = QName.get("template", CMISRA);
 	private static final QName CMISRA_OBJECT = QName.get("object", CMISRA);
+	private static final QName CMISRA_NUMITEMS = QName.get("numItems", CMISRA);
 	private static final QName CMIS_PROPERTIES = QName.get("properties", CMIS);
 	private static final QName CMIS_VALUE = QName.get("value", CMIS);
 
@@ -106,6 +107,16 @@ public class FeedUtils {
 			}
 		}
 		return "";
+	}
+	
+	public static int getNumItemsFeed(Document doc) {
+		if (doc != null) {
+			Element numItems = doc.getRootElement().element(CMISRA_NUMITEMS);
+			if (numItems != null){
+				return Integer.parseInt(numItems.getText());
+			}
+		}
+		return 0;
 	}
 	
 	public static Element getWorkspace(Document doc, String workspaceName){

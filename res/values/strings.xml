@@ -62,8 +62,15 @@
 	<string name="menu_item_refresh">Refresh</string>
 	<string name="menu_item_scanner">Scanner</string>
 	<string name="menu_item_view">View</string>
+	<string name="menu_item_filter">Filter</string>
 	
 	<string name="loading_data">Please wait a few moment... Loading data...</string>
+	
+	<string name="notif_download_finish">Download finished</string>
+	<string name="notif_download_title">Download file : Done.</string>
+	<string name="notif_download_texte">Open File : </string>
+	<string name="notif_open">Open...</string>
+	
 	
 	<!-- SEARCH RESULT -->
 	<string name="search_label">CMIS Repository</string>
@@ -83,6 +90,10 @@
 	<string name="confirm_donwload">Are you sure you want to download this </string>
 	<string name="confirm_donwload2">MB file ?</string>
 	
+	<string name="share_question">You want to share...</string>
+	<string name="share_link">Link</string>
+	<string name="share_content">Content</string>
+	
 	<!-- GENERIC ACTION STRING -->
 	<string name="delete">Delete...</string>
     <string name="edit">Edit</string>
@@ -98,6 +109,7 @@
     <string name="cancel">Cancel</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="view">View</string>
 	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Developers</string>
@@ -138,5 +150,33 @@
 	<string name="cmis_repo_orderby_title">Order By</string>
 	<string name="cmis_repo_orderby_desc">Identifies the order in which the result rows must be sorted</string>
 	
+	<string name="cmis_repo_paging">CmisRepoPaging</string>
+	<string name="cmis_repo_paging_title">Paging</string>
+	<string name="cmis_repo_paging_desc">Enable Paging</string>
+	
+	<string name="cmis_repo_skipcount">CmisRepoSkipCount</string>
+	
+	<!-- PREFRENCE ACTIVITY -->
+	<string name="cmis_repo_pref">Preferences</string>
+	
+	<string name="cmis_repo_data">Data</string>
+	<string name="cmis_repo_view">View</string>
+	
+	<string name="cmis_cache">CmisCache</string>
+	<string name="cmis_cache_title">Delete cache</string>
+	<string name="cmis_cache_desc">Directory where we store feed and document cache.</string>
+	
+	<string name="cmis_dlfolder">CmisDownloadFolder</string>
+	<string name="cmis_dlfolder_title">Download Folder</string>
+	<string name="cmis_dlfolder_desc">Directory where we store downloaded file.</string>
+	
+	<string name="cmis_defaultview">CmisDefaultView</string>
+	<string name="cmis_defaultview_title">Default View Type</string>
+	<string name="cmis_defaultview_desc">List or Grid view</string>
+	
+	<string name="cmis_scan">CmisDefaultView</string>
+	<string name="cmis_scan_title">Enable Scan</string>
+	<string name="cmis_scan_desc">Enable QRCode scan and generator.</string>
+
 
 </resources>

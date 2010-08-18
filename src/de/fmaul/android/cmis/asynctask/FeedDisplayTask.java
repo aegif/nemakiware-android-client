@@ -18,9 +18,11 @@ package de.fmaul.android.cmis.asynctask;
 import android.app.ListActivity;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,6 +40,8 @@ import de.fmaul.android.cmis.utils.StorageException;
 
 public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection> {
 
+	private static final String TAG = "FeedDisplayTask";
+	
 	private final ListActivity activity;
 	private final CmisRepository repository;
 	private final String title;
@@ -128,6 +132,35 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 		    gridview.setAdapter(new GridAdapter(activity, R.layout.feed_grid_row, itemCollection));
 		} else {
 			layoutListing.setAdapter(new CmisItemCollectionAdapter(activity, R.layout.feed_list_row, itemCollection));
+		}
+		
+		
+		//No Case
+		Button back = ((Button)  activity.findViewById(R.id.back));
+		Button next = ((Button)  activity.findViewById(R.id.next));
+		
+		if (repository.isPaging() == false){
+			Log.d(TAG, "PAGING : NO");
+			back.setVisibility(View.GONE);
+			next.setVisibility(View.GONE);
+		} else {
+		//First Case
+			Log.d(TAG, "- SC" + repository.getSkipCount() + "- MI"  + repository.getMaxItems());
+			if (repository.getSkipCount() == 0 && (repository.getSkipCount() + repository.getMaxItems()) >= repository.getNumItems()){
+				Log.d(TAG, "PAGING : UNIQUE");
+				back.setVisibility(View.GONE);
+				next.setVisibility(View.GONE);
+			} else if (repository.getSkipCount() == 0 && (repository.getSkipCount() + repository.getMaxItems()) < repository.getNumItems()){
+				Log.d(TAG, "PAGING : FIRST");
+				next.setVisibility(View.VISIBLE);
+			} else if (repository.getSkipCount() != 0 && (repository.getSkipCount() + repository.getMaxItems())  >= repository.getNumItems()){
+				Log.d(TAG, "PAGING : END");
+				((Button) activity.findViewById(R.id.back)).setVisibility(View.VISIBLE);
+			} else {
+				Log.d(TAG, "PAGING : MIDDLE");
+				back.setVisibility(View.VISIBLE);
+				next.setVisibility(View.VISIBLE);
+			}
 		}
 		
 		if (title == null) {
