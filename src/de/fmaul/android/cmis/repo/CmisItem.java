@@ -65,6 +65,9 @@ public class CmisItem extends CmisItemLazy {
 		if (contentElement != null) {
 			contentUrl = contentElement.attributeValue("src");
 			mimeType = contentElement.attributeValue("type");
+			if (mimeType == null){
+				mimeType = "";
+			}
 		}
 
 		for (Element link : (List<Element>) entry.elements("link")) {

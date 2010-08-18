@@ -68,8 +68,8 @@ public class ServerActivity extends ListActivity {
 		MenuItem menuItem = menu.add(Menu.NONE, 1, 0, R.string.menu_item_server_add);
 		menuItem.setIcon(R.drawable.add);
 		
-		menuItem = menu.add(Menu.NONE, 2, 0, R.string.menu_item_prefs);
-		menuItem.setIcon(R.drawable.preferences);
+		menuItem = menu.add(Menu.NONE, 2, 0, R.string.menu_item_filter);
+		menuItem.setIcon(R.drawable.filter);
 		
 		menuItem = menu.add(Menu.NONE, 3, 0, R.string.quit);
 		menuItem.setIcon(R.drawable.quit);
