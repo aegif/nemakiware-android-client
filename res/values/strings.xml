@@ -58,6 +58,7 @@
 	<string name="menu_item_home">Home</string>
 	<string name="menu_item_up">Up</string>
 	<string name="menu_item_back">Back</string>
+	<string name="menu_item_next">Next</string>
 	<string name="menu_item_prefs">Prefs</string>
 	<string name="menu_item_refresh">Refresh</string>
 	<string name="menu_item_scanner">Scanner</string>
@@ -116,6 +117,8 @@
 	<string name="about_resources">Resources</string>
 	<string name="about_project_website">Visit Android CMIS Browser Project Website</string>
 	<string name="about_openicon_website">Visit Open Icon Library Website</string>
+	<string name="about_open_market">Vote for Android CMIS Browser</string>
+	<string name="about_share_app">Share Android CMIS Browser</string>
 	
 	<!-- FAVORITE ACTIVITY -->
     <string name="favorite_create">Favorite added : OK</string>
@@ -126,6 +129,12 @@
     <string name="favorite_delete_error">A problem occured during delete action. Please try again...</string>
 	<string name="favorite_error">Favorite is not availale.</string>
 	<string name="favorite_error_loading">A problem occured during loading action. Please try again...</string>
+	
+	<string name="favorite_open">Choose your view...</string>
+	<string name="favorite_open_folder">Folder</string>
+	<string name="favorite_open_details">Details</string>
+
+	<string name="favorite_title">Favorites for</string>
 
 	<!-- FILTER/PREFRENCE ACTIVITY -->
 	<string name="cmis_repo_filter_pref">Filter Preferences</string>
@@ -177,6 +186,5 @@
 	<string name="cmis_scan">CmisDefaultView</string>
 	<string name="cmis_scan_title">Enable Scan</string>
 	<string name="cmis_scan_desc">Enable QRCode scan and generator.</string>
-
 
 </resources>

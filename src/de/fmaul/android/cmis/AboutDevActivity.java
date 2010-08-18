@@ -15,6 +15,7 @@
  */
 package de.fmaul.android.cmis;
 
+import de.fmaul.android.cmis.utils.IntentIntegrator;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -53,6 +54,35 @@ public class AboutDevActivity extends Activity {
 				}
 			}
 		});
+		
+		
+		((Button) findViewById(R.id.open_market)).setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent viewIntent = new Intent(Intent.ACTION_VIEW);
+				viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				viewIntent.setData(Uri.parse("http://market.android.com/details?id=de.fmaul.android.cmis"));
+
+				try {
+					startActivity(viewIntent);
+				} catch (ActivityNotFoundException e) {
+					Toast.makeText(AboutDevActivity.this, R.string.application_not_available, Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		
+		((Button) findViewById(R.id.share_app)).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					IntentIntegrator.shareText(AboutDevActivity.this, "http://market.android.com/details?id=de.fmaul.android.cmis");
+				} catch (ActivityNotFoundException e) {
+					Toast.makeText(AboutDevActivity.this, R.string.application_not_available, Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		
 		
 	}
 }
