@@ -55,13 +55,19 @@
 	<string name="menu_item_favorites">Favoris</string>
 	
 	<string name="menu_item_home">Home</string>
-	<string name="menu_item_up">Up</string>
+	<string name="menu_item_up">Haut</string>
 	<string name="menu_item_back">Retour</string>
+	<string name="menu_item_next">Suivant</string>
 	<string name="menu_item_prefs">Filtre</string>
 	<string name="menu_item_refresh">Rafraîchir</string>
 	<string name="menu_item_scanner">Scanner</string>
 	
 	<string name="loading_data">Un instant... Chargement des données...</string>
+	
+	<string name="notif_download_finish">Téléchargement terminé</string>
+	<string name="notif_download_title">Fichier téléchargé.</string>
+	<string name="notif_download_texte">Ouvrir le fichier : </string>
+	<string name="notif_open">Ouvrir...</string>
 	
 	
 	<!-- SEARCH RESULT -->
@@ -79,6 +85,12 @@
 	<string name="error_downloading_content">Une erreur s\'est produite lors du téléchargement du fichier.</string>
 	
 	<string name="no_properties">Aucune propriété trouvée.</string>
+	<string name="confirm_donwload">Etes vous sur de vouloir télécharger ce fichier </string>
+	<string name="confirm_donwload2">Mo ?</string>
+	
+	<string name="share_question">Vous voulez partager...</string>
+	<string name="share_link">Lien</string>
+	<string name="share_content">Contenu</string>
 	
 	<!-- GENERIC ACTION STRING -->
 	<string name="delete">Supprimer...</string>
@@ -90,22 +102,20 @@
     <string name="loading">Chargement...</string>
     <string name="data_empty">No data found...</string>
     <string name="qrcode">QRCode</string>
-    <string name="generic_error">An error occured during the treatment. Please try again...</string>
-    
-
-	<!-- Preferences -->
-	<string name="cmis_repo_maxitems">cmisRepoServerMaxItems</string>
-	<string name="cmis_repo_filter">CmisRepoFilter</string>
-	<string name="cmis_repo_types">CmisRepoTypes</string>
-	<string name="cmis_repo_orderby">CmisRepoOrderBy</string>
-	<string name="cmis_repo_params">CmisRepoParams</string>
-	
+    <string name="generic_error">Une erreur s\'est produite lors du traitement. Veuillez réessayer..</string>
+	<string name="confirm">Confirmer</string>
+    <string name="cancel">Annuler</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
+    <string name="view">Voir</string>
 	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Développeurs</string>
 	<string name="about_resources">Ressources</string>
 	<string name="about_project_website">Visiter le site web du projet Android CMIS Browser</string>
 	<string name="about_openicon_website">Visiter le site web Open Icon Library</string>
+	<string name="about_open_market">Voter pour l\'application sur l\'Android Market</string>
+	<string name="about_share_app">Partager Android CMIS Browser via un QRCode</string>
 	
 	<!-- FAVORITE ACTIVITY -->
     <string name="favorite_create">Le favori a été ajouté.</string>
@@ -116,5 +126,61 @@
 	<string name="favorite_error">Favorite is not availale.</string>
 	<string name="favorite_error_loading">Une erreur s\'est produite lors de la chargement du favori.. Veuillez recommencer...</string>
     
+    <string name="favorite_open">Veuillez choisir une vue...</string>
+	<string name="favorite_open_folder">Répertoire</string>
+	<string name="favorite_open_details">Détails</string>
+	
+	<string name="favorite_title">Favoris pour</string>
+    
+    <!-- FILTER/PREFRENCE ACTIVITY -->
+	<string name="cmis_repo_filter_pref">Préférence de filtre</string>
+	
+	<string name="cmis_repo_params">CmisRepoParams</string>
+	<string name="cmis_repo_params_title">Filtre</string>
+	<string name="cmis_repo_params_desc">Permettre les paramètres de filtre.</string>
+	
+	<string name="cmis_repo_maxitems">cmisRepoServerMaxItems</string>
+	<string name="cmis_repo_maxitems_title">Max Items</string>
+	<string name="cmis_repo_maxitems_desc">C\'est le nombre maximum d\'éléments affichés sur une page.</string>
+	
+	<string name="cmis_repo_filter">CmisRepoFilter</string>
+	<string name="cmis_repo_filter_title">Filtre de propriété</string>
+	<string name="cmis_repo_filter_desc">Non disponible</string>
+	
+	<string name="cmis_repo_types">CmisRepoTypes</string>
+	<string name="cmis_repo_types_title">Type d\'élément</string>
+	<string name="cmis_repo_types_desc">Restreint le type d\'élément retourné. (documents, folders, policies, any)</string>
+	
+	<string name="cmis_repo_orderby">CmisRepoOrderBy</string>
+	<string name="cmis_repo_orderby_title">Ordre</string>
+	<string name="cmis_repo_orderby_desc">Identifie l\'ordre dans lequel on affiche les éléments.</string>
+	
+	<string name="cmis_repo_paging">CmisRepoPaging</string>
+	<string name="cmis_repo_paging_title">Pagination</string>
+	<string name="cmis_repo_paging_desc">Permettre la pagination</string>
+	
+	<string name="cmis_repo_skipcount">CmisRepoSkipCount</string>
+    
+    <!-- PREFRENCE ACTIVITY -->
+	<string name="cmis_repo_pref">Preferences</string>
+	
+	<string name="cmis_repo_data">Données</string>
+	<string name="cmis_repo_view">Vue</string>
+	
+	<string name="cmis_cache">CmisCache</string>
+	<string name="cmis_cache_title">Supprimer le cache</string>
+	<string name="cmis_cache_desc">Répertoire où sont stockés les fichiers de cache.</string>
+	
+	<string name="cmis_dlfolder">CmisDownloadFolder</string>
+	<string name="cmis_dlfolder_title">Téléchargement</string>
+	<string name="cmis_dlfolder_desc">Répertoire où sont stockés les fichiers téléchargés.</string>
+	
+	<string name="cmis_defaultview">CmisDefaultView</string>
+	<string name="cmis_defaultview_title">Type de vue</string>
+	<string name="cmis_defaultview_desc">Vue en liste ou grille.</string>
+	
+	<string name="cmis_scan">CmisDefaultView</string>
+	<string name="cmis_scan_title">Scanner</string>
+	<string name="cmis_scan_desc">Permettre le scan de QRCode.</string>
 
 </resources>
