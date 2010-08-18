@@ -28,7 +28,7 @@ public class FilterPrefs {
 	}
 	
 	public String getMaxItems() {
-		return getPrefs().getString(activity.getString(R.string.cmis_repo_maxitems), "");
+		return getPrefs().getString(activity.getString(R.string.cmis_repo_maxitems), "0");
 	}
 
 	public String getFilter() {
@@ -41,6 +41,14 @@ public class FilterPrefs {
 
 	public String getOrder() {
 		return getPrefs().getString(activity.getString(R.string.cmis_repo_orderby), "");	
+	}
+	
+	public Boolean getPaging () {
+		return getPrefs().getBoolean(activity.getString(R.string.cmis_repo_paging), true);	
+	}
+	
+	public int getSkipCount () {
+		return getPrefs().getInt(activity.getString(R.string.cmis_repo_skipcount), 0);	
 	}
 	
 	public Boolean getParams() {

@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.Button;
 import de.fmaul.android.cmis.CmisApp;
 import de.fmaul.android.cmis.ListCmisFeedActivity;
 import de.fmaul.android.cmis.Prefs;

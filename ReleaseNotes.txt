@@ -4,6 +4,7 @@ Bug Fix :
 QRCode for folders.
 Unique Favorite.
 Up when you come from favorite.
+Ability to cancel Download process.
 
 New Features : 
 Breadcrumbs
@@ -11,4 +12,6 @@ Improve ListCMIS behaviour during screen rotation
 GridView on ListCMIS
 Share Links or Links + Content
 Download in background
-Preferences
+Improve details actions. (Download, View, Share Content, Share URL...)
+Improve preferences
+Paging

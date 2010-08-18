@@ -68,7 +68,10 @@ public class ServerActivity extends ListActivity {
 		MenuItem menuItem = menu.add(Menu.NONE, 1, 0, R.string.menu_item_server_add);
 		menuItem.setIcon(R.drawable.add);
 		
-		menuItem = menu.add(Menu.NONE, 2, 0, R.string.quit);
+		menuItem = menu.add(Menu.NONE, 2, 0, R.string.menu_item_prefs);
+		menuItem.setIcon(R.drawable.preferences);
+		
+		menuItem = menu.add(Menu.NONE, 3, 0, R.string.quit);
 		menuItem.setIcon(R.drawable.quit);
 		
 		return true;
@@ -81,6 +84,9 @@ public class ServerActivity extends ListActivity {
 			startActivity(new Intent(this,ServerEditActivity.class));
 			return true;
 		case 2:
+			startActivity( new Intent(this, CmisFilterActivity.class));
+			return true;
+		case 3:
 			Intent intent = new Intent(this, HomeActivity.class);
 			intent.putExtra("EXIT", true);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

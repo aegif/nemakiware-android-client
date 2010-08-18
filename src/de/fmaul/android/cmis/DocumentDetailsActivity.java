@@ -15,26 +15,17 @@
  */
 package de.fmaul.android.cmis;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.SimpleAdapter;
 import de.fmaul.android.cmis.asynctask.ItemPropertiesDisplayTask;
 import de.fmaul.android.cmis.repo.CmisItemLazy;
-import de.fmaul.android.cmis.repo.CmisProperty;
 import de.fmaul.android.cmis.repo.CmisRepository;
-import de.fmaul.android.cmis.repo.CmisTypeDefinition;
 import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.IntentIntegrator;
-import de.fmaul.android.cmis.utils.ListUtils;
 
 public class DocumentDetailsActivity extends ListActivity {
 
@@ -118,52 +109,6 @@ public class DocumentDetailsActivity extends ListActivity {
 
 	private void displayPropertiesFromIntent() {
 		new ItemPropertiesDisplayTask(this).execute();
-		
-		/*List<CmisProperty> propList = getPropertiesFromIntent();
-		objectTypeId = getObjectTypeIdFromIntent();
-		CmisTypeDefinition typeDefinition = getRepository().getTypeDefinition(objectTypeId);
-		List<Map<String, ?>> list = buildListOfNameValueMaps(propList, typeDefinition);
-		initListAdapter(list);*/
-	}
-
-	private String getObjectTypeIdFromIntent() {
-		return getIntent().getStringExtra("objectTypeId");
-	}
-	
-	private void initListAdapter(List<Map<String, ?>> list) {
-		SimpleAdapter props = new SimpleAdapter(this, list, R.layout.document_details_row, new String[] { "name", "value" }, new int[] {
-				R.id.propertyName, R.id.propertyValue });
-
-		setListAdapter(props);
-	}
-
-	private List<Map<String, ?>> buildListOfNameValueMaps(List<CmisProperty> propList, CmisTypeDefinition typeDefinition) {
-		List<Map<String, ?>> list = new ArrayList<Map<String, ?>>();
-		for (CmisProperty cmisProperty : propList) {
-			if (cmisProperty.getDefinitionId() != null) {
-				list.add(ListUtils.createPair(getDisplayNameFromProperty(cmisProperty, typeDefinition), cmisProperty.getValue()));
-			}
-		}
-		return list;
-	}
-
-	private String getDisplayNameFromProperty(CmisProperty property, CmisTypeDefinition typeDefinition) {
-		String name = property.getDisplayName();
-
-		if (TextUtils.isEmpty(name)) {
-		}
-		name = typeDefinition.getDisplayNameForProperty(property);
-
-		if (TextUtils.isEmpty(name)) {
-			name = property.getDefinitionId();
-		}
-		
-		return name.replaceAll("cmis:", "");
-	}
-
-	private ArrayList<CmisProperty> getPropertiesFromIntent() {
-		ArrayList<CmisProperty> propList = getIntent().getParcelableArrayListExtra("properties");
-		return propList;
 	}
 
 	CmisRepository getRepository() {

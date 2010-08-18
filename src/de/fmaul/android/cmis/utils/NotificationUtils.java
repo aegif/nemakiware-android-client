@@ -16,10 +16,10 @@ public class NotificationUtils {
 	
 	public static final int DOWNLOAD_ID = 3313;
 	
-	public static void downloadNotification(Activity contextActivity, File contentFile, String mimetype){
+	public static void downloadNotification(Activity activity, File contentFile, String mimetype){
 		
-		NotificationManager notificationManager = (NotificationManager) contextActivity.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.cmisexplorer, "Download finished", System.currentTimeMillis());
+		NotificationManager notificationManager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
+		Notification notification = new Notification(R.drawable.cmisexplorer, activity.getText(R.string.notif_download_finish), System.currentTimeMillis());
 		notification.flags = Notification.FLAG_AUTO_CANCEL;
 		
 		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
@@ -32,23 +32,23 @@ public class NotificationUtils {
 		i.putExtra("mimeType", item.getMimeType());
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);*/
 		
-		PendingIntent pendingIntent = PendingIntent.getActivity(contextActivity, 0, viewIntent, 0);
-		String titreNotification = "Download file finished.";
-		String texteNotification = "Open file " + contentFile.getName();
-		notification.setLatestEventInfo(contextActivity, titreNotification, texteNotification, pendingIntent);
+		PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0, viewIntent, 0);
+		String titreNotification = activity.getText(R.string.notif_download_title).toString();
+		String texteNotification = activity.getText(R.string.notif_download_texte) + contentFile.getName();
+		notification.setLatestEventInfo(activity, titreNotification, texteNotification, pendingIntent);
 		notificationManager.notify(DOWNLOAD_ID, notification);
 	}
 	
-	public static void downloadNotification(Activity contextActivity){
+	public static void downloadNotification(Activity activity){
 		
-		NotificationManager notificationManager = (NotificationManager) contextActivity.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notification = new Notification(R.drawable.cmisexplorer, "Downloading..", System.currentTimeMillis());
-		Intent viewIntent = new Intent(contextActivity, HomeActivity.class);
+		NotificationManager notificationManager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
+		Notification notification = new Notification(R.drawable.cmisexplorer, activity.getText(R.string.download_progress), System.currentTimeMillis());
+		Intent viewIntent = new Intent(activity, HomeActivity.class);
 		viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		PendingIntent pendingIntent = PendingIntent.getActivity(contextActivity, 0, viewIntent, 0);
-		String titreNotification = "Downloading files.";
-		String texteNotification = "Open Cmis Browser";
-		notification.setLatestEventInfo(contextActivity, titreNotification, texteNotification, pendingIntent);
+		PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0, viewIntent, 0);
+		String titreNotification =  activity.getText(R.string.download_progress).toString();
+		String texteNotification =  activity.getText(R.string.notif_open).toString();
+		notification.setLatestEventInfo(activity, titreNotification, texteNotification, pendingIntent);
 		notificationManager.notify(DOWNLOAD_ID, notification);
 	}
 	
