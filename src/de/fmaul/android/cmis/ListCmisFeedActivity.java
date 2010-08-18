@@ -155,6 +155,10 @@ public class ListCmisFeedActivity extends ListActivity {
 			@Override
 			public void onClick(View v) {
 				if (item != null && item.getPath().equals("/") == false){
+					if (getRepository().isPaging()) {
+				    	getRepository().setSkipCount(0);
+				    	getRepository().generateParams(activity);
+					}
 					new FeedItemDisplayTask(activity, getRepository().getServer(), item.getParentUrl(), 1).execute();
 				} else {
 					Intent intent = new Intent(activity, ServerActivity.class);
@@ -479,6 +483,10 @@ public class ListCmisFeedActivity extends ListActivity {
 
 			if (doc.hasChildren()) {
 				//new FeedDisplayTask(ListCmisFeedActivity.this, getRepository(), doc).execute(doc.getDownLink());
+				if (getRepository().isPaging()) {
+			    	getRepository().setSkipCount(0);
+			    	getRepository().generateParams(activity);
+				}
 				ActionUtils.openNewListViewActivity(ListCmisFeedActivity.this, doc);
 			} else {
 				ActionUtils.displayDocumentDetails(ListCmisFeedActivity.this, doc);
