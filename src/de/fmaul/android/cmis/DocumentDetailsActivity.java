@@ -15,14 +15,21 @@
  */
 package de.fmaul.android.cmis;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import de.fmaul.android.cmis.asynctask.ItemPropertiesDisplayTask;
 import de.fmaul.android.cmis.repo.CmisItemLazy;
+import de.fmaul.android.cmis.repo.CmisPropertyFilter;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.IntentIntegrator;
@@ -30,14 +37,19 @@ import de.fmaul.android.cmis.utils.IntentIntegrator;
 public class DocumentDetailsActivity extends ListActivity {
 
 	private CmisItemLazy item;
-	private Button view, download, share, edit, delete, qrcode;
-	private String objectTypeId;
+	private Button view, download, share, edit, delete, qrcode, pref;
 	private Activity activity;
+	private List<Map<String, ?>> itemProperties;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.document_details_main);
+		
+		
+		//Restart & Screen Rotation
+		itemProperties = (List<Map<String, ?>>) getLastNonConfigurationInstance();
+		
 		activity = this;
 		
 		item = (CmisItemLazy) getIntent().getExtras().getSerializable("item");
@@ -45,6 +57,12 @@ public class DocumentDetailsActivity extends ListActivity {
 		setTitleFromIntent();
 		displayActionIcons();
 		displayPropertiesFromIntent();
+	}
+	
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+	    final List<Map<String, ?>> data = getItemProperties();
+	    return data;
 	}
 	
 	private void displayActionIcons(){
@@ -55,6 +73,7 @@ public class DocumentDetailsActivity extends ListActivity {
 		edit = (Button) findViewById(R.id.editmetadata);
 		delete = (Button) findViewById(R.id.delete);
 		qrcode = (Button) findViewById(R.id.qrcode);
+		pref = (Button) findViewById(R.id.preference);
 		
 		//File
 		if (item != null && item.getSize() != null){
@@ -101,6 +120,38 @@ public class DocumentDetailsActivity extends ListActivity {
 				IntentIntegrator.shareText(activity, item.getSelfUrl());
 			}
 		});
+		
+		pref.setOnClickListener(new OnClickListener() {
+			private CharSequence[] cs;
+
+			@Override
+			public void onClick(View v) {
+				
+				cs = CmisPropertyFilter.getFiltersLabel(DocumentDetailsActivity.this, item); 
+				
+				AlertDialog.Builder builder = new AlertDialog.Builder(DocumentDetailsActivity.this);
+				builder.setTitle(R.string.cmis_repo_choose_workspace);
+				
+				builder.setSingleChoiceItems(cs, -1, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						 dialog.dismiss();
+			        	 new ItemPropertiesDisplayTask(DocumentDetailsActivity.this, null, CmisPropertyFilter.getFilters(item).get(which)).execute();  
+					}
+				});
+				
+				
+				builder.setNegativeButton(DocumentDetailsActivity.this.getText(R.string.cancel), new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			        	   dialog.cancel();
+			           }
+			       });
+				
+				AlertDialog alert = builder.create();
+				alert.show();
+			}
+		});
 	}
 
 	private void setTitleFromIntent() {
@@ -109,9 +160,15 @@ public class DocumentDetailsActivity extends ListActivity {
 
 	private void displayPropertiesFromIntent() {
 		new ItemPropertiesDisplayTask(this).execute();
+		//new ItemPropertiesDisplayTask(this, null, CmisPropertyFilter.getFilter(item)).execute();
 	}
 
 	CmisRepository getRepository() {
 		return ((CmisApp) getApplication()).getRepository();
 	}
+	
+	List<Map<String, ?>> getItemProperties() {
+		return ((CmisApp) getApplication()).getItemProperties();
+	}
+	
 }

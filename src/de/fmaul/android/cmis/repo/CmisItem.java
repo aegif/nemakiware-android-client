@@ -26,7 +26,8 @@ import org.dom4j.Element;
 import de.fmaul.android.cmis.utils.FeedUtils;
 
 public class CmisItem extends CmisItemLazy {
-
+	
+	
 	public CmisItem(CmisItem item) {
 		super(item);
 	}
@@ -84,13 +85,14 @@ public class CmisItem extends CmisItemLazy {
 		
 		properties = FeedUtils.getCmisPropertiesForEntry(entry);
 		
-		if (properties.get("cmis:contentStreamLength") != null){
-			size = properties.get("cmis:contentStreamLength").getValue();
+		if (properties.get(CmisProperty.CONTENT_STREAMLENGTH) != null){
+			size = properties.get(CmisProperty.CONTENT_STREAMLENGTH).getValue();
 		} else {
 			size = null;
 		}
-		if (properties.get("cmis:path") != null){
-			path = properties.get("cmis:path").getValue();
+		
+		if (properties.get(CmisProperty.OBJECT_BASETYPEID) != null){
+			baseType = properties.get(CmisProperty.OBJECT_BASETYPEID).getValue();
 		}
 		
 	}

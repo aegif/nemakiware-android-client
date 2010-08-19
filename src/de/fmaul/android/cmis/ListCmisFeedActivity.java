@@ -364,7 +364,10 @@ public class ListCmisFeedActivity extends ListActivity {
 
 		QueryType queryType = getQueryTypeFromIntent(queryIntent);
 		String searchFeed = getRepository().getSearchFeed(queryType, queryString);
-		new FeedDisplayTask(this, getRepository(), getString(R.string.search_results_for) + " '" + queryString + "'").execute(searchFeed);
+		
+		Log.d(TAG, "SearchFeed : " + searchFeed);
+		
+		new FeedDisplayTask(this, getRepository(), getString(R.string.search_results_for) + " '" + queryString + "'", true).execute(searchFeed);
 	}
 
 	/**

@@ -15,6 +15,9 @@
  */
 package de.fmaul.android.cmis;
 
+import java.util.List;
+import java.util.Map;
+
 import android.app.Application;
 import de.fmaul.android.cmis.repo.CmisItemCollection;
 import de.fmaul.android.cmis.repo.CmisRepository;
@@ -26,6 +29,8 @@ public class CmisApp extends Application {
 	private CmisRepository repository;
 	private Prefs prefs;
 	private CmisItemCollection items;
+	private List<Map<String, ?>> itemProperties;
+	
 	
 	public CmisRepository getRepository() {
 		return repository;
@@ -49,6 +54,14 @@ public class CmisApp extends Application {
 
 	public CmisItemCollection getItems() {
 		return items;
+	}
+
+	public void setItemProperties(List<Map<String, ?>> itemProperties) {
+		this.itemProperties = itemProperties;
+	}
+
+	public List<Map<String, ?>> getItemProperties() {
+		return itemProperties;
 	}
 	
 }

@@ -165,6 +165,13 @@
 	
 	<string name="cmis_repo_skipcount">CmisRepoSkipCount</string>
 	
+	<string name="item_filter_object">Object</string>
+	<string name="item_filter_folder">Folder</string>
+	<string name="item_filter_document">Document</string>
+	<string name="item_filter_content">Content</string>
+	<string name="item_filter_extra">Extra</string>
+	<string name="item_filter_all">All</string>
+	
 	<!-- PREFRENCE ACTIVITY -->
 	<string name="cmis_repo_pref">Preferences</string>
 	
