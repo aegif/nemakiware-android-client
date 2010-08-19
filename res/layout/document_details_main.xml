@@ -82,13 +82,11 @@
 				
 			<Button
 				android:id="@+id/preference"
-				android:layout_height="wrap_content"
-				android:drawableTop="@drawable/filter"
+				android:drawableTop="@drawable/filter_m"
 				android:clickable="true"
 				android:text="@string/menu_item_filter"
-				android:layout_marginRight="6dip"
 				android:layout_width="wrap_content" 
-				android:textSize="8sp" />
+				android:textSize="8sp" android:layout_height="wrap_content"/>
 
         </LinearLayout>
 	</HorizontalScrollView>
