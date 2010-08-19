@@ -50,6 +50,7 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 	private CmisItemLazy item;
 	private CmisItemCollection items;
 	private ListView layoutListing;
+	private Boolean isSearch;
 
 	public FeedDisplayTask(ListActivity activity, CmisRepository repository) {
 		this(activity, repository, null, null, null);
@@ -57,6 +58,11 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 	
 	public FeedDisplayTask(ListActivity activity, CmisRepository repository, String title) {
 		this(activity, repository, title, null, null);
+	}
+	
+	public FeedDisplayTask(ListActivity activity, CmisRepository repository, String title, Boolean isSearch) {
+		this(activity, repository, title, null, null);
+		this.isSearch = isSearch;
 	}
 	
 	public FeedDisplayTask(ListActivity activity, CmisRepository repository, CmisItemLazy item) {
@@ -74,6 +80,7 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 		this.title = title;
 		this.item = item;
 		this.items = items;
+		this.isSearch = false;
 	}
 
 	@Override
@@ -103,20 +110,20 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 				return items;
 			} else {
 				String feed = params[0];
-				/*if (item != null){
-					feed = item.getDownLink();
-				} else {
-					feed = params[0];
-				}*/
 				if (feed == null) {
 					return repository.getRootCollection(feedParams);
+				} else if (isSearch){
+					return repository.getCollectionFromFeed(feed);
 				} else {
 					return repository.getCollectionFromFeed(feed + feedParams);
 				}
 			}
 		} catch (FeedLoadException fle) {
+			Log.d(TAG, fle.getMessage());
+			ActionUtils.displayError(activity, R.string.generic_error);
 			return CmisItemCollection.emptyCollection();
 		} catch (StorageException e) {
+			Log.d(TAG, e.getMessage());
 			ActionUtils.displayError(activity, R.string.generic_error);
 			return CmisItemCollection.emptyCollection();
 		}

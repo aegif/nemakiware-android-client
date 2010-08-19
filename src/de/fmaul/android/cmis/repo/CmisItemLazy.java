@@ -38,6 +38,7 @@ public class CmisItemLazy implements Serializable {
 	protected String mimeType;
 	protected String size;
 	protected String path;
+	protected String baseType;
 
 	protected Date modificationDate;
 	
@@ -57,6 +58,7 @@ public class CmisItemLazy implements Serializable {
 		this.size =  item.getSize();
 		this.modificationDate =  item.getModificationDate();
 		this.path = item.getPath();
+		this.baseType = item.getBaseType();
 	}
 
 	public String getTitle() {
@@ -110,6 +112,10 @@ public class CmisItemLazy implements Serializable {
 	
 	public String getParentUrl() {
 		return parentUrl;
+	}
+	
+	public String getBaseType() {
+		return baseType;
 	}
 	
 	public File getContent(Application application, String repositoryWorkspace) throws StorageException {

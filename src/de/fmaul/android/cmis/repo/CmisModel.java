@@ -21,4 +21,7 @@ public class CmisModel {
 	public final static String ITEM_LINK_UP = "up";
 	public final static String ITEM_LINK_DOWN = "down";
 	public final static String ITEM_LINK_SELF = "self";
+	
+	public final static String CMIS_TYPE_FOLDER= "cmis:folder";
+	public final static String CMIS_TYPE_DOCUMENTS = "cmis:document";
 }
