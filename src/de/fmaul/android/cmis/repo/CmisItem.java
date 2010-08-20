@@ -90,6 +90,10 @@ public class CmisItem extends CmisItemLazy {
 		} else {
 			size = null;
 		}
+		if (properties.get(CmisProperty.FOLDER_PATH) != null){
+			path = properties.get(CmisProperty.FOLDER_PATH).getValue();
+		}
+		
 		
 		if (properties.get(CmisProperty.OBJECT_BASETYPEID) != null){
 			baseType = properties.get(CmisProperty.OBJECT_BASETYPEID).getValue();

@@ -240,8 +240,8 @@ public class ActionUtils {
 	
 	public static void displayDocumentDetails(Activity activity, Server server, CmisItem doc) {
 		try {
+			((CmisApp) activity.getApplication()).setCmisPropertyFilter(null);
 			Intent intent =getDocumentDetailsIntent(activity, server,  doc);
-			
 			activity.startActivity(intent);
 		} catch (Exception e) {
 			displayError(activity, R.string.generic_error);
