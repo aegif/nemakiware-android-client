@@ -23,6 +23,8 @@ public class Prefs {
 	private int dataView;
 	private String downloadFolder;
 	private boolean enableScan;
+	private boolean confirmDownload;
+	private String downloadFileSize;
 	
 	
 	public Prefs(int dataView) {
@@ -31,10 +33,13 @@ public class Prefs {
 	}
 
 	
-	public Prefs(int dataView, String downloadFolder) {
+	public Prefs(int dataView, String downloadFolder, boolean enableScan, boolean confirmDownload, String downloadFileSize) {
 		super();
 		this.dataView = dataView;
-		this.setDownloadFolder(downloadFolder);
+		this.downloadFolder = downloadFolder;
+		this.enableScan = enableScan;
+		this.confirmDownload = confirmDownload;
+		this.downloadFileSize = downloadFileSize;
 	}
 
 
@@ -63,5 +68,25 @@ public class Prefs {
 
 	public boolean isEnableScan() {
 		return enableScan;
+	}
+
+
+	public void setConfirmDownload(boolean confirmDownload) {
+		this.confirmDownload = confirmDownload;
+	}
+
+
+	public boolean isConfirmDownload() {
+		return confirmDownload;
+	}
+
+
+	public void setDownloadFileSize(String downloadFileSize) {
+		this.downloadFileSize = downloadFileSize;
+	}
+
+
+	public String getDownloadFileSize() {
+		return downloadFileSize;
 	}
 }

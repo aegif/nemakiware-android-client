@@ -28,4 +28,19 @@
 			android:defaultValue="true"
 			android:enabled="true" />  
     </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/download">
+        <CheckBoxPreference 
+			android:key="@string/cmis_download"
+			android:title="@string/cmis_download_title" 
+			android:summary="@string/cmis_download_desc"
+			android:defaultValue="true"
+			/>
+		<EditTextPreference 
+			android:key="@string/cmis_download_size"
+			android:title="@string/cmis_download_size_title" 
+			android:summary="@string/cmis_download_size_desc"
+			android:defaultValue="100"
+			android:dependency="@string/cmis_download" />  
+    </PreferenceCategory>
 </PreferenceScreen>

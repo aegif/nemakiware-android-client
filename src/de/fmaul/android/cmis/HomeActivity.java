@@ -83,7 +83,10 @@ public class HomeActivity extends Activity {
     	((CmisApp) getApplication()).setPrefs(
     			new Prefs(
     				Integer.parseInt(sharePrefs.getString("default_view", "1")),
-	    			sharePrefs.getString("download_folder", "/sdcard/Download")
+	    			sharePrefs.getString(getText(R.string.cmis_dlfolder).toString(), "/sdcard/Download"),
+	    			sharePrefs.getBoolean(getText(R.string.cmis_scan).toString(), true),
+    				sharePrefs.getBoolean(getText(R.string.cmis_download).toString(), true),
+    				sharePrefs.getString(getText(R.string.cmis_download_size).toString(), "100")
 	    			)
     			);
 	}

@@ -88,8 +88,8 @@
 	<string name="error_downloading_content">Error downloading content from CMIS repository.</string>
 	
 	<string name="no_properties">No properties found.</string>
-	<string name="confirm_donwload">Are you sure you want to download this </string>
-	<string name="confirm_donwload2">MB file ?</string>
+	<string name="confirm_donwload">Are you sure you want to download this</string>
+	<string name="confirm_donwload2">file ?</string>
 	
 	<string name="share_question">You want to share...</string>
 	<string name="share_link">Link</string>
@@ -203,5 +203,19 @@
 	<string name="cmis_scan">CmisDefaultView</string>
 	<string name="cmis_scan_title">Enable Scan</string>
 	<string name="cmis_scan_desc">Enable QRCode scan and generator.</string>
+	
+	<string name="cmis_download">CmisDownloadConfirm</string>
+	<string name="cmis_download_title">Téléchargement</string>
+	<string name="cmis_download_desc">Demander une confirmation avant téléchargement.</string>
+	
+	<string name="cmis_download_size">CmisDownloadSizeConfirm</string>
+	<string name="cmis_download_size_title">File Size</string>
+	<string name="cmis_download_size_desc">File size (in KB) from which we need confirmation</string>
+
+	<!-- GENERIC STRING -->
+	<string name="file_size_bytes">bytes</string>
+	<string name="file_size_kilobytes">KB</string>
+	<string name="file_size_megabytes">MB</string>
+	<string name="file_size_gigabytes">GB</string>
 
 </resources>

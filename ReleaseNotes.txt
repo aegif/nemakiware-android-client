@@ -3,10 +3,14 @@ V 0.93
 
 Bug Fix :
 Breadcrumb
+Favorite icon for document without content
 
 New Features : 
 Property Filter
 Open With (if mimetype detection failed)
+Open With Icon in details View
+Preference : Alert Download Size.
+Confirmation Dialog if size of file si more than ...Kb
 
 ===========================================================
 V 0.92

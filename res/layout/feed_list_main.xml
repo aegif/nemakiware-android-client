@@ -7,7 +7,7 @@
    
     <HorizontalScrollView 
         android:id="@+id/my_scrollview"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:scrollbars="none" 
 		>
@@ -15,8 +15,8 @@
             <LinearLayout android:id="@+id/my_layout"
                     android:layout_height="fill_parent"
                     android:orientation="horizontal"
-                    android:layout_width="fill_parent" 
-                    android:layout_gravity="bottom|center_horizontal">
+                    android:layout_width="wrap_content" 
+                    >
 
             <Button
 				android:id="@+id/home"
@@ -24,7 +24,7 @@
 				android:drawableTop="@drawable/home"
 				android:clickable="true"
 				android:text="@string/menu_item_home"
-				android:layout_marginRight="6dip"
+				android:layout_marginRight="3dip"
 				android:layout_width="fill_parent" 
 				android:textSize="8sp" />
 				
@@ -34,7 +34,7 @@
 				android:drawableTop="@drawable/up"
 				android:clickable="true"
 				android:text="@string/menu_item_up"
-				android:layout_marginRight="6dip"
+				android:layout_marginRight="3dip"
 				android:layout_width="wrap_content" 
 				android:textSize="8sp" />
 				
@@ -44,7 +44,7 @@
 				android:drawableTop="@drawable/previous"
 				android:clickable="true"
 				android:text="@string/menu_item_back"
-				android:layout_marginRight="6dip"
+				android:layout_marginRight="3dip"
 				android:layout_width="wrap_content" 
 				android:textSize="8sp"
 				android:visibility="gone" />
@@ -55,7 +55,7 @@
 				android:drawableTop="@drawable/next_s"
 				android:clickable="true"
 				android:text="@string/menu_item_next"
-				android:layout_marginRight="6dip"
+				android:layout_marginRight="3dip"
 				android:layout_width="wrap_content" 
 				android:textSize="8sp"
 				android:visibility="gone"  />
@@ -66,7 +66,7 @@
 				android:drawableTop="@drawable/refresh"
 				android:clickable="true"
 				android:text="@string/menu_item_refresh"
-				android:layout_marginRight="6dip"
+				android:layout_marginRight="3dip"
 				android:layout_width="wrap_content" 
 				android:textSize="8sp" />
 				
@@ -77,7 +77,7 @@
 				android:drawableTop="@drawable/filter"
 				android:clickable="true"
 				android:text="@string/menu_item_filter"
-				android:layout_marginRight="6dip"
+				android:layout_marginRight="3dip"
 				android:layout_width="wrap_content" 
 				android:textSize="8sp" />
 				

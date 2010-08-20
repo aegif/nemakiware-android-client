@@ -87,8 +87,8 @@
 	<string name="error_downloading_content">Une erreur s\'est produite lors du téléchargement du fichier.</string>
 	
 	<string name="no_properties">Aucune propriété trouvée.</string>
-	<string name="confirm_donwload">Etes vous sur de vouloir télécharger ce fichier </string>
-	<string name="confirm_donwload2">Mo ?</string>
+	<string name="confirm_donwload">Etes vous sur de vouloir télécharger ce fichier de</string>
+	<string name="confirm_donwload2">\?</string>
 	
 	<string name="share_question">Vous voulez partager...</string>
 	<string name="share_link">Lien</string>
@@ -181,7 +181,7 @@
 	<string name="item_filter_all">Tout</string>
     
     <!-- PREFRENCE ACTIVITY -->
-	<string name="cmis_repo_pref">Preferences</string>
+	<string name="cmis_repo_pref">Préférences</string>
 	
 	<string name="cmis_repo_data">Données</string>
 	<string name="cmis_repo_view">Vue</string>
@@ -201,5 +201,20 @@
 	<string name="cmis_scan">CmisDefaultView</string>
 	<string name="cmis_scan_title">Scanner</string>
 	<string name="cmis_scan_desc">Permettre le scan de QRCode.</string>
+	
+	<string name="cmis_download">CmisDownloadConfirm</string>
+	<string name="cmis_download_title">Téléchargement</string>
+	<string name="cmis_download_desc">Demander une confirmation avant téléchargement.</string>
+	
+	<string name="cmis_download_size">CmisDownloadSizeConfirm</string>
+	<string name="cmis_download_size_title">Taille du fichier</string>
+	<string name="cmis_download_size_desc">Taille du fichier (en Ko) à partir duquel on demande une confirmation.</string>
+	
+
+	<!-- GENERIC STRING -->
+	<string name="file_size_bytes">octets</string>
+	<string name="file_size_kilobytes">Ko</string>
+	<string name="file_size_megabytes">Mo</string>
+	<string name="file_size_gigabytes">Go</string>
 
 </resources>
