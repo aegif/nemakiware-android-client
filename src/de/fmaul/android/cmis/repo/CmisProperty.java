@@ -45,7 +45,7 @@ public class CmisProperty implements Parcelable {
 	public static final String CONTENT_STREAMID = "cmis:contentStreamId";
 	public static final String CONTENT_STREAMLENGTH = "cmis:contentStreamLength";
 	public static final String CONTENT_STREAMMIMETYPE = "cmis:contentStreamMimeType";
-	public static final String CONTENT_STREAMFILENAME = "cmiscontentStreamFileName";
+	public static final String CONTENT_STREAMFILENAME = "cmis:contentStreamFileName";
 	
 	public static final String FOLDER_PARENTID = "cmis:parentId";
 	public static final String FOLDER_PATH = "cmis:path";

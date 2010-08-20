@@ -15,7 +15,6 @@
  */
 package de.fmaul.android.cmis;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,16 +38,14 @@ public class DocumentDetailsActivity extends ListActivity {
 	private CmisItemLazy item;
 	private Button view, download, share, edit, delete, qrcode, pref;
 	private Activity activity;
-	private List<Map<String, ?>> itemProperties;
+	private CmisPropertyFilter propertyFilter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.document_details_main);
 		
-		
-		//Restart & Screen Rotation
-		itemProperties = (List<Map<String, ?>>) getLastNonConfigurationInstance();
+		propertyFilter = (CmisPropertyFilter) getLastNonConfigurationInstance();
 		
 		activity = this;
 		
@@ -61,7 +58,7 @@ public class DocumentDetailsActivity extends ListActivity {
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-	    final List<Map<String, ?>> data = getItemProperties();
+	    final CmisPropertyFilter data = getCmisPropertyFilter();
 	    return data;
 	}
 	
@@ -137,7 +134,7 @@ public class DocumentDetailsActivity extends ListActivity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						 dialog.dismiss();
-			        	 new ItemPropertiesDisplayTask(DocumentDetailsActivity.this, null, CmisPropertyFilter.getFilters(item).get(which)).execute();  
+			        	 new ItemPropertiesDisplayTask(DocumentDetailsActivity.this, CmisPropertyFilter.getFilters(item).get(which)).execute();  
 					}
 				});
 				
@@ -153,22 +150,26 @@ public class DocumentDetailsActivity extends ListActivity {
 			}
 		});
 	}
-
+	
 	private void setTitleFromIntent() {
 		setTitle(getString(R.string.title_details) + " '" + item.getTitle() + "'");
 	}
 
 	private void displayPropertiesFromIntent() {
-		new ItemPropertiesDisplayTask(this).execute();
-		//new ItemPropertiesDisplayTask(this, null, CmisPropertyFilter.getFilter(item)).execute();
+		if (propertyFilter != null){
+			new ItemPropertiesDisplayTask(this, true).execute("");
+		} else {
+			new ItemPropertiesDisplayTask(this).execute();
+		}
+		
 	}
 
 	CmisRepository getRepository() {
 		return ((CmisApp) getApplication()).getRepository();
 	}
 	
-	List<Map<String, ?>> getItemProperties() {
-		return ((CmisApp) getApplication()).getItemProperties();
+	CmisPropertyFilter getCmisPropertyFilter() {
+		return ((CmisApp) getApplication()).getCmisPropertyFilter();
 	}
 	
 }

@@ -18,13 +18,113 @@ package de.fmaul.android.cmis.repo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import de.fmaul.android.cmis.R;
+import de.fmaul.android.cmis.utils.ListUtils;
 
 public class CmisPropertyFilter {
+	
+	
+	private Map<String, CmisProperty> extraProps= new LinkedHashMap<String, CmisProperty>();
+	private Map<String, CmisProperty> objectProps= new LinkedHashMap<String, CmisProperty>(); 
+	private Map<String, CmisProperty> docProps= new LinkedHashMap<String, CmisProperty>(); 
+	private Map<String, CmisProperty> contentProps= new LinkedHashMap<String, CmisProperty>(); 
+	private Map<String, CmisProperty> folderProps= new LinkedHashMap<String, CmisProperty>();
+	private Map<String, CmisProperty> allProps = new LinkedHashMap<String, CmisProperty>(); 
+	
+	private Map<String, Map<String, CmisProperty>> filters = new HashMap<String, Map<String,CmisProperty>>(5);
+	private Map<String[], Map<String, CmisProperty>> filterToProps = new HashMap<String[], Map<String,CmisProperty>>(5);
+	
+	private CmisTypeDefinition typeDefinition;
+	private String[] filterSelected;
+	
+	
+	public CmisPropertyFilter(List<CmisProperty> propList, CmisTypeDefinition typeDefinition){
+		this.typeDefinition = typeDefinition;
+		initFilters();
+		dispatch(propList);
+	}
+	
+	public List<Map<String, ?>> render(){
+		return render(filterSelected);
+	}
+	
+	
+	public List<Map<String, ?>> render(String[] filterSelected){
+		this.filterSelected = filterSelected;
+		Map<String, CmisProperty> currentProps = allProps;
+		if (filterToProps.containsKey(filterSelected)){
+			currentProps = filterToProps.get(filterSelected);
+		}
+		
+		List<Map<String, ?>> list = new ArrayList<Map<String, ?>>();
+		for(Entry<String, CmisProperty> prop : currentProps.entrySet()) {
+			if (prop.getValue() != null){
+				list.add(ListUtils.createPair(getDisplayNameFromProperty(prop.getValue(), typeDefinition), prop.getValue().getValue()));
+			}
+		}
+		return list;
+	}
+	
+	private String getDisplayNameFromProperty(CmisProperty property, CmisTypeDefinition typeDefinition) {
+		String name = property.getDisplayName();
+		if (TextUtils.isEmpty(name)) {
+		}
+		name = typeDefinition.getDisplayNameForProperty(property);
+		if (TextUtils.isEmpty(name)) {
+			name = property.getDefinitionId();
+		}
+		return name.replaceAll("cmis:", "");
+	}
+	
+	private void dispatch(List<CmisProperty> propList) {
+		for (CmisProperty cmisProperty : propList) {
+			String definitionId = cmisProperty.getDefinitionId();
+			if (definitionId != null) {
+				if (filters.get(definitionId) != null){
+					filters.get(definitionId).put(definitionId, cmisProperty);
+					allProps.put(definitionId, cmisProperty);
+				} else {
+					extraProps.put(definitionId, cmisProperty);
+				}
+			}
+		}
+		allProps.putAll(extraProps);
+	}
 
+	private void initFilters(){
+		initPropsFilter(LIST_OBJECT, objectProps);
+		initPropsFilter(LIST_FOLDER, folderProps);
+		initPropsFilter(LIST_DOC, docProps);
+		initPropsFilter(LIST_CONTENT, contentProps);
+		initPropsFilter(LIST_EXTRA, extraProps);
+		initAllPropsFilter();
+		
+	}
+	
+	private void initPropsFilter(String[] props, Map<String, CmisProperty> listProps){
+		//LinkedHashMap<String, CmisProperty> hashMap = new LinkedHashMap<String, CmisProperty>(props.length);
+		for (int i = 0; i < props.length; i++) {
+			listProps.put(props[i], null);
+			filters.put(props[i], listProps);
+		}
+		//listProps.putAll(hashMap;
+		filterToProps.put(props, listProps);
+	}
+	
+	private void initAllPropsFilter(){
+		allProps.putAll(objectProps);
+		allProps.putAll(folderProps);
+		allProps.putAll(docProps);
+		allProps.putAll(contentProps);
+	}
+	
 	public static final String[] LIST_EXTRA = {
 	};
 	

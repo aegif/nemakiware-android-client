@@ -20,6 +20,7 @@ import java.util.Map;
 
 import android.app.Application;
 import de.fmaul.android.cmis.repo.CmisItemCollection;
+import de.fmaul.android.cmis.repo.CmisPropertyFilter;
 import de.fmaul.android.cmis.repo.CmisRepository;
 
 public class CmisApp extends Application {
@@ -29,7 +30,7 @@ public class CmisApp extends Application {
 	private CmisRepository repository;
 	private Prefs prefs;
 	private CmisItemCollection items;
-	private List<Map<String, ?>> itemProperties;
+	private CmisPropertyFilter cmisPropertyFilter;
 	
 	
 	public CmisRepository getRepository() {
@@ -56,12 +57,12 @@ public class CmisApp extends Application {
 		return items;
 	}
 
-	public void setItemProperties(List<Map<String, ?>> itemProperties) {
-		this.itemProperties = itemProperties;
+	public void setCmisPropertyFilter(CmisPropertyFilter cmisPropertyFilter) {
+		this.cmisPropertyFilter = cmisPropertyFilter;
 	}
 
-	public List<Map<String, ?>> getItemProperties() {
-		return itemProperties;
+	public CmisPropertyFilter getCmisPropertyFilter() {
+		return cmisPropertyFilter;
 	}
 	
 }
