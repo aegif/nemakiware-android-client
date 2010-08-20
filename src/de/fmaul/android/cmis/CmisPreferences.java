@@ -75,6 +75,22 @@ public class CmisPreferences extends PreferenceActivity {
 		    }
 		});
 		
+		getPreferenceManager().findPreference(this.getText(R.string.cmis_download)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+		    @Override
+		    public boolean onPreferenceChange(Preference preference, Object newValue) {
+		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setConfirmDownload((Boolean) newValue);
+		    	return true;
+		    }
+		});
+		
+		getPreferenceManager().findPreference(this.getText(R.string.cmis_download_size)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+		    @Override
+		    public boolean onPreferenceChange(Preference preference, Object newValue) {
+		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setDownloadFolder((String) newValue);
+		    	return true;
+		    }
+		});
+		
 	}
 	
 }

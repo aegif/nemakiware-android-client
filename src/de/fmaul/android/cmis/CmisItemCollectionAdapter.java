@@ -33,6 +33,7 @@ import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisItemCollection;
 import de.fmaul.android.cmis.repo.CmisProperty;
+import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.MimetypeUtils;
 
 public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
@@ -105,27 +106,7 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 
 	private void appendInfoDocumentSize(CmisItem doc, List<String> infos) {
 		if (doc.getSize() != null) {
-			infos.add(convertAndFormatSize(doc.getSize()));
-		}
-	}
-
-	private String convertAndFormatSize(String size) {
-		int sizeInByte = Integer.parseInt(size);
-
-		if (sizeInByte < 1024) {
-			return String.valueOf(sizeInByte) + " bytes";
-		} else {
-			int sizeInKB = sizeInByte / 1024;
-			if (sizeInKB < 1024) {
-				return String.valueOf(sizeInKB) + " KB";
-			} else {
-				int sizeInMB = sizeInKB / 1024;
-				if (sizeInMB < 1024) {
-					return String.valueOf(sizeInMB) + " MB";
-				} else {
-					return String.valueOf(sizeInMB / 1024) + " GB";
-				}
-			}
+			infos.add(ActionUtils.convertAndFormatSize((Activity) context, doc.getSize()));
 		}
 	}
 
