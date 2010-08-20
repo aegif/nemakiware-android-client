@@ -127,7 +127,7 @@ public class DocumentDetailsActivity extends ListActivity {
 				cs = CmisPropertyFilter.getFiltersLabel(DocumentDetailsActivity.this, item); 
 				
 				AlertDialog.Builder builder = new AlertDialog.Builder(DocumentDetailsActivity.this);
-				builder.setTitle(R.string.cmis_repo_choose_workspace);
+				builder.setTitle(R.string.item_filter_title);
 				
 				builder.setSingleChoiceItems(cs, -1, new DialogInterface.OnClickListener() {
 					

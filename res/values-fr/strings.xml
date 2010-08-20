@@ -58,9 +58,11 @@
 	<string name="menu_item_up">Haut</string>
 	<string name="menu_item_back">Retour</string>
 	<string name="menu_item_next">Suivant</string>
-	<string name="menu_item_prefs">Filtre</string>
+	<string name="menu_item_prefs">Préférences</string>
 	<string name="menu_item_refresh">Rafraîchir</string>
 	<string name="menu_item_scanner">Scanner</string>
+	<string name="menu_item_view">Voir</string>
+	<string name="menu_item_filter">Filtrer</string>
 	
 	<string name="loading_data">Un instant... Chargement des données...</string>
 	
@@ -160,6 +162,14 @@
 	<string name="cmis_repo_paging_desc">Permettre la pagination</string>
 	
 	<string name="cmis_repo_skipcount">CmisRepoSkipCount</string>
+    
+    <string name="item_filter_title">Choisissez votre filtre...</string>
+    <string name="item_filter_object">Objet</string>
+	<string name="item_filter_folder">Répertoire</string>
+	<string name="item_filter_document">Document</string>
+	<string name="item_filter_content">Contenu</string>
+	<string name="item_filter_extra">Extra</string>
+	<string name="item_filter_all">Tout</string>
     
     <!-- PREFRENCE ACTIVITY -->
 	<string name="cmis_repo_pref">Preferences</string>
