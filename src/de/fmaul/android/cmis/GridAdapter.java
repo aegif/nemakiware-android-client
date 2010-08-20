@@ -1,7 +1,5 @@
 package de.fmaul.android.cmis;
 
-import de.fmaul.android.cmis.repo.CmisItem;
-import de.fmaul.android.cmis.repo.CmisItemCollection;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import de.fmaul.android.cmis.repo.CmisItem;
+import de.fmaul.android.cmis.repo.CmisItemCollection;
+import de.fmaul.android.cmis.utils.MimetypeUtils;
 
 
 
@@ -60,29 +61,7 @@ public class GridAdapter extends ArrayAdapter<CmisItem> {
 	}
     
     private void updateControlIcon(ViewHolder vh, CmisItem item) {
-
-		if (item.hasChildren()) {
-			vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.folderopen));
-		} else {
-			String mimetype = item.getMimeType();
-			if(mimetype.contains("image")){
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.image));
-			} else if(mimetype.contains("pdf")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.pdf));
-			} else if(mimetype.contains("msword")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.msword));
-			} else if(mimetype.contains("excel")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.msexcel));
-			} else if(mimetype.contains("point")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.mspowerpoint));
-			} else if(mimetype.contains("html")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.html));
-			} else if(mimetype.contains("video")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.video));
-			} else {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.text));
-			}
-		}
+		vh.icon.setImageDrawable(getContext().getResources().getDrawable(MimetypeUtils.getIcon((Activity)activity, item)));
 	}
     
 }

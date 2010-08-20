@@ -15,13 +15,13 @@
  */
 package de.fmaul.android.cmis;
 
-import java.util.List;
 import java.util.Map;
 
 import android.app.Application;
 import de.fmaul.android.cmis.repo.CmisItemCollection;
 import de.fmaul.android.cmis.repo.CmisPropertyFilter;
 import de.fmaul.android.cmis.repo.CmisRepository;
+import de.fmaul.android.cmis.utils.MimetypeUtils;
 
 public class CmisApp extends Application {
 
@@ -31,7 +31,14 @@ public class CmisApp extends Application {
 	private Prefs prefs;
 	private CmisItemCollection items;
 	private CmisPropertyFilter cmisPropertyFilter;
+	private Map<String,Integer> mimetypesMap;
 	
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		mimetypesMap = MimetypeUtils.createIconMap();
+	}
 	
 	public CmisRepository getRepository() {
 		return repository;
@@ -63,6 +70,14 @@ public class CmisApp extends Application {
 
 	public CmisPropertyFilter getCmisPropertyFilter() {
 		return cmisPropertyFilter;
+	}
+
+	public void setMimetypesMap(Map<String,Integer> mimetypesMap) {
+		this.mimetypesMap = mimetypesMap;
+	}
+
+	public Map<String,Integer> getMimetypesMap() {
+		return mimetypesMap;
 	}
 	
 }

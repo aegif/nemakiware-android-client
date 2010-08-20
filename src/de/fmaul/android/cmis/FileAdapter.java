@@ -96,16 +96,16 @@ public class FileAdapter extends ArrayAdapter<File> {
 			if (item.equals(parent)){
 				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.up));
 			} else {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.folderopen));
+				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.mt_folderopen));
 			}
 		} else {
 			String mimetype = getExtension(item.getName());
 			if (mimetype == null || mimetype.length() == 0) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.text));
+				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.mt_text));
 			} else if (fileExtensions.get(mimetype) != null){
 				vh.icon.setImageDrawable(getContext().getResources().getDrawable(fileExtensions.get(mimetype)));
 			} else {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.text));
+				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.mt_text));
 			}
 		}
 	}
@@ -114,27 +114,27 @@ public class FileAdapter extends ArrayAdapter<File> {
 	private static HashMap<String, Integer> fileExtensions =  new HashMap<String, Integer>();
 	
 	 static {
-		 	fileExtensions.put("jpg", R.drawable.image);
-		 	fileExtensions.put("jpeg", R.drawable.image);
-		 	fileExtensions.put("gif", R.drawable.image);
-		 	fileExtensions.put("png", R.drawable.image);
+		 	fileExtensions.put("jpg", R.drawable.mt_image);
+		 	fileExtensions.put("jpeg", R.drawable.mt_image);
+		 	fileExtensions.put("gif", R.drawable.mt_image);
+		 	fileExtensions.put("png", R.drawable.mt_image);
 		 	
-		 	fileExtensions.put("pdf", R.drawable.pdf);
+		 	fileExtensions.put("pdf", R.drawable.mt_pdf);
 		 	
-		 	fileExtensions.put("doc", R.drawable.msword);
-		 	fileExtensions.put("docx", R.drawable.msword);
+		 	fileExtensions.put("doc", R.drawable.mt_msword);
+		 	fileExtensions.put("docx", R.drawable.mt_msword);
 		 	
-		 	fileExtensions.put("xls", R.drawable.msexcel);
-		 	fileExtensions.put("xlsx", R.drawable.msexcel);
+		 	fileExtensions.put("xls", R.drawable.mt_msexcel);
+		 	fileExtensions.put("xlsx", R.drawable.mt_msexcel);
 		 	
-		 	fileExtensions.put("ppt", R.drawable.mspowerpoint);
-		 	fileExtensions.put("pptx", R.drawable.mspowerpoint);
+		 	fileExtensions.put("ppt", R.drawable.mt_mspowerpoint);
+		 	fileExtensions.put("pptx", R.drawable.mt_mspowerpoint);
 		 	
-		 	fileExtensions.put("html", R.drawable.html);
-		 	fileExtensions.put("htm", R.drawable.html);
+		 	fileExtensions.put("html", R.drawable.mt_html);
+		 	fileExtensions.put("htm", R.drawable.mt_html);
 		 	
-		 	fileExtensions.put("mov", R.drawable.video);
-		 	fileExtensions.put("avi", R.drawable.video);
+		 	fileExtensions.put("mov", R.drawable.mt_video);
+		 	fileExtensions.put("avi", R.drawable.mt_video);
 		 	
 		  }
 	

@@ -67,6 +67,14 @@ public class CmisPreferences extends PreferenceActivity {
 		    }
 		});
 		
+		getPreferenceManager().findPreference(this.getText(R.string.cmis_scan)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+		    @Override
+		    public boolean onPreferenceChange(Preference preference, Object newValue) {
+		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setEnableScan((Boolean) newValue);
+		    	return true;
+		    }
+		});
+		
 	}
 	
 }

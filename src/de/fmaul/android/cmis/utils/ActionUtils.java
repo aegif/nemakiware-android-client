@@ -20,9 +20,11 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnCancelListener;
 import android.net.Uri;
 import android.widget.Toast;
 import de.fmaul.android.cmis.CmisApp;
@@ -30,12 +32,14 @@ import de.fmaul.android.cmis.DocumentDetailsActivity;
 import de.fmaul.android.cmis.ListCmisFeedActivity;
 import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.asynctask.AbstractDownloadTask;
+import de.fmaul.android.cmis.asynctask.ItemPropertiesDisplayTask;
 import de.fmaul.android.cmis.database.Database;
 import de.fmaul.android.cmis.database.FavoriteDAO;
 import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisItemLazy;
 import de.fmaul.android.cmis.repo.CmisProperty;
+import de.fmaul.android.cmis.repo.CmisPropertyFilter;
 import de.fmaul.android.cmis.repo.CmisRepository;
 
 public class ActionUtils {
@@ -99,18 +103,64 @@ public class ActionUtils {
 		Toast.makeText(contextActivity, messageId, Toast.LENGTH_LONG).show();
 	}
 	
-	public static void viewFileInAssociatedApp(Activity contextActivity, File tempFile, String mimeType) {
+	public static void viewFileInAssociatedApp(final Activity contextActivity, final File tempFile, String mimeType) {
 		Intent viewIntent = new Intent(Intent.ACTION_VIEW);
 		Uri data = Uri.fromFile(tempFile);
-		viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		//viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		viewIntent.setDataAndType(data, mimeType.toLowerCase());
 
 		try {
 			contextActivity.startActivity(viewIntent);
 		} catch (ActivityNotFoundException e) {
-			Toast.makeText(contextActivity, R.string.application_not_available, Toast.LENGTH_SHORT).show();
+			//Toast.makeText(contextActivity, R.string.application_not_available, Toast.LENGTH_SHORT).show();
+			openWith(contextActivity, tempFile);
 		}
 	}
+	
+	
+	public static void openWithDocument(final Activity contextActivity, final CmisItemLazy item) {
+		try {
+			File content = getItemFile(contextActivity,  contextActivity.getIntent().getStringExtra("workspace"), item);
+			if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getSize())){
+				openWith(contextActivity, content);
+			} else {
+				new AbstractDownloadTask(getRepository(contextActivity), contextActivity) {
+					@Override
+					public void onDownloadFinished(File contentFile) {
+						if (contentFile != null && contentFile.exists()) {
+							openWith(contextActivity, contentFile);
+						} else {
+							displayError(contextActivity, R.string.error_file_does_not_exists);
+						}
+					}
+				}.execute(item);
+			}
+		} catch (Exception e) {
+			displayError(contextActivity, e.getMessage());
+		}
+	}
+	
+	
+	private static void openWith(final Activity contextActivity, final File tempFile){
+		CharSequence[] cs = MimetypeUtils.getOpenWithRowsLabel(contextActivity); 
+		AlertDialog.Builder builder = new AlertDialog.Builder(contextActivity);
+		builder.setTitle(R.string.open_with_title);
+		builder.setSingleChoiceItems(cs, -1, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				 viewFileInAssociatedApp(contextActivity, tempFile, MimetypeUtils.getDefaultMimeType().get(which));
+				 dialog.dismiss();
+			}
+		});
+		builder.setNegativeButton(contextActivity.getText(R.string.cancel), new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	        	   dialog.cancel();
+	           }
+	       });
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+	
 	
 	public static void saveAs(final Activity contextActivity, final String workspace, final CmisItemLazy item){
 		try {
@@ -118,17 +168,26 @@ public class ActionUtils {
 			if (content != null && content.length() > 0 && content.length() == Long.parseLong(item.getSize())){
 				viewFileInAssociatedApp(contextActivity, content, item.getMimeType());
 			} else {
-				NotificationUtils.downloadNotification(contextActivity);
-				new AbstractDownloadTask(getRepository(contextActivity), contextActivity, true) {
-					@Override
-					public void onDownloadFinished(File contentFile) {
-						if (contentFile != null && contentFile.exists()) {
-							NotificationUtils.downloadNotification(contextActivity, contentFile, item.getMimeType());	
-						} else {
-							displayError(contextActivity, R.string.error_file_does_not_exists);
+				File cacheContent = item.getContent(contextActivity.getApplication(), workspace);
+				if (cacheContent != null && cacheContent.length() > 0 && cacheContent.length() == Long.parseLong(item.getSize())){
+					//TODO AsyncTask
+					ProgressDialog pg = ProgressDialog.show(contextActivity, "", contextActivity.getText(R.string.loading), true, true);
+					StorageUtils.copy(cacheContent, content);
+					pg.dismiss();
+					viewFileInAssociatedApp(contextActivity, cacheContent, item.getMimeType());
+				} else {
+					NotificationUtils.downloadNotification(contextActivity);
+					new AbstractDownloadTask(getRepository(contextActivity), contextActivity, true) {
+						@Override
+						public void onDownloadFinished(File contentFile) {
+							if (contentFile != null && contentFile.exists()) {
+								NotificationUtils.downloadNotification(contextActivity, contentFile, item.getMimeType());	
+							} else {
+								displayError(contextActivity, R.string.error_file_does_not_exists);
+							}
 						}
-					}
-				}.execute(item);
+					}.execute(item);	
+				}
 			}
 		} catch (Exception e) {
 			displayError(contextActivity, e.getMessage());
@@ -179,12 +238,16 @@ public class ActionUtils {
 	}
 	
 	private static void shareFileInAssociatedApp(Activity contextActivity, File contentFile, CmisItemLazy item) {
+		shareFileInAssociatedApp(contextActivity, contentFile, item, item.getMimeType());
+	}
+	
+	private static void shareFileInAssociatedApp(Activity contextActivity, File contentFile, CmisItemLazy item, String mimetype) {
 		Intent i = new Intent(Intent.ACTION_SEND);
 		i.putExtra(Intent.EXTRA_SUBJECT, item.getTitle());
 		if (contentFile != null && contentFile.exists()){
 			i.putExtra(Intent.EXTRA_TEXT, item.getContentUrl());
 			i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(contentFile));
-			i.setType(item.getMimeType());
+			i.setType(mimetype);
 		} else {
 			i.putExtra(Intent.EXTRA_TEXT, item.getSelfUrl());
 			i.setType("text/plain");
@@ -217,7 +280,15 @@ public class ActionUtils {
 			long result = 1L;
 			
 			if (favDao.isPresentByURL(item.getSelfUrl()) == false){
-				result = favDao.insert(item.getTitle(), item.getSelfUrl(), server.getId(), item.getMimeType());
+				
+				String mimetype = "";
+				if (item.getMimeType() == null || item.getMimeType().length() == 0){
+					mimetype = item.getBaseType();
+				} else {
+					mimetype = item.getMimeType();
+				}
+				
+				result = favDao.insert(item.getTitle(), item.getSelfUrl(), server.getId(), mimetype);
 				if (result == -1){
 					Toast.makeText(activity, R.string.favorite_create_error, Toast.LENGTH_LONG).show();
 				} else {

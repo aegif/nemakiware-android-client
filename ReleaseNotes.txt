@@ -1,3 +1,14 @@
+===========================================================
+V 0.93
+
+Bug Fix :
+Breadcrumb
+
+New Features : 
+Property Filter
+Open With (if mimetype detection failed)
+
+===========================================================
 V 0.92
 
 Bug Fix : 
@@ -15,3 +26,5 @@ Download in background
 Improve details actions. (Download, View, Share Content, Share URL...)
 Improve preferences
 Paging
+===========================================================
+

@@ -522,8 +522,10 @@ public class ListCmisFeedActivity extends ListActivity {
 		item.setIcon(R.drawable.cmisexplorer);
 		
 		/* BETA : comment to desactivate Scan Process.*/
-		item = menu.add(Menu.NONE, 10, 0, R.string.menu_item_scanner);
-		item.setIcon(R.drawable.scanner);
+		if (getCmisPrefs().isEnableScan()){
+			item = menu.add(Menu.NONE, 10, 0, R.string.menu_item_scanner);
+			item.setIcon(R.drawable.scanner);
+		}
 		
 		item = menu.add(Menu.NONE, 11, 0, R.string.menu_item_view);
 		
@@ -656,6 +658,10 @@ public class ListCmisFeedActivity extends ListActivity {
 
 	void setItems(CmisItemCollection items) {
 		((CmisApp) getApplication()).setItems(items);
+	}
+	
+	Prefs getCmisPrefs() {
+		return ((CmisApp) getApplication()).getPrefs();
 	}
 
 }

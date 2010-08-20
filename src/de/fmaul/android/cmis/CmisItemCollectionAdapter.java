@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -32,6 +33,7 @@ import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisItemCollection;
 import de.fmaul.android.cmis.repo.CmisProperty;
+import de.fmaul.android.cmis.utils.MimetypeUtils;
 
 public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 
@@ -82,29 +84,7 @@ public class CmisItemCollectionAdapter extends ArrayAdapter<CmisItem> {
 	}
 
 	private void updateControlIcon(ViewHolder vh, CmisItem item) {
-
-		if (item.hasChildren()) {
-			vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.folderopen));
-		} else {
-			String mimetype = item.getMimeType();
-			if(mimetype.contains("image")){
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.image));
-			} else if(mimetype.contains("pdf")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.pdf));
-			} else if(mimetype.contains("msword")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.msword));
-			} else if(mimetype.contains("excel")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.msexcel));
-			} else if(mimetype.contains("point")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.mspowerpoint));
-			} else if(mimetype.contains("html")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.html));
-			} else if(mimetype.contains("video")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.video));
-			} else {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.text));
-			}
-		}
+		vh.icon.setImageDrawable(getContext().getResources().getDrawable(MimetypeUtils.getIcon((Activity)context, item)));
 	}
 
 	private void updateControlDescriptionText(ViewHolder vh, CmisItem item) {

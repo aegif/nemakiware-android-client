@@ -56,7 +56,7 @@ public class FavoriteActivity extends ListActivity {
 		}
 		
 		setContentView(R.layout.server);
-		setTitle("Favorites for " + currentServer.getName());
+		setTitle(this.getText(R.string.favorite_title) + currentServer.getName());
 
 		createFavoriteList();
 		registerForContextMenu(getListView());
@@ -74,7 +74,7 @@ public class FavoriteActivity extends ListActivity {
 
 		final Favorite f = listFavorite.get(position);
 		if (f != null){
-			if (f.getMimetype() != null && f.getMimetype().length() != 0){
+			if (f.getMimetype() != null && f.getMimetype().length() != 0 && f.getMimetype().equals("cmis:folder") == false){
 				new FeedItemDisplayTask(activity, currentServer, f.getUrl()).execute();
 			} else {
 				
@@ -101,7 +101,7 @@ public class FavoriteActivity extends ListActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.setHeaderIcon(android.R.drawable.ic_menu_more);
-		menu.setHeaderTitle(this.getString(R.string.context_menu_title));
+		menu.setHeaderTitle(this.getString(R.string.favorite_option));
 		menu.add(0, 1, Menu.NONE, getString(R.string.delete));
 	}
 	
