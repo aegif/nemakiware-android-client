@@ -36,7 +36,7 @@ import de.fmaul.android.cmis.utils.IntentIntegrator;
 public class DocumentDetailsActivity extends ListActivity {
 
 	private CmisItemLazy item;
-	private Button view, download, share, edit, delete, qrcode, pref;
+	private Button view, download, share, edit, delete, qrcode, filter, openwith;
 	private Activity activity;
 	private CmisPropertyFilter propertyFilter;
 
@@ -70,7 +70,8 @@ public class DocumentDetailsActivity extends ListActivity {
 		edit = (Button) findViewById(R.id.editmetadata);
 		delete = (Button) findViewById(R.id.delete);
 		qrcode = (Button) findViewById(R.id.qrcode);
-		pref = (Button) findViewById(R.id.preference);
+		filter = (Button) findViewById(R.id.filter);
+		openwith = (Button) findViewById(R.id.openwith);
 		
 		//File
 		if (item != null && item.getSize() != null){
@@ -89,6 +90,13 @@ public class DocumentDetailsActivity extends ListActivity {
 				}
 			});
 			
+			openwith.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					ActionUtils.openWithDocument(activity, item);
+				}
+			});
+			
 			edit.setVisibility(View.GONE);
 			delete.setVisibility(View.GONE);
 			//qrcode.setVisibility(View.GONE);
@@ -101,6 +109,7 @@ public class DocumentDetailsActivity extends ListActivity {
 			//share.setVisibility(View.GONE);
 			//qrcode.setVisibility(View.GONE);
 			delete.setVisibility(View.GONE);
+			openwith.setVisibility(View.GONE);
 		}
 		
 		
@@ -111,14 +120,20 @@ public class DocumentDetailsActivity extends ListActivity {
 			}
 		});
 		
-		qrcode.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				IntentIntegrator.shareText(activity, item.getSelfUrl());
-			}
-		});
+		if (getCmisPrefs().isEnableScan()){
+			qrcode.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					IntentIntegrator.shareText(activity, item.getSelfUrl());
+				}
+			});
+		} else {
+			qrcode.setVisibility(View.GONE);
+		}
 		
-		pref.setOnClickListener(new OnClickListener() {
+		
+		
+		filter.setOnClickListener(new OnClickListener() {
 			private CharSequence[] cs;
 
 			@Override
@@ -128,27 +143,23 @@ public class DocumentDetailsActivity extends ListActivity {
 				
 				AlertDialog.Builder builder = new AlertDialog.Builder(DocumentDetailsActivity.this);
 				builder.setTitle(R.string.item_filter_title);
-				
 				builder.setSingleChoiceItems(cs, -1, new DialogInterface.OnClickListener() {
-					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						 dialog.dismiss();
 			        	 new ItemPropertiesDisplayTask(DocumentDetailsActivity.this, CmisPropertyFilter.getFilters(item).get(which)).execute();  
 					}
 				});
-				
-				
 				builder.setNegativeButton(DocumentDetailsActivity.this.getText(R.string.cancel), new DialogInterface.OnClickListener() {
 			           public void onClick(DialogInterface dialog, int id) {
 			        	   dialog.cancel();
 			           }
 			       });
-				
 				AlertDialog alert = builder.create();
 				alert.show();
 			}
 		});
+		
 	}
 	
 	private void setTitleFromIntent() {
@@ -170,6 +181,10 @@ public class DocumentDetailsActivity extends ListActivity {
 	
 	CmisPropertyFilter getCmisPropertyFilter() {
 		return ((CmisApp) getApplication()).getCmisPropertyFilter();
+	}
+	
+	Prefs getCmisPrefs() {
+		return ((CmisApp) getApplication()).getPrefs();
 	}
 	
 }

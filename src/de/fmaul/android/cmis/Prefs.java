@@ -22,6 +22,7 @@ public class Prefs {
 	
 	private int dataView;
 	private String downloadFolder;
+	private boolean enableScan;
 	
 	
 	public Prefs(int dataView) {
@@ -54,8 +55,13 @@ public class Prefs {
 	public String getDownloadFolder() {
 		return downloadFolder;
 	}
-	
-	
-	
-	
+
+
+	public void setEnableScan(boolean enableScan) {
+		this.enableScan = enableScan;
+	}
+
+	public boolean isEnableScan() {
+		return enableScan;
+	}
 }

@@ -84,7 +84,7 @@
 	<string name="download_progress">Downloading content...</string>
 	<string name="main_no_items">No documents to display</string>
 	<string name="error_file_does_not_exists">Downloaded file does not exist.</string>
-	<string name="application_not_available">There is no application for this file type.</string>
+	<string name="application_not_available">There is no application to open this file type.</string>
 	<string name="error_downloading_content">Error downloading content from CMIS repository.</string>
 	
 	<string name="no_properties">No properties found.</string>
@@ -95,6 +95,12 @@
 	<string name="share_link">Link</string>
 	<string name="share_content">Content</string>
 	
+	<string name="open_with_title">Open with</string>
+	<string name="open_with_text">Text</string>
+	<string name="open_with_audio">Audio</string>
+	<string name="open_with_image">Image</string>
+	<string name="open_with_video">Video</string>
+	
 	<!-- GENERIC ACTION STRING -->
 	<string name="delete">Delete...</string>
     <string name="edit">Edit</string>
@@ -103,7 +109,7 @@
     <string name="share">Share</string>
     <string name="quit">Quit</string>
     <string name="loading">Loading...</string>
-    <string name="data_empty">No data found.</string>
+    <string name="data_empty">No data available...</string>
     <string name="qrcode">QRCode</string>
     <string name="generic_error">An error occured during the treatment. Please try again...</string>
     <string name="confirm">Confirm</string>
@@ -111,6 +117,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="view">View</string>
+    <string name="open">Open</string>
+    <string name="open_with">Open with</string>
 	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Developers</string>
@@ -135,6 +143,7 @@
 	<string name="favorite_open_details">Details</string>
 
 	<string name="favorite_title">Favorites for</string>
+	<string name="favorite_option">Favorite Option</string>
 
 	<!-- FILTER/PREFRENCE ACTIVITY -->
 	<string name="cmis_repo_filter_pref">Filter Preferences</string>

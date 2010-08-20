@@ -17,6 +17,7 @@ package de.fmaul.android.cmis;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import de.fmaul.android.cmis.model.Favorite;
+import de.fmaul.android.cmis.repo.CmisItem;
+import de.fmaul.android.cmis.utils.MimetypeUtils;
 
 
 public class FavoriteAdapter extends ArrayAdapter<Favorite> {
@@ -35,8 +38,12 @@ public class FavoriteAdapter extends ArrayAdapter<Favorite> {
 		ImageView icon;
 	}
 
+
+	private Context context;
+
 	public FavoriteAdapter(Context context, int textViewResourceId, ArrayList<Favorite> favorites) {
 		super(context, textViewResourceId,favorites);
+		this.context = context;
 	}
 	
 	@Override
@@ -73,30 +80,9 @@ public class FavoriteAdapter extends ArrayAdapter<Favorite> {
 		}
 	}
 	
-	private void updateControlIcon(ViewHolder vh, Favorite item) {
 
-		String mimetype = item.getMimetype();
-		if (mimetype == null || mimetype.length() == 0) {
-			vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.folderopen));
-		} else {
-			if(mimetype.contains("image")){
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.image));
-			} else if(mimetype.contains("pdf")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.pdf));
-			} else if(mimetype.contains("msword")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.msword));
-			} else if(mimetype.contains("excel")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.msexcel));
-			} else if(mimetype.contains("point")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.mspowerpoint));
-			} else if(mimetype.contains("html")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.html));
-			} else if(mimetype.contains("video")) {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.video));
-			} else {
-				vh.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.text));
-			}
-		}
+	private void updateControlIcon(ViewHolder vh, Favorite item) {
+		vh.icon.setImageDrawable(getContext().getResources().getDrawable(MimetypeUtils.getIcon((Activity)context, item.getMimetype())));
 	}
 	
 }

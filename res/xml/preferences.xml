@@ -26,6 +26,6 @@
 			android:title="@string/cmis_scan_title" 
 			android:summary="@string/cmis_scan_desc"
 			android:defaultValue="true"
-			android:enabled="false" />  
+			android:enabled="true" />  
     </PreferenceCategory>
 </PreferenceScreen>
