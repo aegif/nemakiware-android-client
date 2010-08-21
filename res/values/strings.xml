@@ -71,7 +71,7 @@
 	<string name="notif_download_title">Download file : Done.</string>
 	<string name="notif_download_texte">Open File : </string>
 	<string name="notif_open">Open...</string>
-	
+
 	
 	<!-- SEARCH RESULT -->
 	<string name="search_label">CMIS Repository</string>
@@ -205,8 +205,8 @@
 	<string name="cmis_scan_desc">Enable QRCode scan and generator.</string>
 	
 	<string name="cmis_download">CmisDownloadConfirm</string>
-	<string name="cmis_download_title">Téléchargement</string>
-	<string name="cmis_download_desc">Demander une confirmation avant téléchargement.</string>
+	<string name="cmis_download_title">Download confirmation</string>
+	<string name="cmis_download_desc">Ask for a confirmation before downloading.</string>
 	
 	<string name="cmis_download_size">CmisDownloadSizeConfirm</string>
 	<string name="cmis_download_size_title">File Size</string>

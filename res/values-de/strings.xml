@@ -28,7 +28,8 @@
 	<string name="cmis_repo_choose_workspace">Choose Default Workspace</string>
 	
 	<string name="error_repo_connexion">Das Repository ist nicht korrekt eingerichtet. Prüfen Sie die Einstellungen.</string>
-	
+	<string name="cmis_repo_fields">NAME, URL und WORKSPACE sind Pflichtangaben.</string>
+		
 	<!-- SERVER INFO -->
 	<string name="server_info">Info</string>
 	<string name="server_info_general">Allgemein</string>
@@ -70,6 +71,7 @@
 	<string name="notif_download_texte">Datei öffnen: </string>
 	<string name="notif_open">Öffnen...</string>
 	
+	
 	<!-- SEARCH RESULT -->
 	<string name="search_label">CMIS Repository</string>
 	<string name="search_results_for">Ergebnisse für</string>
@@ -92,6 +94,12 @@
 	<string name="share_link">Link</string>
 	<string name="share_content">Inhalt</string>
 
+	<string name="open_with_title">Öffne mit</string>
+	<string name="open_with_text">Text</string>
+	<string name="open_with_audio">Audio</string>
+	<string name="open_with_image">Image</string>
+	<string name="open_with_video">Video</string>
+	
 	<!-- GENERIC ACTION STRING -->
 	<string name="delete">Löschen...</string>
     <string name="edit">Bearbeiten</string>
@@ -102,14 +110,15 @@
     <string name="loading">lade...</string>
     <string name="data_empty">Keine Daten gefundnen.</string>
     <string name="qrcode">QRCode</string>
-
     <string name="generic_error">An error occured during the treatment. Please try again...</string>
-    <string name="confirm">Confirm</string>
-    <string name="cancel">Cancel</string>
+    <string name="confirm">Bestätigen</string>
+    <string name="cancel">Abbrechen</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="view">View</string>
-	
+    <string name="view">Anzeigen</string>
+    <string name="open">Öffnen</string>
+    <string name="open_with">Öffnen mit</string>
+    	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Developers</string>
 	<string name="about_resources">Resources</string>
@@ -133,6 +142,7 @@
 	<string name="favorite_open_details">Detailansicht</string>
 
 	<string name="favorite_title">Favoriten für</string>
+	<string name="favorite_option">Favorit Optionen</string>
 
 	<!-- FILTER/PREFRENCE ACTIVITY -->
 	<string name="cmis_repo_filter_pref">Filter Einstellungen</string>
@@ -179,5 +189,12 @@
 	
 	<string name="cmis_scan_title">Scannen</string>
 	<string name="cmis_scan_desc">Schaltet QRCode scan and Generator an.</string>
+
+	<string name="cmis_download_title">Download Bestätigung</string>
+	<string name="cmis_download_desc">Vor dem Download eine Bestätigung erfragen.</string>
+	
+	<string name="cmis_download_size">CmisDownloadSizeConfirm</string>
+	<string name="cmis_download_size_title">File Size</string>
+	<string name="cmis_download_size_desc">File size (in KB) from which we need confirmation</string>
 
 </resources>
