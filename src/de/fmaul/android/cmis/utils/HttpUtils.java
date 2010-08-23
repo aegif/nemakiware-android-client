@@ -43,8 +43,7 @@ public class HttpUtils {
 		return client.execute(get);
 	}
 
-	static InputStream getWebRessourceAsStream(String url, String user, String password) throws IOException, ClientProtocolException {
-
+	public static InputStream getWebRessourceAsStream(String url, String user, String password) throws IOException, ClientProtocolException {
 		return getWebRessource(url, user, password).getEntity().getContent();
 	}
 
