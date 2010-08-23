@@ -112,7 +112,7 @@ public class ActionUtils {
 	
 	
 	private static void confirmDownload(final Activity contextActivity, final CmisItemLazy item, final boolean openAutomatic) {
-		if (getPrefs(contextActivity).isConfirmDownload() && Integer.parseInt(item.getSize()) > Integer.parseInt(getPrefs(contextActivity).getDownloadFileSize())) {
+		if (getPrefs(contextActivity).isConfirmDownload() && Integer.parseInt(item.getSize()) > convertSizeToKb(getPrefs(contextActivity).getDownloadFileSize())) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(contextActivity);
 			builder.setMessage(
 					contextActivity.getText(R.string.confirm_donwload) + " " + 
@@ -174,7 +174,7 @@ public class ActionUtils {
 					pg.dismiss();
 					viewFileInAssociatedApp(contextActivity, cacheContent, item.getMimeType());
 				} else {
-					if (getPrefs(contextActivity).isConfirmDownload() && Integer.parseInt(item.getSize()) > Integer.parseInt(getPrefs(contextActivity).getDownloadFileSize())) {
+					if (getPrefs(contextActivity).isConfirmDownload() && Integer.parseInt(item.getSize()) > convertSizeToKb(getPrefs(contextActivity).getDownloadFileSize())) {
 						NotificationUtils.downloadNotification(contextActivity);
 						new AbstractDownloadTask(getRepository(contextActivity), contextActivity, true) {
 							@Override
@@ -334,10 +334,16 @@ public class ActionUtils {
 		}
 	}
 	
+	
+	private static int convertSizeToKb(String size){
+		return Integer.parseInt(size) * 1024;
+	}
+	
 	public static String convertAndFormatSize(Activity activity, String size) {
 		int sizeInByte = Integer.parseInt(size);
 	    return convertAndFormatSize(activity, sizeInByte);
 	}
+	
 	
 	public static String convertAndFormatSize(Activity activity, int sizeInByte) {
 		if (sizeInByte < 1024) {
