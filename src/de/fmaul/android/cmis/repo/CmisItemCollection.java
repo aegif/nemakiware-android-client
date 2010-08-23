@@ -27,11 +27,17 @@ public class CmisItemCollection {
 	private String upLink;
 	private String title;
 
+
+
 	private CmisItemCollection() {
 	}
 
 	public List<CmisItem> getItems() {
 		return items;
+	}
+	
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getTitle() {
