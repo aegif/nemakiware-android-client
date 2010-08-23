@@ -19,6 +19,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,6 +31,7 @@ import org.dom4j.Element;
 
 import android.app.Activity;
 import android.app.Application;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import de.fmaul.android.cmis.FilterPrefs;
@@ -186,31 +188,6 @@ public class CmisRepository {
 		String url = uriTemplateTypeById.replace("{id}", documentTypeId);
 		Document doc = FeedUtils.readAtomFeed(url, repositoryUser, repositoryPassword);
 		return CmisTypeDefinition.createFromFeed(doc);
-	}
-
-	public File retreiveContent(CmisItemLazy item) throws StorageException {
-		File contentFile = StorageUtils.getStorageFile(application, repositoryWorkspace, StorageUtils.TYPE_CONTENT, item.getId(), item.getTitle());
-		return retreiveContent(item, contentFile);
-	}
-	
-	public File retreiveContent(CmisItemLazy item, String downloadFolder) throws StorageException {
-		File contentFile = item.getContentDownload(application, downloadFolder);
-		return retreiveContent(item, contentFile);
-	}
-	
-	private File retreiveContent(CmisItemLazy item, File contentFile) throws StorageException {
-		try {
-			contentFile.getParentFile().mkdirs();
-			contentFile.createNewFile();
-			OutputStream os = new BufferedOutputStream(new FileOutputStream(contentFile));
-
-			downloadContent(item, os);
-			os.close();
-			return contentFile;
-		} catch (Exception e) {
-
-		}
-		return null;
 	}
 
 	/**

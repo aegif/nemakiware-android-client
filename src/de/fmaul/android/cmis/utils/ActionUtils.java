@@ -336,7 +336,10 @@ public class ActionUtils {
 	
 	public static String convertAndFormatSize(Activity activity, String size) {
 		int sizeInByte = Integer.parseInt(size);
-
+	    return convertAndFormatSize(activity, sizeInByte);
+	}
+	
+	public static String convertAndFormatSize(Activity activity, int sizeInByte) {
 		if (sizeInByte < 1024) {
 			return String.valueOf(sizeInByte) + " " + activity.getText(R.string.file_size_bytes);
 		} else {
