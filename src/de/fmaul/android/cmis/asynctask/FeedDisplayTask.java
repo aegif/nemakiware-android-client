@@ -131,6 +131,10 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 
 	@Override
 	protected void onPostExecute(CmisItemCollection itemCollection) {
+		if (items == null){
+			itemCollection.setTitle(title);
+		}
+		
 		((CmisApp) activity.getApplication()).setItems(itemCollection);
 		
 		Prefs prefs = ((CmisApp) activity.getApplication()).getPrefs();
