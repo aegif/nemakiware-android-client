@@ -132,7 +132,11 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 	@Override
 	protected void onPostExecute(CmisItemCollection itemCollection) {
 		if (items == null){
-			itemCollection.setTitle(title);
+			if (title != null){
+				itemCollection.setTitle(title);
+			} else {
+				itemCollection.setTitle(item.getTitle());
+			}
 		}
 		
 		((CmisApp) activity.getApplication()).setItems(itemCollection);
@@ -185,11 +189,11 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 		}
 		
 		//TITLE
-		if (title == null) {
+		//if (title == null) {
 			activity.getWindow().setTitle(itemCollection.getTitle() + title_paging);
-		} else {
-			activity.getWindow().setTitle(title + title_paging);
-		}
+		//} else {
+		//	activity.getWindow().setTitle(title + title_paging);
+		//}
 		
 		activity.setProgressBarIndeterminateVisibility(false);
 		
