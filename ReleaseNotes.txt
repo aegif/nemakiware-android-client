@@ -1,4 +1,13 @@
 ===========================================================
+V 0.94
+
+Bug Fix :
+Title during screenRotation
+File Size download (Kb instead of bytes)
+Cancel Download works! 
+
+
+===========================================================
 V 0.93
 
 Bug Fix :

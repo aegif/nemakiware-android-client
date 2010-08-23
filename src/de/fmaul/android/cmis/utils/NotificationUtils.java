@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.widget.RemoteViews;
 import de.fmaul.android.cmis.HomeActivity;
 import de.fmaul.android.cmis.R;
 
@@ -55,6 +56,20 @@ public class NotificationUtils {
 	public static void cancelDownloadNotification(Activity contextActivity){
 		NotificationManager notificationManager = (NotificationManager) contextActivity.getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.cancel(DOWNLOAD_ID);
+	}
+	
+	
+	public static void updateDownloadNotification(Activity activity, String message){
+		
+		NotificationManager notificationManager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
+		Notification notification = new Notification(R.drawable.cmisexplorer, activity.getText(R.string.download_progress), System.currentTimeMillis());
+		Intent viewIntent = new Intent(activity, HomeActivity.class);
+		viewIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0, viewIntent, 0);
+		String titreNotification =  activity.getText(R.string.download_progress).toString();
+		String texteNotification =  message;
+		notification.setLatestEventInfo(activity, titreNotification, texteNotification, pendingIntent);
+		notificationManager.notify(DOWNLOAD_ID, notification);
 	}
 	
 }

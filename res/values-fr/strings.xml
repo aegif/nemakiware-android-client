@@ -118,6 +118,7 @@
     <string name="view">Voir</string>
     <string name="open">Ouvrir</string>
     <string name="open_with">Ouvrir avec</string>
+    <string name="progress">Progression</string>
 	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Développeurs</string>
