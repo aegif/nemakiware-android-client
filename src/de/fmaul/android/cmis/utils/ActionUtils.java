@@ -111,7 +111,7 @@ public class ActionUtils {
 	}
 	
 	
-	private static void confirmDownload(final Activity contextActivity, final CmisItemLazy item, final boolean openAutomatic) {
+	private static void confirmDownloadBackground(final Activity contextActivity, final CmisItemLazy item) {
 		if (getPrefs(contextActivity).isConfirmDownload() && Integer.parseInt(item.getSize()) > convertSizeToKb(getPrefs(contextActivity).getDownloadFileSize())) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(contextActivity);
 			builder.setMessage(
@@ -122,7 +122,8 @@ public class ActionUtils {
 			       .setCancelable(false)
 			       .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 			           public void onClick(DialogInterface dialog, int id) {
-			        	   startDownload(contextActivity, item, openAutomatic);
+			        	   NotificationUtils.downloadNotification(contextActivity);
+			        	   startDownloadBackground(contextActivity, item);
 			           }
 			       })
 			       .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -133,7 +134,46 @@ public class ActionUtils {
 			AlertDialog alert = builder.create();
 			alert.show();
 		} else {
-			startDownload(contextActivity, item, openAutomatic);
+			startDownloadBackground(contextActivity, item);
+		}
+	}
+	
+	private static void startDownloadBackground(final Activity contextActivity, final CmisItemLazy item){
+		new AbstractDownloadTask(getRepository(contextActivity), contextActivity, true) {
+			@Override
+			public void onDownloadFinished(File contentFile) {
+				if (contentFile != null && contentFile.exists()) {
+					NotificationUtils.downloadNotification(contextActivity, contentFile, item.getMimeType());	
+				} else {
+					displayError(contextActivity, R.string.error_file_does_not_exists);
+				}
+			}
+		}.execute(item);
+	}
+	
+	private static void confirmDownload(final Activity contextActivity, final CmisItemLazy item, final boolean notification) {
+		if (getPrefs(contextActivity).isConfirmDownload() && Integer.parseInt(item.getSize()) > convertSizeToKb(getPrefs(contextActivity).getDownloadFileSize())) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(contextActivity);
+			builder.setMessage(
+					contextActivity.getText(R.string.confirm_donwload) + " " + 
+					convertAndFormatSize(contextActivity, item.getSize()) + " " + 
+					contextActivity.getText(R.string.confirm_donwload2)
+					)
+			       .setCancelable(false)
+			       .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			        	   startDownload(contextActivity, item, true);
+			           }
+			       })
+			       .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			                dialog.cancel();
+			           }
+			       });
+			AlertDialog alert = builder.create();
+			alert.show();
+		} else {
+			startDownload(contextActivity, item, true);
 		}
 	}
 	
@@ -174,19 +214,7 @@ public class ActionUtils {
 					pg.dismiss();
 					viewFileInAssociatedApp(contextActivity, cacheContent, item.getMimeType());
 				} else {
-					if (getPrefs(contextActivity).isConfirmDownload() && Integer.parseInt(item.getSize()) > convertSizeToKb(getPrefs(contextActivity).getDownloadFileSize())) {
-						NotificationUtils.downloadNotification(contextActivity);
-						new AbstractDownloadTask(getRepository(contextActivity), contextActivity, true) {
-							@Override
-							public void onDownloadFinished(File contentFile) {
-								if (contentFile != null && contentFile.exists()) {
-									NotificationUtils.downloadNotification(contextActivity, contentFile, item.getMimeType());	
-								} else {
-									displayError(contextActivity, R.string.error_file_does_not_exists);
-								}
-							}
-						}.execute(item);	
-					}
+					confirmDownloadBackground(contextActivity, item);
 				}
 			}
 		} catch (Exception e) {
@@ -376,6 +404,35 @@ public class ActionUtils {
 		}
 		
 		activity.startActivity(intent);
+	}
+	
+	
+	public static void openDocument(final Activity contextActivity, final File content) {
+		try {
+			if (content != null && content.length() > 0 ){
+				viewFileInAssociatedApp(contextActivity, content, MimetypeUtils.getMimetype(contextActivity, content));
+			}
+		} catch (Exception e) {
+			displayError(contextActivity, e.getMessage());
+		}
+	}
+	
+	public static void openWithDocument(final Activity contextActivity, final File content) {
+		try {
+			if (content != null && content.length() > 0){
+				openWith(contextActivity, content);
+			}
+		} catch (Exception e) {
+			displayError(contextActivity, e.getMessage());
+		}
+	}
+	
+	public static void shareFileInAssociatedApp(Activity contextActivity, File contentFile) {
+		Intent i = new Intent(Intent.ACTION_SEND);
+		i.putExtra(Intent.EXTRA_SUBJECT, contentFile.getName());
+		i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(contentFile));
+		i.setType(MimetypeUtils.getMimetype(contextActivity, contentFile));
+		contextActivity.startActivity(Intent.createChooser(i, contextActivity.getText(R.string.share)));
 	}
 	
 	private static CmisRepository getRepository(Activity activity) {

@@ -137,45 +137,30 @@
 		         />
         </LinearLayout>
    
-   
-   <LinearLayout android:orientation="vertical"
-		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content"
-		android:id="@+id/listing"
-		>
-   
-		<ListView
-		    android:id="@+id/android:list"
-		    android:layout_width="fill_parent"
-		    android:layout_height="fill_parent"
-		    />
-		
-		<TextView
-		    android:id="@+id/empty"
-		    android:layout_width="fill_parent"
-		    android:layout_height="fill_parent"
-		    android:text="@string/main_no_items"
-		    android:visibility="gone"
-		    />
-		    
-    </LinearLayout>
-    
-     <LinearLayout android:orientation="vertical"
-		android:layout_width="fill_parent" 
-		android:layout_height="wrap_content"
-		>
-		
-    	<GridView xmlns:android="http://schemas.android.com/apk/res/android" 
-		    android:id="@+id/gridview"
-		    android:layout_width="fill_parent" 
-		    android:layout_height="wrap_content"
-		    android:columnWidth="90dp"
-		    android:numColumns="auto_fit"
-		    android:verticalSpacing="5dp"
-		    android:horizontalSpacing="5dp"
-		    android:stretchMode="columnWidth"
-		    android:gravity="center"
-		/>
-	</LinearLayout>
-    
+   <FrameLayout
+        android:layout_width="fill_parent" 
+        android:layout_height="0dip"
+        android:layout_weight="1" >
+		   <LinearLayout android:orientation="vertical"
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:id="@+id/listing"
+				>
+		   
+				<ListView
+				    android:id="@+id/android:list"
+				    android:layout_width="fill_parent"
+				    android:layout_height="fill_parent"
+				    />
+				
+				<TextView
+				    android:id="@+id/empty"
+				    android:layout_width="fill_parent"
+				    android:layout_height="fill_parent"
+				    android:text="@string/main_no_items"
+				    android:visibility="gone"
+				    />
+				    
+		    </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

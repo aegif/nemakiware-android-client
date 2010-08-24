@@ -8,6 +8,7 @@
 	<string name="home_menu_repository">CMIS Repositories</string>
 	<string name="home_menu_favorites">Favorites</string>
 	<string name="home_menu_about">About</string>
+	<string name="home_menu_explorer">File Explorer</string>
 	
 	<!-- SERVER ACTIVITY -->
 	<string name="menu_item_server_add">Add Server</string>
@@ -120,6 +121,10 @@
     <string name="open">Open</string>
     <string name="open_with">Open with</string>
     <string name="progress">Progress</string>
+    <string name="rename">Rename</string>
+    <string name="copy">Copy</string>
+	<string name="paste">Paste</string>
+	<string name="create_folder">Create folder</string>
 	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Developers</string>
@@ -218,5 +223,10 @@
 	<string name="file_size_kilobytes">KB</string>
 	<string name="file_size_megabytes">MB</string>
 	<string name="file_size_gigabytes">GB</string>
+	
+	<!-- FILE SYSTEM ACTIVITY -->
+	<string name="action_rename_desc">Enter a new name for this item</string>
+	<string name="action_delete_desc">Are you sure you want to delete this item : </string>
+	<string name="action_create_folder_des">Enter the name of your new folder </string>
 
 </resources>

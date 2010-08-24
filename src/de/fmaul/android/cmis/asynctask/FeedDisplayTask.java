@@ -110,7 +110,7 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 				return items;
 			} else {
 				String feed = params[0];
-				if (feed == null) {
+				if (feed == null || feed.length() == 0) {
 					return repository.getRootCollection(feedParams);
 				} else if (isSearch){
 					return repository.getCollectionFromFeed(feed);
@@ -171,11 +171,13 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 				int nb_page = repository.getNumItems() > 0 ? ((int) Math.ceil((double) repository.getNumItems()/ (double) repository.getMaxItems())) : 0;
 				title_paging =  " [1/" + nb_page + "]";  
 				next.setVisibility(View.VISIBLE);
+				back.setVisibility(View.GONE);
 			} else if (repository.getSkipCount() != 0 && (repository.getSkipCount() + repository.getMaxItems())  >= repository.getNumItems()){
 				int nb_page = repository.getNumItems() > 0 ? ((int) Math.ceil((double) repository.getNumItems()/ (double) repository.getMaxItems())) : 0;
 				title_paging =  " [" + nb_page + "/" + nb_page + "]";
 				Log.d(TAG, "PAGING : END");
-				((Button) activity.findViewById(R.id.back)).setVisibility(View.VISIBLE);
+				next.setVisibility(View.GONE);
+				back.setVisibility(View.VISIBLE);
 			} else {
 				int nb_page = repository.getNumItems() > 0 ? ((int) Math.ceil((double) repository.getNumItems()/ (double) repository.getMaxItems())) : 0;
 				int currentPage = repository.getSkipCount() > 0 ? ((int) Math.floor((double) repository.getSkipCount()/ (double) repository.getMaxItems())) + 1 : 0;
@@ -188,12 +190,7 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 			}
 		}
 		
-		//TITLE
-		//if (title == null) {
-			activity.getWindow().setTitle(itemCollection.getTitle() + title_paging);
-		//} else {
-		//	activity.getWindow().setTitle(title + title_paging);
-		//}
+		activity.getWindow().setTitle(itemCollection.getTitle() + title_paging);
 		
 		activity.setProgressBarIndeterminateVisibility(false);
 		
@@ -206,7 +203,11 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 		
 		if (item != null){
-			((TextView) activity.findViewById(R.id.path)).setText(item.getPath());
+			if (item.getPath() != null){
+				((TextView) activity.findViewById(R.id.path)).setText(item.getPath());
+			} else {
+				((TextView) activity.findViewById(R.id.path)).setText("/");
+			}
 		} else {
 			((TextView) activity.findViewById(R.id.path)).setText("/");
 		}

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import de.fmaul.android.cmis.CmisApp;
@@ -50,6 +51,8 @@ public class ServerInitTask extends AsyncTask<String, Void, CmisRepository> {
 			return CmisRepository.create(app, server);
 		} catch (FeedLoadException fle) {
 			return null;
+		} catch (Exception fle) {
+			return null;
 		}
 	}
 
@@ -58,8 +61,9 @@ public class ServerInitTask extends AsyncTask<String, Void, CmisRepository> {
 		try {
 			repo.generateParams(activity);
 			((CmisApp) activity.getApplication()).setRepository(repo);
-			((CmisApp) activity.getApplication()).getRepository().clearCache(repo.getServer().getWorkspace());
-			activity.processSearchOrDisplayIntent();
+			activity.setItem(repo.getRootItem());
+			repo.clearCache(repo.getServer().getWorkspace());
+			new FeedDisplayTask(activity, repo, getTitleFromIntent()).execute(getFeedFromIntent());
 			pg.dismiss();
 		} catch (StorageException e) {
 			ActionUtils.displayError(activity, R.string.generic_error);
@@ -75,5 +79,25 @@ public class ServerInitTask extends AsyncTask<String, Void, CmisRepository> {
 	protected void onCancelled() {
 		activity.finish();
 		pg.dismiss();
+	}
+	
+	private String getFeedFromIntent() {
+		Bundle extras = activity.getIntent().getExtras();
+		if (extras != null) {
+			if (extras.get("feed") != null) {
+				return extras.get("feed").toString();
+			}
+		}
+		return null;
+	}
+	
+	private String getTitleFromIntent() {
+		Bundle extras = activity.getIntent().getExtras();
+		if (extras != null) {
+			if (extras.get("title") != null) {
+				return extras.get("title").toString();
+			}
+		}
+		return null;
 	}
 }

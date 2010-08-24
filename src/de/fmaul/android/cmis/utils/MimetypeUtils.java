@@ -1,5 +1,6 @@
 package de.fmaul.android.cmis.utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,6 +109,59 @@ public class MimetypeUtils {
 		iconMap.put("video/msvideo",R.drawable.mt_video);
 		return iconMap;
 	}
+	
+	public static Map<String,String> createExtensionMap(){
+		Map<String,String> extensionMap = new HashMap<String, String>();
+		
+		extensionMap.put("bmp", "image/bmp");
+		extensionMap.put("doc", "application/msword");
+		extensionMap.put("jpg", "image/jpeg");
+		extensionMap.put("jpeg", "image/jpeg");
+		extensionMap.put("mp3", "audio/mp3");
+		extensionMap.put("pdf", "application/pdf");
+		extensionMap.put("ppt", "application/vnd.ms-powerpoint");
+		extensionMap.put("png", "image/png");
+		extensionMap.put("xls", "application/vnd.ms-excel");
+		extensionMap.put("mp3", "audio/mp3");
+		extensionMap.put("wav", "audio/wav");
+		extensionMap.put("ogg", "audio/x-ogg");
+		extensionMap.put("mid", "audio/mid");
+		extensionMap.put("midi", "audio/midi");
+		extensionMap.put("amr", "audio/AMR");
+		extensionMap.put("mpeg", "video/mpeg");
+		extensionMap.put("3gp", "video/3gpp");
+		extensionMap.put("jar", "application/java-archive");
+		extensionMap.put("zip", "application/zip");
+		extensionMap.put("rar", "application/x-rar-compressed");
+		extensionMap.put("gz", "application/gzip");
+		extensionMap.put("htm", "text/html");
+		extensionMap.put("html", "text/html");
+		extensionMap.put("php", "text/php");
+		extensionMap.put("txt", "text/plain");
+		extensionMap.put("csv", "text/csv");
+		extensionMap.put("xml", "text/xml");
+		extensionMap.put("apk", "application/vnd.android.package-archive");
+		
+		return extensionMap;
+	}
+	
+	
+	
+	public static String getMimetype(Activity activity, File file) {
+		if (file.exists() && file.isFile()) {
+			Map<String, String> map = createExtensionMap();
+			String name = file.getName();
+			String extension = name.substring(name.lastIndexOf(".")+1, name.length());
+			if (map.containsKey(extension)){
+				return map.get(extension);
+			} else {
+				return "";
+			}
+		} else {
+			return "";
+		}
+	}
+	
 	
 	
 }

@@ -67,6 +67,7 @@ public class CmisRepository {
 	private int maxItems = 0;
 	private Boolean paging;
 	private int numItems;
+	private CmisItem rootItem;
 	
 	/**
 	 * Connects to a CMIS Repository with the given connection information FIXME
@@ -179,6 +180,7 @@ public class CmisRepository {
 		}
 		
 		numItems = FeedUtils.getNumItemsFeed(doc);
+		rootItem = CmisItem.createFromFeed(doc.getRootElement());
 		Log.d(TAG, "NumItems : " + numItems);
 		
 		return CmisItemCollection.createFromFeed(doc);
@@ -228,6 +230,7 @@ public class CmisRepository {
 			}
 			setFeedParams(createParams(pref, isAdd, false));
 		} else {
+			setPaging(false);
 			setUseFeedParams(false);
 		}
 	}
@@ -358,5 +361,9 @@ public class CmisRepository {
 
 	public int getMaxItems() {
 		return maxItems;
+	}
+	
+	public CmisItem getRootItem() {
+		return rootItem;
 	}
 }
