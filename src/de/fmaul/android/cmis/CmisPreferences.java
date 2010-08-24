@@ -86,7 +86,7 @@ public class CmisPreferences extends PreferenceActivity {
 		getPreferenceManager().findPreference(this.getText(R.string.cmis_download_size)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 		    @Override
 		    public boolean onPreferenceChange(Preference preference, Object newValue) {
-		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setDownloadFolder((String) newValue);
+		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setDownloadFileSize((String) newValue);
 		    	return true;
 		    }
 		});
