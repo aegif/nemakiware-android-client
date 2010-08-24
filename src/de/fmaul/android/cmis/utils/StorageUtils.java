@@ -101,6 +101,19 @@ public class StorageUtils {
 	    out.close();
 	}
 	
+	public static File getDownloadRoot(Application app) throws StorageException {
+		String state = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(state)) {
+			StringBuilder builder = new StringBuilder();
+			builder.append(((CmisApp) app).getPrefs().getDownloadFolder());
+			return new File(builder.toString());
+		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+			throw new StorageException("Storage in Read Only Mode");
+		} else {
+			throw new StorageException("Storage is unavailable");
+		}
+	}
+	
 	public static File getStorageFile(Application app, String saveFolder, String filename) throws StorageException {
 		String state = Environment.getExternalStorageState();
 		if (Environment.MEDIA_MOUNTED.equals(state)) {

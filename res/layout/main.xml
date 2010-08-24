@@ -48,6 +48,19 @@
         android:layout_marginBottom="15sp"
         />
         
+        
+    <Button
+    	android:id="@+id/filesystem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="@string/home_menu_explorer" 
+        android:textSize="20sp" 
+        android:drawableLeft="@drawable/phone_l"
+        android:drawablePadding="10sp"
+        android:layout_marginBottom="15sp"
+        />
+        
     <Button
    	 	android:id="@+id/preferences"
         android:layout_width="fill_parent"

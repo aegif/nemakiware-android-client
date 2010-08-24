@@ -8,6 +8,7 @@
 	<string name="home_menu_repository">Entrepôt de données</string>
 	<string name="home_menu_favorites">Favoris</string>
 	<string name="home_menu_about">A Propos</string>
+	<string name="home_menu_explorer">Explorateur de fichiers</string>
 	
 	<!-- SERVER ACTIVITY -->
 	<string name="menu_item_server_add">Ajouter un entrepôt</string>
@@ -119,6 +120,9 @@
     <string name="open">Ouvrir</string>
     <string name="open_with">Ouvrir avec</string>
     <string name="progress">Progression</string>
+    <string name="rename">Renommer</string>
+    <string name="copy">Copier</string>
+	<string name="paste">Coller</string>
 	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Développeurs</string>
@@ -217,5 +221,9 @@
 	<string name="file_size_kilobytes">Ko</string>
 	<string name="file_size_megabytes">Mo</string>
 	<string name="file_size_gigabytes">Go</string>
+	
+	<!-- FILE SYSTEM ACTIVITY -->
+	<string name="action_rename_desc">Veuillez taper le nouveau nom de l\'élément.</string>
+	<string name="action_delete_desc">Etes vous sur de vouloir supprimer cet élément : </string>
 
 </resources>

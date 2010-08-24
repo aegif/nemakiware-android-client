@@ -30,6 +30,7 @@ public class CmisApp extends Application {
 	private CmisRepository repository;
 	private Prefs prefs;
 	private CmisItemCollection items;
+	private ListCmisFeedActivitySave savedContextItems;
 	private CmisPropertyFilter cmisPropertyFilter;
 	private Map<String,Integer> mimetypesMap;
 	
@@ -78,6 +79,14 @@ public class CmisApp extends Application {
 
 	public Map<String,Integer> getMimetypesMap() {
 		return mimetypesMap;
+	}
+
+	public void setSavedContextItems(ListCmisFeedActivitySave savedContextItems) {
+		this.savedContextItems = savedContextItems;
+	}
+
+	public ListCmisFeedActivitySave getSavedContextItems() {
+		return savedContextItems;
 	}
 	
 }

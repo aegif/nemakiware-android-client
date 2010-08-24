@@ -15,6 +15,7 @@
  */
 package de.fmaul.android.cmis;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -70,14 +71,16 @@ public class ListCmisFeedActivity extends ListActivity {
 	private ListActivity activity = this;
 	private OnSharedPreferenceChangeListener listener;
 	private CmisItemLazy item;
+	private CmisItemLazy itemParent;
 	private CmisItemCollection items;
-
 	private GridView gridview;
-
 	private ListView listView;
-
 	private Prefs prefs;
+	private ArrayList<CmisItemLazy> currentStack =  new ArrayList<CmisItemLazy>();
 
+	private ListCmisFeedActivitySave save;
+	private boolean firstStart = false;
+	
 	/**
 	 * Contains the current connection information and methods to access the
 	 * CMIS repository.
@@ -91,13 +94,39 @@ public class ListCmisFeedActivity extends ListActivity {
 		initWindow();
 		initActionIcon();
 		
+		Bundle extra = this.getIntent().getExtras();
+		if (extra != null && extra.getBoolean("isFirstStart")) {
+			firstStart = true;
+		}
+		
+		
 		//Restart
-		items = (CmisItemCollection) getLastNonConfigurationInstance();
+		if (getLastNonConfigurationInstance() != null ){
+			save = (ListCmisFeedActivitySave) getLastNonConfigurationInstance();
+			this.item = save.getItem();
+			this.itemParent = save.getItemParent();
+			this.items = save.getItems();
+			this.currentStack = save.getCurrentStack();
+			firstStart = false;
+			new FeedDisplayTask(this, getRepository(), null, item, items).execute();
+		}
+		
+		//Search Context
+		if (activityIsCalledWithSearchAction() == false && getSaveContext() != null){
+			save = getSaveContext();
+			this.item = save.getItem();
+			this.itemParent = save.getItemParent();
+			this.items = save.getItems();
+			this.currentStack = save.getCurrentStack();
+			firstStart = false;
+			setSaveContext(null);
+			new FeedDisplayTask(this, getRepository(), null, item, items).execute();
+		}
 		
 		if (initRepository() == false){
-			item = (CmisItemLazy) getIntent().getExtras().getSerializable("item");
 			processSearchOrDisplayIntent();
 		}
+		
 		//Filter Management
 		listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 			  public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
@@ -118,18 +147,31 @@ public class ListCmisFeedActivity extends ListActivity {
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    if (keyCode == KeyEvent.KEYCODE_BACK && getRepository().isPaging()) {
-	    	getRepository().generateParams(activity, false);
-	    	this.finish();
-	        return true;
+	    if (keyCode == KeyEvent.KEYCODE_BACK){
+	    	if (getRepository().isPaging()) {
+	    		getRepository().generateParams(activity, false);
+		    	goUP(true);
+		        return true;
+	    	} else if (activityIsCalledWithSearchAction()){
+	    		activity.finish();
+	    		ActionUtils.openNewListViewActivity(activity, item);
+	    		return true;
+	    	} else {
+	    		goUP(true);
+		    	return true;
+	    	}
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
 	
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-	    final CmisItemCollection data = getItems();
-	    return data;
+		if (item == null){
+			item = getRepository().getRootItem();
+			itemParent = item;
+			currentStack.add(item);
+		}
+		return new ListCmisFeedActivitySave(item, itemParent, getItems(), currentStack);
 	}
 	
 	private void initActionIcon() {
@@ -138,7 +180,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		Button back = (Button) findViewById(R.id.back);
 		Button next = (Button) findViewById(R.id.next);
 		Button refresh = (Button) findViewById(R.id.refresh);
-		Button pref = (Button) findViewById(R.id.preference);
+		Button filter = (Button) findViewById(R.id.preference);
 		
 		home.setOnClickListener(new OnClickListener() {
 			@Override
@@ -154,41 +196,30 @@ public class ListCmisFeedActivity extends ListActivity {
 		up.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (item != null && item.getPath().equals("/") == false){
-					if (getRepository().isPaging()) {
-				    	getRepository().setSkipCount(0);
-				    	getRepository().generateParams(activity);
-					}
-					new FeedItemDisplayTask(activity, getRepository().getServer(), item.getParentUrl(), 1).execute();
-				} else {
-					Intent intent = new Intent(activity, ServerActivity.class);
-					intent.putExtra("EXIT", false);
-					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				}
+				goUP(false);
 			}
 		});
 		
-		//if (getRepository().isPaging()){
-			back.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					getRepository().generateParams(activity, false);
-					//ActionUtils.openNewListViewActivity(ListCmisFeedActivity.this, item);
-					ListCmisFeedActivity.this.finish();
-					//ListCmisFeedActivity.this.finish();
-				}
-			});
-			
-			next.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					getRepository().generateParams(activity, true);
-					ActionUtils.openNewListViewActivity(ListCmisFeedActivity.this, item);
-				}
-			});
-		//}
+		back.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				getRepository().generateParams(activity, false);
+				new FeedDisplayTask(ListCmisFeedActivity.this, getRepository(), item).execute(item.getDownLink());
+			}
+		});
 		
-		pref.setOnClickListener(new OnClickListener() {
+		next.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (item == null) {
+					item = getRepository().getRootItem();
+				}
+				getRepository().generateParams(activity, true);
+				new FeedDisplayTask(ListCmisFeedActivity.this, getRepository(), item).execute(item.getDownLink());
+			}
+		});
+		
+		filter.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				startActivity(new Intent(activity, CmisFilterActivity.class));
@@ -211,8 +242,7 @@ public class ListCmisFeedActivity extends ListActivity {
 				new ServerInitTask(this, getApplication(), (Server) getIntent().getExtras().getSerializable("server")).execute();
 			} else {
 				// Case if we change repository.
-				Bundle extra = this.getIntent().getExtras();
-				if (extra != null && extra.getBoolean("isFirstStart")) {
+				if (firstStart) {
 					new ServerInitTask(this, getApplication(), (Server) getIntent().getExtras().getSerializable("server")).execute();
 				} else {
 					init = false;
@@ -230,7 +260,7 @@ public class ListCmisFeedActivity extends ListActivity {
 				doSearchWithIntent(getIntent());
 			} else {
 				// display the feed that is passed in through the intent
-				displayFeedInListView();
+				//displayFeedInListView();
 			}
 		} else {
 			Toast.makeText(this, getText(R.string.error_repo_connexion), 5);
@@ -376,7 +406,7 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * 
 	 * @return
 	 */
-	private String getFeedFromIntent() {
+	/*private String getFeedFromIntent() {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			if (extras.get("feed") != null) {
@@ -394,7 +424,7 @@ public class ListCmisFeedActivity extends ListActivity {
 			}
 		}
 		return null;
-	}
+	}*/
 
 	protected void reload(String workspace) {
 			Intent intent = new Intent(this, ListCmisFeedActivity.class);
@@ -417,24 +447,13 @@ public class ListCmisFeedActivity extends ListActivity {
 	
 	private void refresh() {
 		
-		String feed = "";
-		if (item != null){
-			feed = item.getDownLink();
-		} else {
-			feed = getRepository().getFeedRootCollection();
+		if (item == null){
+			item = getRepository().getRootItem();
 		}
-		
+		getRepository().generateParams(activity, false);
 		try {
-			if (StorageUtils.deleteFeedFile(getApplication(), getRepository().getServer().getWorkspace(), feed)){
-				activity.finish();
-				if (item != null){
-					ActionUtils.openNewListViewActivity(activity, item);
-				} else {
-					Intent intent = new Intent(activity, ListCmisFeedActivity.class);
-					intent.putExtra("feed", feed);
-					intent.putExtra("title", getTitleFromIntent());
-					startActivity(intent);
-				}
+			if (StorageUtils.deleteFeedFile(getApplication(), getRepository().getServer().getWorkspace(), item.getDownLink())){
+				new FeedDisplayTask(ListCmisFeedActivity.this, getRepository(), item).execute(item.getDownLink());
 			} else {
 				displayError(R.string.application_not_available);
 			}
@@ -456,7 +475,7 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * 
 	 * @param feed
 	 */
-	private void displayFeedInListView() {
+	/*private void displayFeedInListView() {
 		setTitle(R.string.loading);
 		if (items != null){
 			Log.d(TAG, "Start FeedDisplayTask : Items");
@@ -468,7 +487,7 @@ public class ListCmisFeedActivity extends ListActivity {
 			Log.d(TAG, "Start FeedDisplayTask : title");
 			new FeedDisplayTask(this, getRepository(), getTitleFromIntent()).execute(getFeedFromIntent());
 		}
-	}
+	}*/
 
 	private void displayError(int messageId) {
 		Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show();
@@ -490,7 +509,21 @@ public class ListCmisFeedActivity extends ListActivity {
 			    	getRepository().setSkipCount(0);
 			    	getRepository().generateParams(activity);
 				}
-				ActionUtils.openNewListViewActivity(ListCmisFeedActivity.this, doc);
+				
+				if (item == null) {
+					item = getRepository().getRootItem();
+					currentStack.add(item);
+				}
+				
+				currentStack.add(doc);
+				
+				//ActionUtils.openNewListViewActivity(ListCmisFeedActivity.this, doc);
+				new FeedDisplayTask(ListCmisFeedActivity.this, getRepository(), doc).execute(doc.getDownLink());
+				
+				itemParent = item;
+				item = doc;
+				
+				Log.d(TAG, "DOWN : I " + item.getTitle() + " | P : " + itemParent.getTitle());
 			} else {
 				ActionUtils.displayDocumentDetails(ListCmisFeedActivity.this, doc);
 			}
@@ -632,6 +665,33 @@ public class ListCmisFeedActivity extends ListActivity {
 		    }
 		}
 
+	 public void goUP(boolean isBack){
+		 if (item != null && item.getPath() != null && item.getPath().equals("/") == false){
+				if (getRepository().isPaging()) {
+			    	getRepository().setSkipCount(0);
+			    	getRepository().generateParams(activity);
+				}
+				if (itemParent != null) {
+					currentStack.remove(item);
+					item = currentStack.get(currentStack.size()-1);
+					new FeedDisplayTask(ListCmisFeedActivity.this, getRepository(), itemParent).execute(itemParent.getDownLink());
+					if (currentStack.size()-2 > 0){
+						itemParent = currentStack.get(currentStack.size()-2);
+					} else {
+						itemParent = currentStack.get(0);
+					}
+				} else {
+					new FeedItemDisplayTask(activity, getRepository().getServer(), item.getParentUrl(), 1).execute();
+				}
+			} else if (isBack) {
+				Intent intent = new Intent(activity, ServerActivity.class);
+				intent.putExtra("EXIT", false);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			}
+	 }
+	 
+	 
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -641,8 +701,10 @@ public class ListCmisFeedActivity extends ListActivity {
 		Bundle appData = new Bundle();
 		appData.putString(QueryType.class.getName(), queryType.name());
 		startSearch("", false, appData, false);
+		((CmisApp) getApplication()).setSavedContextItems(new ListCmisFeedActivitySave(item, itemParent, getItems(), currentStack));
 		return true;
 	}
+	
 
 	CmisRepository getRepository() {
 		return ((CmisApp) getApplication()).getRepository();
@@ -663,5 +725,22 @@ public class ListCmisFeedActivity extends ListActivity {
 	Prefs getCmisPrefs() {
 		return ((CmisApp) getApplication()).getPrefs();
 	}
+	
+	public CmisItemLazy getItem() {
+		return item;
+	}
+
+	public void setItem(CmisItemLazy item) {
+		this.item = item;
+	}
+	
+	public ListCmisFeedActivitySave getSaveContext(){
+		return ((CmisApp) getApplication()).getSavedContextItems();
+	}
+	
+	public void setSaveContext(ListCmisFeedActivitySave save){
+		((CmisApp) getApplication()).setSavedContextItems(save);
+	}
+	
 
 }

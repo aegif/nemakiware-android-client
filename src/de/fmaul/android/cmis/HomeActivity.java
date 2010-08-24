@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
-import de.fmaul.android.cmis.repo.CmisItemCollection;
 
 public class HomeActivity extends Activity {
     
@@ -66,6 +65,14 @@ public class HomeActivity extends Activity {
 				
 				startActivity(new Intent(HomeActivity.this, CmisPreferences.class));
 				//startActivity(new Intent(HomeActivity.this, FileChooserActivity.class));
+			}
+		});
+        
+        ((Button) findViewById(R.id.filesystem)).setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(HomeActivity.this, FileChooserActivity.class));
 			}
 		});
         
