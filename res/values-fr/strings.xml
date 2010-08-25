@@ -123,6 +123,7 @@
     <string name="rename">Renommer</string>
     <string name="copy">Copier</string>
 	<string name="paste">Coller</string>
+	<string name="sorting">Tri</string>
 	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Développeurs</string>
@@ -225,5 +226,10 @@
 	<!-- FILE SYSTEM ACTIVITY -->
 	<string name="action_rename_desc">Veuillez taper le nouveau nom de l\'élément.</string>
 	<string name="action_delete_desc">Etes vous sur de vouloir supprimer cet élément : </string>
+	
+	<string name="action_sorting_title">Choisissez votre tri...</string>
+	<string name="action_sorting_name">Nom</string>
+	<string name="action_sorting_size">Taille</string>
+	<string name="action_sorting_date">Date</string>
 
 </resources>

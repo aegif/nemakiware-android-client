@@ -2,7 +2,11 @@ package de.fmaul.android.cmis;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -24,6 +28,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import de.fmaul.android.cmis.asynctask.ItemPropertiesDisplayTask;
+import de.fmaul.android.cmis.repo.CmisItemLazy;
+import de.fmaul.android.cmis.repo.CmisModel;
+import de.fmaul.android.cmis.repo.CmisPropertyFilter;
 import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.FileSystemUtils;
 import de.fmaul.android.cmis.utils.StorageException;
@@ -51,6 +59,18 @@ public class FileChooserActivity extends ListActivity {
 	private static final int DIALOG_DELETE = 2;
 	private static final int DIALOG_RENAME = 3;
 	private static final int DIALOG_ABOUT = 4;
+	private static final int DIALOG_ORDER = 5;
+	
+	private int order = SORT_ALPHA;
+
+	private ArrayList<String> filtersValueLabel = new ArrayList<String>(3);
+	private ArrayList<Integer> filters= new ArrayList<Integer>(3);
+
+	private static final int SORT_ALPHA = R.string.action_sorting_name;
+	private static final int SORT_SIZE = R.string.action_sorting_size;
+	private static final int SORT_DATE = R.string.action_sorting_date;
+
+	
 
 
     /** Called when the activity is first created. */
@@ -58,6 +78,12 @@ public class FileChooserActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.file_list_main);
+        
+        //Filter Init
+        getFilters();
+        getFiltersValueLabel();
+        
+        
         listView = this.getListView();
         listView.setOnCreateContextMenuListener(this);
         try {
@@ -131,6 +157,21 @@ public class FileChooserActivity extends ListActivity {
 
     private void displayFiles() {
         ArrayAdapter<File> fileAdapter;
+        
+        switch (order) {
+		case SORT_ALPHA:
+			Collections.sort(mFileList, new DirAlphaComparator()); 
+			break;
+		case SORT_DATE:
+			Collections.sort(mFileList, new DirDateComparator()); 
+			break;
+		case SORT_SIZE:
+			Collections.sort(mFileList, new DirSizeComparator()); 
+			break;
+		default:
+			break;
+		}
+        
 
         getListView().setItemsCanFocus(false);
         getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -247,14 +288,10 @@ public class FileChooserActivity extends ListActivity {
     private void initActionIcon() {
 		Button home = (Button) findViewById(R.id.home);
 		Button up = (Button) findViewById(R.id.up);
-		Button back = (Button) findViewById(R.id.back);
-		Button next = (Button) findViewById(R.id.next);
 		Button refresh = (Button) findViewById(R.id.refresh);
 		Button filter = (Button) findViewById(R.id.preference);
+		Button order = (Button) findViewById(R.id.order);
 		
-		
-		back.setVisibility(View.GONE);
-		next.setVisibility(View.GONE);
 		refresh.setVisibility(View.GONE);
 		filter.setVisibility(View.GONE);
 		
@@ -269,10 +306,17 @@ public class FileChooserActivity extends ListActivity {
 			}
 		});
 		
+		order.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showDialog(DIALOG_ORDER);
+			}
+		});
+		
 		up.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				goUp();
+				initialize(file.getName(), file);
 			}
 		});
 	}
@@ -332,6 +376,23 @@ public class FileChooserActivity extends ListActivity {
 
 			return createDialog(R.string.rename, R.string.action_rename_desc, file.getName(), rename);
 
+		case DIALOG_ORDER:
+			
+			return new AlertDialog.Builder(this).setTitle(R.string.action_sorting_title)
+				.setSingleChoiceItems(getFiltersLabel(), filters.indexOf(order), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						 dialog.dismiss();
+			        	 order = filters.get(which); 
+			        	 initialize(mRoot.getName(), mRoot);
+					}
+				})
+				.setNegativeButton(this.getText(R.string.cancel), new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			        	   dialog.cancel();
+			           }
+			    }).create();
+			
 		default:
 			return null;
 		}
@@ -356,6 +417,71 @@ public class FileChooserActivity extends ListActivity {
 		}
 		return super.onOptionsItemSelected(item);
 
+	}
+    
+    class DirAlphaComparator implements Comparator<File> {
+
+        public int compare(File filea, File fileb) {
+            if (filea.isDirectory() && !fileb.isDirectory()) {
+                return -1;
+
+            } else if (!filea.isDirectory() && fileb.isDirectory()) {
+                return 1;
+
+            } else {
+                return filea.getName().compareToIgnoreCase(fileb.getName());
+            }
+        }
+    }
+    
+    class DirSizeComparator implements Comparator<File> {
+
+        public int compare(File filea, File fileb) {
+            if (filea.isDirectory() && !fileb.isDirectory()) {
+                return -1;
+
+            } else if (!filea.isDirectory() && fileb.isDirectory()) {
+                return 1;
+
+            } else {
+            	if (filea.length() > fileb.length()){
+            		return 1;
+            	} else if  (filea.length() < fileb.length()){
+            		return -1;
+            	} else {
+            		return 0;
+            	}
+            }
+        }
+    }
+    
+    class DirDateComparator implements Comparator<File> {
+
+        public int compare(File filea, File fileb) {
+        	if (filea.lastModified() > fileb.lastModified()){
+        		return 1;
+        	} else if  (filea.lastModified() < fileb.lastModified()){
+        		return -1;
+        	} else {
+        		return 0;
+        	}
+        }
+    }
+    
+    private void getFiltersValueLabel() {
+		filtersValueLabel.add(this.getText(R.string.action_sorting_name).toString());
+		filtersValueLabel.add(this.getText(R.string.action_sorting_size).toString());
+		filtersValueLabel.add(this.getText(R.string.action_sorting_date).toString());
+	}
+    
+    private void getFilters() {
+		filters.add(R.string.action_sorting_name);
+		filters.add(R.string.action_sorting_size);
+		filters.add(R.string.action_sorting_date);
+	}
+	
+    private CharSequence[] getFiltersLabel() {
+		return filtersValueLabel.toArray(new CharSequence[filters.size()]);
 	}
 
 }
