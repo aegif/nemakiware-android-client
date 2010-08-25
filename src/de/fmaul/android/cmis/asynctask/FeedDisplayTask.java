@@ -50,7 +50,9 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 	private CmisItemLazy item;
 	private CmisItemCollection items;
 	private ListView layoutListing;
+	private GridView layoutGrid;
 	private Boolean isSearch;
+	private Prefs prefs;
 
 	public FeedDisplayTask(ListActivity activity, CmisRepository repository) {
 		this(activity, repository, null, null, null);
@@ -91,10 +93,15 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 				feedParams = repository.getFeedParams();
 		}
 		
-		//Loading Animation
+		//Hide Data during Animation
+		layoutGrid = (GridView) activity.findViewById(R.id.gridview);
 		layoutListing = activity.getListView();
-		layoutListing.setVisibility(View.GONE);
 		
+		layoutListing.setVisibility(View.GONE);
+		layoutGrid.setVisibility(View.GONE);
+		activity.findViewById(R.id.empty).setVisibility(View.GONE);
+		
+		//Loading Animation
 		layout = activity.findViewById(R.id.animation);
 		layout.setVisibility(View.VISIBLE);
 		View objet = activity.findViewById(R.id.transfert);
@@ -190,27 +197,35 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 			}
 		}
 		
+		//Setting TITLE
 		activity.getWindow().setTitle(itemCollection.getTitle() + title_paging);
 		
-		activity.setProgressBarIndeterminateVisibility(false);
-		
-		layout.setVisibility(View.GONE);
-		layoutListing.setVisibility(View.VISIBLE);
-		
-		if (itemCollection.getItems().size() == 0 ){
-			activity.findViewById(R.id.empty).setVisibility(View.VISIBLE);
-		}
-		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-		
-		if (item != null){
-			if (item.getPath() != null){
-				((TextView) activity.findViewById(R.id.path)).setText(item.getPath());
-			} else {
-				((TextView) activity.findViewById(R.id.path)).setText("/");
-			}
+		//Setting BreadCrumb
+		if (item != null && item.getPath() != null){
+			((TextView) activity.findViewById(R.id.path)).setText(item.getPath());
 		} else {
 			((TextView) activity.findViewById(R.id.path)).setText("/");
 		}
+		
+		//Show Data & Hide  Animation
+		prefs = ((CmisApp) activity.getApplication()).getPrefs();
+		if(prefs != null && prefs.getDataView() == Prefs.GRIDVIEW){
+			layoutGrid.setVisibility(View.VISIBLE);
+		} else {
+			layoutListing.setVisibility(View.VISIBLE);
+		}
+		layout.setVisibility(View.GONE);
+		activity.setProgressBarIndeterminateVisibility(false);
+		
+		
+		if (itemCollection.getItems().size() == 0 ){
+			activity.findViewById(R.id.empty).setVisibility(View.VISIBLE);
+		} else {
+			activity.findViewById(R.id.empty).setVisibility(View.GONE);
+		}
+		
+		//Allow screen rotation
+		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 	}
 
 	@Override
