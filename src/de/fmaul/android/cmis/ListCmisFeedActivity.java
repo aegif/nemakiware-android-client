@@ -81,6 +81,8 @@ public class ListCmisFeedActivity extends ListActivity {
 	private ListCmisFeedActivitySave save;
 	private boolean firstStart = false;
 	
+	protected static final int REQUEST_CODE_FAVORITE = 1;
+	
 	/**
 	 * Contains the current connection information and methods to access the
 	 * CMIS repository.
@@ -260,7 +262,14 @@ public class ListCmisFeedActivity extends ListActivity {
 				doSearchWithIntent(getIntent());
 			} else {
 				// display the feed that is passed in through the intent
-				//displayFeedInListView();
+				Bundle extras = getIntent().getExtras();
+				if (extras != null) {
+					if (extras.get("item") != null) {
+						item = (CmisItemLazy) extras.get("item");
+					}
+				}
+				
+				new FeedDisplayTask(this, getRepository(), item).execute(item.getDownLink());
 			}
 		} else {
 			Toast.makeText(this, getText(R.string.error_repo_connexion), 5);
@@ -510,7 +519,7 @@ public class ListCmisFeedActivity extends ListActivity {
 			    	getRepository().generateParams(activity);
 				}
 				
-				if (item == null) {
+				if (item == null || currentStack.size() == 0) {
 					item = getRepository().getRootItem();
 					currentStack.add(item);
 				}
@@ -659,6 +668,17 @@ public class ListCmisFeedActivity extends ListActivity {
 	
 	 public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 	    	
+		/* super.onActivityResult(requestCode, resultCode, intent);
+
+			switch (requestCode) {
+			case REQUEST_CODE_FAVORITE:
+				if (resultCode == RESULT_OK && intent != null) {
+						
+				}
+				break;
+			}*/
+		 
+		 
 	    	IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 		    if (scanResult != null) {
 		    	new FeedItemDisplayTask(activity, getRepository().getServer(), scanResult.getContents()).execute();
