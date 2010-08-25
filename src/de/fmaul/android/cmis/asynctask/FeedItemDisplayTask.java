@@ -65,7 +65,7 @@ public class FeedItemDisplayTask extends AsyncTask<String, Void, CmisItem> {
 				break;
 			}
 		} else {
-			ActionUtils.displayError(activity, R.string.favorite_error_loading);
+			ActionUtils.displayMessage(activity, R.string.favorite_error_loading);
 		}
 		pg.dismiss();
 	}

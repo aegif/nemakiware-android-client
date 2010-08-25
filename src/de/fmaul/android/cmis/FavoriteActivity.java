@@ -94,7 +94,7 @@ public class FavoriteActivity extends ListActivity {
 				alert.show();
 			}
 		} else {
-			ActionUtils.displayError(this, R.string.favorite_error);
+			ActionUtils.displayMessage(this, R.string.favorite_error);
 		}
 	}
 	

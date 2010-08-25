@@ -66,10 +66,10 @@ public class ServerInitTask extends AsyncTask<String, Void, CmisRepository> {
 			new FeedDisplayTask(activity, repo, getTitleFromIntent()).execute(getFeedFromIntent());
 			pg.dismiss();
 		} catch (StorageException e) {
-			ActionUtils.displayError(activity, R.string.generic_error);
+			ActionUtils.displayMessage(activity, R.string.generic_error);
 			pg.dismiss();
 		} catch (Exception e) {
-			ActionUtils.displayError(activity, R.string.generic_error);
+			ActionUtils.displayMessage(activity, R.string.generic_error);
 			activity.finish();
 			pg.dismiss();
 		}

@@ -42,7 +42,7 @@ public class CmisPreferences extends PreferenceActivity {
 		    	try {
 					StorageUtils.deleteCacheFolder(CmisPreferences.this.getApplication());
 				} catch (StorageException e) {
-					ActionUtils.displayError(CmisPreferences.this, R.string.generic_error);
+					ActionUtils.displayMessage(CmisPreferences.this, R.string.generic_error);
 				}
 		    	preference.setEnabled(false);
 		    	return true;

@@ -2,22 +2,20 @@ package de.fmaul.android.cmis;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,10 +26,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import de.fmaul.android.cmis.asynctask.ItemPropertiesDisplayTask;
-import de.fmaul.android.cmis.repo.CmisItemLazy;
-import de.fmaul.android.cmis.repo.CmisModel;
-import de.fmaul.android.cmis.repo.CmisPropertyFilter;
+import de.fmaul.android.cmis.asynctask.CopyFilesTask;
+import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.FileSystemUtils;
 import de.fmaul.android.cmis.utils.StorageException;
@@ -41,7 +37,7 @@ public class FileChooserActivity extends ListActivity {
 
     private static final int EDIT_ACTION = 0;
 
-	private final String t = "File Chooser";
+	private final String TAG = "File Chooser";
 
     protected ArrayList<File> mFileList;
     protected File mRoot;
@@ -52,6 +48,7 @@ public class FileChooserActivity extends ListActivity {
 	private ListView listView;
 
 	private EditText input;
+	private Boolean multipleMode = false;
 	
 	private static final int MENU_NEW_FOLDER = Menu.FIRST + 1;
 	
@@ -61,16 +58,30 @@ public class FileChooserActivity extends ListActivity {
 	private static final int DIALOG_ABOUT = 4;
 	private static final int DIALOG_ORDER = 5;
 	
-	private int order = SORT_ALPHA;
+	private int sort = SORT_ALPHA;
 
-	private ArrayList<String> filtersValueLabel = new ArrayList<String>(3);
-	private ArrayList<Integer> filters= new ArrayList<Integer>(3);
+	private ArrayList<String> sortingValueLabel = new ArrayList<String>(3);
+	private ArrayList<Integer> sorting = new ArrayList<Integer>(3);
 
 	private static final int SORT_ALPHA = R.string.action_sorting_name;
 	private static final int SORT_SIZE = R.string.action_sorting_size;
 	private static final int SORT_DATE = R.string.action_sorting_date;
 
-	
+	private ArrayList<File> copiedFiles = new ArrayList<File>();
+	private ArrayList<File> cutFiles = new ArrayList<File>();
+	private ArrayList<File> selectionFiles = new ArrayList<File>();
+
+	private Button home;
+	private Button up;
+	private Button filter;
+	private Button paste;
+	private Button clear;
+	private Button order;
+	private Button copy;
+	private Button cut;
+	private Button delete;
+	private Button cancel;
+	private Button multiple;
 
 
     /** Called when the activity is first created. */
@@ -80,8 +91,8 @@ public class FileChooserActivity extends ListActivity {
         setContentView(R.layout.file_list_main);
         
         //Filter Init
-        getFilters();
-        getFiltersValueLabel();
+        initSorting();
+        initSortingLabel();
         
         
         listView = this.getListView();
@@ -98,11 +109,163 @@ public class FileChooserActivity extends ListActivity {
 		
 		initialize("Download", file);
     }
+    private AlertDialog createDialog(int title, int message, String defaultValue, DialogInterface.OnClickListener positiveClickListener){
+    	final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle(title);
+		alert.setMessage(message);
+		input = new EditText(this);
+		input.setText(defaultValue);
+		alert.setView(input);
+		alert.setPositiveButton(R.string.validate, positiveClickListener);
+
+		alert.setNegativeButton(R.string.cancel,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+						dialog.cancel();
+					}
+				});
+		return alert.create();
+    }
+    
+    private void initActionIcon() {
+		 home = (Button) findViewById(R.id.home);
+		 up = (Button) findViewById(R.id.up);
+		 filter = (Button) findViewById(R.id.preference);
+		 order = (Button) findViewById(R.id.order);
+		 paste = (Button) findViewById(R.id.paste);
+		 clear = (Button) findViewById(R.id.clear);
+		 copy = (Button) findViewById(R.id.copy);
+		 cut = (Button) findViewById(R.id.cut);
+		 delete = (Button) findViewById(R.id.delete);
+		 cancel = (Button) findViewById(R.id.cancel);
+		 multiple = (Button) findViewById(R.id.multiple);
+		
+		multiple.setVisibility(View.GONE);
+		filter.setVisibility(View.GONE);
+		paste.setVisibility(View.GONE);
+		clear.setVisibility(View.GONE);
+		copy.setVisibility(View.GONE);
+		cut.setVisibility(View.GONE);
+		delete.setVisibility(View.GONE);
+		cancel.setVisibility(View.GONE);
+		
+		home.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+				Intent intent = new Intent(FileChooserActivity.this, HomeActivity.class);
+				intent.putExtra("EXIT", false);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			}
+		});
+		
+		order.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showDialog(DIALOG_ORDER);
+			}
+		});
+		
+		up.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				goUp(false);
+			}
+		});
+		
+		paste.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				for (File fileToMove : cutFiles) {
+					FileSystemUtils.rename(mRoot, fileToMove);
+				}
+				new CopyFilesTask(FileChooserActivity.this, copiedFiles, cutFiles, mRoot).execute();
+			}
+		});
+		
+		clear.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				copiedFiles.clear();
+				cutFiles.clear();
+				paste.setVisibility(View.GONE);
+				clear.setVisibility(View.GONE);
+				ActionUtils.displayMessage(FileChooserActivity.this, R.string.action_clear_success);
+			}
+		});
+		
+		copy.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				copy.setVisibility(View.GONE);
+				cut.setVisibility(View.GONE);
+				paste.setVisibility(View.GONE);
+				clear.setVisibility(View.GONE);
+				delete.setVisibility(View.GONE);
+				multipleMode = false;
+				copiedFiles.addAll(selectionFiles);
+				selectionFiles.clear();
+			}
+		});
+		
+		cut.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				copy.setVisibility(View.GONE);
+				cut.setVisibility(View.GONE);
+				paste.setVisibility(View.GONE);
+				clear.setVisibility(View.GONE);
+				delete.setVisibility(View.GONE);
+				multipleMode = false;
+				cutFiles.addAll(selectionFiles);
+				selectionFiles.clear();
+			}
+		});
+		
+		delete.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				copy.setVisibility(View.GONE);
+				cut.setVisibility(View.GONE);
+				paste.setVisibility(View.GONE);
+				clear.setVisibility(View.GONE);
+				delete.setVisibility(View.GONE);
+				multipleMode = false;
+				for (File file : selectionFiles) {
+					FileSystemUtils.delete(file);
+				}
+			}
+		});
+		
+		multiple.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (multipleMode){
+					copy.setVisibility(View.GONE);
+					cut.setVisibility(View.GONE);
+					paste.setVisibility(View.GONE);
+					delete.setVisibility(View.GONE);
+					multipleMode = false;
+					initialize(mRoot.getName(), mRoot);
+				} else {
+					copy.setVisibility(View.VISIBLE);
+					cut.setVisibility(View.VISIBLE);
+					paste.setVisibility(View.VISIBLE);
+					clear.setVisibility(View.GONE);
+					delete.setVisibility(View.VISIBLE);
+					multipleMode = true;
+				}
+			}
+		});
+		
+	}
+    
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-        	goUp();
+        	goUp(true);
             return true;
         }
 
@@ -158,7 +321,7 @@ public class FileChooserActivity extends ListActivity {
     private void displayFiles() {
         ArrayAdapter<File> fileAdapter;
         
-        switch (order) {
+        switch (sort) {
 		case SORT_ALPHA:
 			Collections.sort(mFileList, new DirAlphaComparator()); 
 			break;
@@ -174,7 +337,7 @@ public class FileChooserActivity extends ListActivity {
         
 
         getListView().setItemsCanFocus(false);
-        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         fileAdapter = new FileAdapter(this, R.layout.file_list_row, mFileList, parent);
         setListAdapter(fileAdapter);
     }
@@ -186,21 +349,33 @@ public class FileChooserActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
 
-		file = (File) l.getItemAtPosition(position);
-		
-		if (file != null){
-			if (file.isDirectory()) {
-				setListAdapter(null);
-				if (file.getParent() != null){
-					parent = new File(file.getParent());
+    	file = (File) l.getItemAtPosition(position);
+    	int c;
+    	if (multipleMode){
+        	if (selectionFiles.contains(file)){
+        		selectionFiles.remove(file);
+        		c = Color.BLUE;
+        	} else {
+        		selectionFiles.add(file);
+        		c = Color.DKGRAY;
+        	}
+        	v.setBackgroundColor(c);
+        	l.getChildAt(position).refreshDrawableState();
+    	} else {
+			if (file != null){
+				if (file.isDirectory()) {
+					setListAdapter(null);
+					if (file.getParent() != null){
+						parent = new File(file.getParent());
+					} else {
+						parent = null;
+					}
+					initialize(file.getName(), file);
 				} else {
-					parent = null;
+					ActionUtils.openDocument(this, file);
 				}
-				initialize(file.getName(), file);
-			} else {
-				ActionUtils.openDocument(this, file);
 			}
-		}
+    	}
     }
     
     
@@ -209,9 +384,18 @@ public class FileChooserActivity extends ListActivity {
 		menu.setHeaderIcon(android.R.drawable.ic_menu_more);
 		menu.setHeaderTitle(this.getString(R.string.feed_menu_title));
 		
-		menu.add(0, 0, Menu.NONE, getString(R.string.share));
-		menu.add(0, 1, Menu.NONE, getString(R.string.open));
-		menu.add(0, 2, Menu.NONE, getString(R.string.open_with));
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		File file = (File) getListView().getItemAtPosition(info.position);
+		
+		if (file.isFile()){
+			menu.add(0, 0, Menu.NONE, getString(R.string.share));
+			menu.add(0, 1, Menu.NONE, getString(R.string.open));
+			menu.add(0, 2, Menu.NONE, getString(R.string.open_with));
+			menu.add(0, 5, Menu.NONE, getString(R.string.copy));
+			menu.add(0, 6, Menu.NONE, getString(R.string.cut));
+		} else {
+			menu.add(0, 6, Menu.NONE, getString(R.string.move));
+		}
 		menu.add(0, 3, Menu.NONE, getString(R.string.rename));
 		menu.add(0, 4, Menu.NONE, getString(R.string.delete));
 	}
@@ -245,6 +429,18 @@ public class FileChooserActivity extends ListActivity {
 		case 4:
 			showDialog(DIALOG_DELETE);
 			return true;
+		case 5:
+			copiedFiles.add(file);
+			ActionUtils.displayMessage(this, R.string.action_clipboard_add);
+			this.findViewById(R.id.paste).setVisibility(View.VISIBLE);
+			this.findViewById(R.id.clear).setVisibility(View.VISIBLE);
+			return true;
+		case 6:
+			cutFiles.add(file);
+			ActionUtils.displayMessage(this, R.string.action_clipboard_add);
+			this.findViewById(R.id.paste).setVisibility(View.VISIBLE);
+			this.findViewById(R.id.clear).setVisibility(View.VISIBLE);
+			return true;
 		default:
 			return super.onContextItemSelected(menuItem);
 		}
@@ -267,68 +463,14 @@ public class FileChooserActivity extends ListActivity {
     }
     
     
-    private AlertDialog createDialog(int title, int message, String defaultValue, DialogInterface.OnClickListener positiveClickListener){
-    	final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setTitle(title);
-		alert.setMessage(message);
-		input = new EditText(this);
-		input.setText(defaultValue);
-		alert.setView(input);
-		alert.setPositiveButton(R.string.validate, positiveClickListener);
-
-		alert.setNegativeButton(R.string.cancel,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int whichButton) {
-						dialog.cancel();
-					}
-				});
-		return alert.create();
-    }
-    
-    private void initActionIcon() {
-		Button home = (Button) findViewById(R.id.home);
-		Button up = (Button) findViewById(R.id.up);
-		Button refresh = (Button) findViewById(R.id.refresh);
-		Button filter = (Button) findViewById(R.id.preference);
-		Button order = (Button) findViewById(R.id.order);
-		
-		refresh.setVisibility(View.GONE);
-		filter.setVisibility(View.GONE);
-		
-		home.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-				Intent intent = new Intent(FileChooserActivity.this, HomeActivity.class);
-				intent.putExtra("EXIT", false);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-				startActivity(intent);
-			}
-		});
-		
-		order.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showDialog(DIALOG_ORDER);
-			}
-		});
-		
-		up.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				initialize(file.getName(), file);
-			}
-		});
-	}
-    
-    public void goUp(){
+    public void goUp(Boolean exit){
     	if (file.getParent() != null){
 			file = new File(file.getParent());
 			if (file.getParent() != null){
 				parent = new File(file.getParent());
 			}
 			initialize(file.getName(), file);
-		} else {
+		} else if (exit) {
 			Intent intent = new Intent(FileChooserActivity.this, HomeActivity.class);
 			intent.putExtra("EXIT", false);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -379,11 +521,11 @@ public class FileChooserActivity extends ListActivity {
 		case DIALOG_ORDER:
 			
 			return new AlertDialog.Builder(this).setTitle(R.string.action_sorting_title)
-				.setSingleChoiceItems(getFiltersLabel(), filters.indexOf(order), new DialogInterface.OnClickListener() {
+				.setSingleChoiceItems(getFiltersLabel(), sorting.indexOf(sort), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						 dialog.dismiss();
-			        	 order = filters.get(which); 
+			        	 sort = sorting.get(which); 
 			        	 initialize(mRoot.getName(), mRoot);
 					}
 				})
@@ -468,20 +610,20 @@ public class FileChooserActivity extends ListActivity {
         }
     }
     
-    private void getFiltersValueLabel() {
-		filtersValueLabel.add(this.getText(R.string.action_sorting_name).toString());
-		filtersValueLabel.add(this.getText(R.string.action_sorting_size).toString());
-		filtersValueLabel.add(this.getText(R.string.action_sorting_date).toString());
+    private void initSortingLabel() {
+		sortingValueLabel.add(this.getText(R.string.action_sorting_name).toString());
+		sortingValueLabel.add(this.getText(R.string.action_sorting_size).toString());
+		sortingValueLabel.add(this.getText(R.string.action_sorting_date).toString());
 	}
     
-    private void getFilters() {
-		filters.add(R.string.action_sorting_name);
-		filters.add(R.string.action_sorting_size);
-		filters.add(R.string.action_sorting_date);
+    private void initSorting() {
+		sorting.add(R.string.action_sorting_name);
+		sorting.add(R.string.action_sorting_size);
+		sorting.add(R.string.action_sorting_date);
 	}
 	
     private CharSequence[] getFiltersLabel() {
-		return filtersValueLabel.toArray(new CharSequence[filters.size()]);
+		return sortingValueLabel.toArray(new CharSequence[sorting.size()]);
 	}
 
 }
