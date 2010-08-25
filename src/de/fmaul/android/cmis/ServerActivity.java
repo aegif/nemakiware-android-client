@@ -17,7 +17,10 @@ package de.fmaul.android.cmis;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -32,6 +35,7 @@ import de.fmaul.android.cmis.asynctask.ServerInfoLoadingTask;
 import de.fmaul.android.cmis.database.Database;
 import de.fmaul.android.cmis.database.ServerDAO;
 import de.fmaul.android.cmis.model.Server;
+import de.fmaul.android.cmis.utils.FileSystemUtils;
 
 public class ServerActivity extends ListActivity {
 
@@ -39,6 +43,9 @@ public class ServerActivity extends ListActivity {
 	
 	
 	private ArrayList<Server> listServer;
+
+
+	private Server server;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -133,7 +140,7 @@ public class ServerActivity extends ListActivity {
 			return false;
 		}
 
-		Server server = (Server) getListView().getItemAtPosition(menuInfo.position);
+		server = (Server) getListView().getItemAtPosition(menuInfo.position);
 
 		switch (menuItem.getItemId()) {
 		case 1:
@@ -149,7 +156,20 @@ public class ServerActivity extends ListActivity {
 			return true;
 		case 3:
 			if (server != null) {
-				deleteServer(server.getId());
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle(R.string.delete);
+				builder.setMessage(ServerActivity.this.getText(R.string.action_delete_desc) + " " + server.getName() + " ? ")
+				.setCancelable(false)
+				.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						deleteServer(server.getId());
+					}
+				}).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				}).create();
+				builder.show();
 			}
 			return true;
 		default:
