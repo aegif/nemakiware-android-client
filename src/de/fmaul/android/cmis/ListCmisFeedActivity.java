@@ -139,12 +139,8 @@ public class ListCmisFeedActivity extends ListActivity {
 			};
 		PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(listener);
 
-		//Set Breadcrumbs
-		if (item != null){
-			((TextView) activity.findViewById(R.id.path)).setText(item.getPath());
-		} else {
-			((TextView) activity.findViewById(R.id.path)).setText("/");
-		}
+		//Set Default Breadcrumbs
+		((TextView) activity.findViewById(R.id.path)).setText("/");
 	}
 	
 	@Override
@@ -261,14 +257,13 @@ public class ListCmisFeedActivity extends ListActivity {
 			if (activityIsCalledWithSearchAction()) {
 				doSearchWithIntent(getIntent());
 			} else {
-				// display the feed that is passed in through the intent
+				// Start this activity from favorite
 				Bundle extras = getIntent().getExtras();
 				if (extras != null) {
 					if (extras.get("item") != null) {
 						item = (CmisItemLazy) extras.get("item");
 					}
 				}
-				
 				new FeedDisplayTask(this, getRepository(), item).execute(item.getDownLink());
 			}
 		} else {
@@ -315,18 +310,17 @@ public class ListCmisFeedActivity extends ListActivity {
 		listView = activity.getListView();
 		
 		prefs = ((CmisApp) activity.getApplication()).getPrefs();
-		if(prefs != null && prefs.getDataView() == Prefs.GRIDVIEW){
-			gridview.setOnItemClickListener(new CmisDocSelectedListener());
-			gridview.setTextFilterEnabled(true);
-			gridview.setClickable(true);
-			gridview.setOnCreateContextMenuListener(this);
-		} else {
-			listView.setTextFilterEnabled(true);
-			listView.setItemsCanFocus(true);
-			listView.setClickable(true);
-			listView.setOnItemClickListener(new CmisDocSelectedListener());
-			listView.setOnCreateContextMenuListener(this);
-		}
+		
+		gridview.setOnItemClickListener(new CmisDocSelectedListener());
+		gridview.setTextFilterEnabled(true);
+		gridview.setClickable(true);
+		gridview.setOnCreateContextMenuListener(this);
+
+		listView.setTextFilterEnabled(true);
+		listView.setItemsCanFocus(true);
+		listView.setClickable(true);
+		listView.setOnItemClickListener(new CmisDocSelectedListener());
+		listView.setOnCreateContextMenuListener(this);
 	}
 
 	@Override
@@ -409,32 +403,6 @@ public class ListCmisFeedActivity extends ListActivity {
 		new FeedDisplayTask(this, getRepository(), getString(R.string.search_results_for) + " '" + queryString + "'", true).execute(searchFeed);
 	}
 
-	/**
-	 * Retrieves the feed to display from a regular intent. This is passed by
-	 * the previous activity when a user selects a folder.
-	 * 
-	 * @return
-	 */
-	/*private String getFeedFromIntent() {
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			if (extras.get("feed") != null) {
-				return extras.get("feed").toString();
-			}
-		}
-		return null;
-	}
-	
-	private String getTitleFromIntent() {
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-			if (extras.get("title") != null) {
-				return extras.get("title").toString();
-			}
-		}
-		return null;
-	}*/
-
 	protected void reload(String workspace) {
 			Intent intent = new Intent(this, ListCmisFeedActivity.class);
 			
@@ -479,24 +447,6 @@ public class ListCmisFeedActivity extends ListActivity {
 		reload(null);
 	}
 
-	/**
-	 * Displays the cmis feed given as in the list asynchronously
-	 * 
-	 * @param feed
-	 */
-	/*private void displayFeedInListView() {
-		setTitle(R.string.loading);
-		if (items != null){
-			Log.d(TAG, "Start FeedDisplayTask : Items");
-			new FeedDisplayTask(this, getRepository(), null, item, items).execute();
-		} else if (item != null){
-			Log.d(TAG, "Start FeedDisplayTask : Item");
-			new FeedDisplayTask(this, getRepository(), item).execute(item.getDownLink());
-		}  else {
-			Log.d(TAG, "Start FeedDisplayTask : title");
-			new FeedDisplayTask(this, getRepository(), getTitleFromIntent()).execute(getFeedFromIntent());
-		}
-	}*/
 
 	private void displayError(int messageId) {
 		Toast.makeText(this, messageId, Toast.LENGTH_SHORT).show();
@@ -513,7 +463,6 @@ public class ListCmisFeedActivity extends ListActivity {
 			CmisItem doc = (CmisItem) parent.getItemAtPosition(position);
 
 			if (doc.hasChildren()) {
-				//new FeedDisplayTask(ListCmisFeedActivity.this, getRepository(), doc).execute(doc.getDownLink());
 				if (getRepository().isPaging()) {
 			    	getRepository().setSkipCount(0);
 			    	getRepository().generateParams(activity);
@@ -526,32 +475,16 @@ public class ListCmisFeedActivity extends ListActivity {
 				
 				currentStack.add(doc);
 				
-				//ActionUtils.openNewListViewActivity(ListCmisFeedActivity.this, doc);
 				new FeedDisplayTask(ListCmisFeedActivity.this, getRepository(), doc).execute(doc.getDownLink());
 				
 				itemParent = item;
 				item = doc;
-				
-				Log.d(TAG, "DOWN : I " + item.getTitle() + " | P : " + itemParent.getTitle());
 			} else {
 				ActionUtils.displayDocumentDetails(ListCmisFeedActivity.this, doc);
 			}
 		}
 	}
 	
-
-	/**
-	 * Opens a feed url in a new listview. This enables the user to use the
-	 * backbutton to get back to the previous list (usually the parent folder).
-	 * 
-	 * @param item
-	 */
-	/*private void openNewListViewActivity(CmisItem item) {
-		Intent intent = new Intent(this, ListCmisFeedActivity.class);
-		intent.putExtra("item", new CmisItemLazy(item));
-		startActivity(intent);
-	}*/
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -563,7 +496,6 @@ public class ListCmisFeedActivity extends ListActivity {
 		item = menu.add(Menu.NONE, 3, 0, R.string.menu_item_about);
 		item.setIcon(R.drawable.cmisexplorer);
 		
-		/* BETA : comment to desactivate Scan Process.*/
 		if (getCmisPrefs().isEnableScan()){
 			item = menu.add(Menu.NONE, 10, 0, R.string.menu_item_scanner);
 			item.setIcon(R.drawable.scanner);
