@@ -120,11 +120,11 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 			}
 		} catch (FeedLoadException fle) {
 			Log.d(TAG, fle.getMessage());
-			ActionUtils.displayError(activity, R.string.generic_error);
+			ActionUtils.displayMessage(activity, R.string.generic_error);
 			return CmisItemCollection.emptyCollection();
 		} catch (StorageException e) {
 			Log.d(TAG, e.getMessage());
-			ActionUtils.displayError(activity, R.string.generic_error);
+			ActionUtils.displayMessage(activity, R.string.generic_error);
 			return CmisItemCollection.emptyCollection();
 		}
 	}

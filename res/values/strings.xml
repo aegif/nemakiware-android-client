@@ -124,6 +124,8 @@
     <string name="rename">Rename</string>
     <string name="copy">Copy</string>
 	<string name="paste">Paste</string>
+	<string name="cut">Cut</string>
+	<string name="move">Move</string>
 	<string name="create_folder">Create folder</string>
 	<string name="sorting">Sorting</string>
 	
@@ -235,5 +237,11 @@
 	<string name="action_sorting_name">Name</string>
 	<string name="action_sorting_size">Size</string>
 	<string name="action_sorting_date">Date</string>
+	
+	<string name="action_clipboard_add">This item has been added to clipboard.</string>
+	<string name="copied_file_name">copy_</string>
+	<string name="action_clear_clipboard">Clear clipboard</string>
+	<string name="action_clear_success">Clipboard has been cleared.</string>
+	<string name="action_paste_success">Paste action : ok</string>
 
 </resources>

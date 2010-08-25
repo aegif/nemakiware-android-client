@@ -123,7 +123,10 @@
     <string name="rename">Renommer</string>
     <string name="copy">Copier</string>
 	<string name="paste">Coller</string>
-	<string name="sorting">Tri</string>
+	<string name="cut">Couper</string>
+	<string name="move">Déplacer</string>
+	<string name="create_folder">Créer un répertoire</string>
+	<string name="sorting">Trier</string>
 	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Développeurs</string>
@@ -231,5 +234,11 @@
 	<string name="action_sorting_name">Nom</string>
 	<string name="action_sorting_size">Taille</string>
 	<string name="action_sorting_date">Date</string>
+	
+	<string name="action_clipboard_add">Cet élément a été ajouté au presse-papier.</string>
+	<string name="copied_file_name">copie_</string>
+	<string name="action_clear_clipboard">Effacer</string>
+	<string name="action_clear_success">Le presse-papier a été éffacé.</string>
+	<string name="action_paste_success">La copie s\'est bien passée</string>
 
 </resources>

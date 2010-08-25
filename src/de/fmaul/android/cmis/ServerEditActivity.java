@@ -102,7 +102,7 @@ public class ServerEditActivity extends Activity {
 					   	startActivity(intent);
 					}
 				} catch (Exception e) {
-					ActionUtils.displayError(ServerEditActivity.this, R.string.generic_error);
+					ActionUtils.displayMessage(ServerEditActivity.this, R.string.generic_error);
 				}
 			}
 

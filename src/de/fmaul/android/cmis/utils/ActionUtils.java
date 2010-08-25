@@ -54,7 +54,7 @@ public class ActionUtils {
 				confirmDownload(contextActivity, item, true);
 			}
 		} catch (Exception e) {
-			displayError(contextActivity, e.getMessage());
+			displayMessage(contextActivity, e.getMessage());
 		}
 	}
 	
@@ -67,7 +67,7 @@ public class ActionUtils {
 				confirmDownload(contextActivity, item, false);
 			}
 		} catch (Exception e) {
-			displayError(contextActivity, e.getMessage());
+			displayMessage(contextActivity, e.getMessage());
 		}
 	}
 	
@@ -104,7 +104,7 @@ public class ActionUtils {
 						openWith(contextActivity, contentFile);
 					}
 				} else {
-					displayError(contextActivity, R.string.error_file_does_not_exists);
+					displayMessage(contextActivity, R.string.error_file_does_not_exists);
 				}
 			}
 		}.execute(item);
@@ -145,7 +145,7 @@ public class ActionUtils {
 				if (contentFile != null && contentFile.exists()) {
 					NotificationUtils.downloadNotification(contextActivity, contentFile, item.getMimeType());	
 				} else {
-					displayError(contextActivity, R.string.error_file_does_not_exists);
+					displayMessage(contextActivity, R.string.error_file_does_not_exists);
 				}
 			}
 		}.execute(item);
@@ -178,11 +178,11 @@ public class ActionUtils {
 	}
 	
 	
-	public static void displayError(Activity contextActivity, int messageId) {
+	public static void displayMessage(Activity contextActivity, int messageId) {
 		Toast.makeText(contextActivity, messageId, Toast.LENGTH_LONG).show();
 	}
 	
-	public static void displayError(Activity contextActivity, String messageId) {
+	public static void displayMessage(Activity contextActivity, String messageId) {
 		Toast.makeText(contextActivity, messageId, Toast.LENGTH_LONG).show();
 	}
 	
@@ -218,7 +218,7 @@ public class ActionUtils {
 				}
 			}
 		} catch (Exception e) {
-			displayError(contextActivity, e.getMessage());
+			displayMessage(contextActivity, e.getMessage());
 		}
 	}
 	
@@ -252,7 +252,7 @@ public class ActionUtils {
 										}.execute(item);
 									}
 								} catch (StorageException e) {
-									displayError(activity, R.string.generic_error);
+									displayMessage(activity, R.string.generic_error);
 								}
 							}
 						});
@@ -260,7 +260,7 @@ public class ActionUtils {
 				alert.show();
 			}
 		} catch (Exception e) {
-			displayError(activity, R.string.generic_error);
+			displayMessage(activity, R.string.generic_error);
 		}
 		
 	}
@@ -325,7 +325,7 @@ public class ActionUtils {
 			database.close();
 			
 		} catch (Exception e) {
-			displayError(activity, R.string.generic_error);
+			displayMessage(activity, R.string.generic_error);
 		}
 	}
 	
@@ -339,7 +339,7 @@ public class ActionUtils {
 			Intent intent =getDocumentDetailsIntent(activity, server,  doc);
 			activity.startActivity(intent);
 		} catch (Exception e) {
-			displayError(activity, R.string.generic_error);
+			displayMessage(activity, R.string.generic_error);
 		}
 	}
 	
@@ -413,7 +413,7 @@ public class ActionUtils {
 				viewFileInAssociatedApp(contextActivity, content, MimetypeUtils.getMimetype(contextActivity, content));
 			}
 		} catch (Exception e) {
-			displayError(contextActivity, e.getMessage());
+			displayMessage(contextActivity, e.getMessage());
 		}
 	}
 	
@@ -423,7 +423,7 @@ public class ActionUtils {
 				openWith(contextActivity, content);
 			}
 		} catch (Exception e) {
-			displayError(contextActivity, e.getMessage());
+			displayMessage(contextActivity, e.getMessage());
 		}
 	}
 	

@@ -88,7 +88,7 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 			progressDialog.show();
 			
 		} else {
-			ActionUtils.displayError(activity, "Downloading in progress...");
+			ActionUtils.displayMessage(activity, "Downloading in progress...");
 		}
 	}
 
@@ -105,7 +105,7 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 					return retreiveContent(item);
 				}
 			} catch (Exception e) {
-				ActionUtils.displayError(activity, R.string.generic_error);
+				ActionUtils.displayMessage(activity, R.string.generic_error);
 				return null;
 			}
 		}

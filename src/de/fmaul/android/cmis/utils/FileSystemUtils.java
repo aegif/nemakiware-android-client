@@ -32,6 +32,14 @@ public class FileSystemUtils {
 		}
 	}
 	
+	public static boolean rename(File folder, File file){
+		if (folder.exists()){
+			return file.renameTo(new File(folder, file.getName()));
+		} else {
+			return false;
+		}
+	}
+	
 	public static boolean delete(File file){
 		if (file.exists()){
 			if (file.isDirectory()) {

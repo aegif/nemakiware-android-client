@@ -251,7 +251,7 @@ public class ListCmisFeedActivity extends ListActivity {
 				}
 			}
 		} catch (FeedLoadException fle) {
-			ActionUtils.displayError(activity, R.string.generic_error);
+			ActionUtils.displayMessage(activity, R.string.generic_error);
 		}
 		return init;
 	}
