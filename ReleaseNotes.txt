@@ -1,10 +1,19 @@
 ===========================================================
 V 0.94
 
+New Feature :
+Local File Browser
+Favorite from Server screen
+Download "Manager" (link with Notification)
+
+
 Bug Fix :
 Title during screenRotation
 File Size download (Kb instead of bytes)
-Cancel Download works! 
+Cancel Download works!
+Server Delete Warning
+Refactoring ListCmisFeedActivity
+Scanner results in wrong case.
 
 
 ===========================================================
