@@ -154,6 +154,8 @@ public class CmisRepository {
 		switch (queryType) {
 		case TITLE:
 			return FeedUtils.getSearchQueryFeedTitle(uriTemplateQuery, query);
+		case FOLDER:
+			return FeedUtils.getSearchQueryFeedFolderTitle(uriTemplateQuery, query);
 		case CMISQUERY:
 			return FeedUtils.getSearchQueryFeedCmisQuery(uriTemplateQuery, query);
 		case FULLTEXT:

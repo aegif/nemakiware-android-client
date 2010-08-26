@@ -146,14 +146,14 @@ public class ListCmisFeedActivity extends ListActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if (keyCode == KeyEvent.KEYCODE_BACK){
-	    	if (getRepository().isPaging()) {
-	    		getRepository().generateParams(activity, false);
-		    	goUP(true);
-		        return true;
-	    	} else if (activityIsCalledWithSearchAction()){
+	    	if (activityIsCalledWithSearchAction()){
 	    		activity.finish();
 	    		ActionUtils.openNewListViewActivity(activity, item);
 	    		return true;
+	    	} else if (getRepository().isPaging()) {
+	    		getRepository().generateParams(activity, false);
+		    	goUP(true);
+		        return true;
 	    	} else {
 	    		goUP(true);
 		    	return true;
@@ -172,6 +172,14 @@ public class ListCmisFeedActivity extends ListActivity {
 		return new ListCmisFeedActivitySave(item, itemParent, getItems(), currentStack);
 	}
 	
+	@Override
+	protected void onDestroy() {
+		if (activityIsCalledWithSearchAction() == false){
+			setSaveContext(null);
+		}
+		super.onDestroy();
+	}
+	
 	private void initActionIcon() {
 		Button home = (Button) findViewById(R.id.home);
 		Button up = (Button) findViewById(R.id.up);
@@ -179,6 +187,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		Button next = (Button) findViewById(R.id.next);
 		Button refresh = (Button) findViewById(R.id.refresh);
 		Button filter = (Button) findViewById(R.id.preference);
+		
 		
 		home.setOnClickListener(new OnClickListener() {
 			@Override
@@ -460,27 +469,36 @@ public class ListCmisFeedActivity extends ListActivity {
 
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+			
 			CmisItem doc = (CmisItem) parent.getItemAtPosition(position);
-
-			if (doc.hasChildren()) {
-				if (getRepository().isPaging()) {
-			    	getRepository().setSkipCount(0);
-			    	getRepository().generateParams(activity);
+			
+			if (activityIsCalledWithSearchAction()){
+				if (doc.hasChildren()) {
+					ActionUtils.openNewListViewActivity(activity, doc);
+				} else {
+					ActionUtils.displayDocumentDetails(activity,  getRepository().getServer(), doc);
 				}
-				
-				if (item == null || currentStack.size() == 0) {
-					item = getRepository().getRootItem();
-					currentStack.add(item);
-				}
-				
-				currentStack.add(doc);
-				
-				new FeedDisplayTask(ListCmisFeedActivity.this, getRepository(), doc).execute(doc.getDownLink());
-				
-				itemParent = item;
-				item = doc;
 			} else {
-				ActionUtils.displayDocumentDetails(ListCmisFeedActivity.this, doc);
+				if (doc.hasChildren()) {
+					if (getRepository().isPaging()) {
+				    	getRepository().setSkipCount(0);
+				    	getRepository().generateParams(activity);
+					}
+					
+					if (item == null || currentStack.size() == 0) {
+						item = getRepository().getRootItem();
+						currentStack.add(item);
+					}
+					
+					currentStack.add(doc);
+					
+					new FeedDisplayTask(ListCmisFeedActivity.this, getRepository(), doc).execute(doc.getDownLink());
+					
+					itemParent = item;
+					item = doc;
+				} else {
+					ActionUtils.displayDocumentDetails(ListCmisFeedActivity.this, doc);
+				}
 			}
 		}
 	}
@@ -524,6 +542,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		searchMenu.setHeaderIcon(android.R.drawable.ic_menu_info_details);
 
 		searchMenu.add(Menu.NONE, 4, 0, R.string.menu_item_search_title);
+		//searchMenu.add(Menu.NONE, 13, 0, R.string.menu_item_search_folder_title);
 		searchMenu.add(Menu.NONE, 5, 0, R.string.menu_item_search_fulltext);
 		searchMenu.add(Menu.NONE, 6, 0, R.string.menu_item_search_cmis);
 	}
@@ -559,6 +578,9 @@ public class ListCmisFeedActivity extends ListActivity {
 			return true;
 		case 6:
 			onSearchRequested(QueryType.CMISQUERY);
+			return true;
+		case 13:
+			onSearchRequested(QueryType.FOLDER);
 			return true;
 		case 7:
 			restart();
@@ -635,6 +657,12 @@ public class ListCmisFeedActivity extends ListActivity {
 		    }
 
 	 public void goUP(boolean isBack){
+		 
+		 if (activityIsCalledWithSearchAction()){
+				itemParent = null;
+				currentStack.clear();
+			}
+		 
 		 if (item != null && item.getPath() != null && item.getPath().equals("/") == false){
 				if (getRepository().isPaging()) {
 			    	getRepository().setSkipCount(0);
@@ -670,6 +698,12 @@ public class ListCmisFeedActivity extends ListActivity {
 		Bundle appData = new Bundle();
 		appData.putString(QueryType.class.getName(), queryType.name());
 		startSearch("", false, appData, false);
+		
+		if (item == null){
+			item = getRepository().getRootItem();
+			itemParent = item;
+			currentStack.add(item);
+		}
 		((CmisApp) getApplication()).setSavedContextItems(new ListCmisFeedActivitySave(item, itemParent, getItems(), currentStack));
 		return true;
 	}
