@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom" xmlns:app="http://www.w3.org/2007/app"
+	xmlns:cmisra="http://docs.oasis-open.org/ns/cmis/restatom/200908/"
+	xmlns:cmis="http://docs.oasis-open.org/ns/cmis/core/200908/" xmlns:alf="http://www.alfresco.org">
+	<author>
+		<name>admin</name>
+	</author>
+	<content type="text/plain"
+		src="http://cmis.alfresco.com:80/service/cmis/s/workspace:SpacesStore/i/1871bb0d-632e-4f21-ace7-8eb87a8b0308/content" />
+	<id>urn:uuid:1871bb0d-632e-4f21-ace7-8eb87a8b0308</id>
+	<link rel="self"
+		href="http://cmis.alfresco.com:80/service/cmis/s/workspace:SpacesStore/i/1871bb0d-632e-4f21-ace7-8eb87a8b0308" />
+	<link rel="enclosure"
+		href="http://cmis.alfresco.com:80/service/cmis/s/workspace:SpacesStore/i/1871bb0d-632e-4f21-ace7-8eb87a8b0308/content"
+		type="text/plain" />
+	<link rel="edit"
+		href="http://cmis.alfresco.com:80/service/cmis/s/workspace:SpacesStore/i/1871bb0d-632e-4f21-ace7-8eb87a8b0308" />
+	<link rel="edit-media"
+		href="http://cmis.alfresco.com:80/service/cmis/s/workspace:SpacesStore/i/1871bb0d-632e-4f21-ace7-8eb87a8b0308/content"
+		type="text/plain" />
+	<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions"
+		href="http://cmis.alfresco.com:80/service/cmis/s/workspace:SpacesStore/i/1871bb0d-632e-4f21-ace7-8eb87a8b0308/allowableactions" />
+	<link rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships"
+		href="http://cmis.alfresco.com:80/service/cmis/s/workspace:SpacesStore/i/1871bb0d-632e-4f21-ace7-8eb87a8b0308/rels" />
+	<link rel="up"
+		href="http://cmis.alfresco.com:80/service/cmis/s/workspace:SpacesStore/i/1871bb0d-632e-4f21-ace7-8eb87a8b0308/parents"
+		type="application/atom+xml;type=feed" />
+	<link rel="version-history"
+		href="http://cmis.alfresco.com:80/service/cmis/s/workspace:SpacesStore/i/1871bb0d-632e-4f21-ace7-8eb87a8b0308/versions" />
+	<link rel="describedby"
+		href="http://cmis.alfresco.com:80/service/cmis/type/cmis:document" />
+	<link rel="service" href="http://cmis.alfresco.com:80/service/cmis" />
+	<published>2010-01-06T15:12:49.245Z</published>
+	<summary></summary>
+	<title>test1</title>
+	<updated>2010-01-06T15:12:54.823Z</updated>
+	<app:edited>2010-01-06T15:12:54.823Z</app:edited>
+	<alf:icon>http://cmis.alfresco.com:80/images/filetypes/_default.gif
+	</alf:icon>
+	<cmisra:object>
+		<cmis:properties>
+			<cmis:propertyBoolean propertyDefinitionId="cmis:isLatestMajorVersion">
+				<cmis:value>false</cmis:value>
+			</cmis:propertyBoolean>
+			<cmis:propertyId propertyDefinitionId="cmis:contentStreamId">
+				<cmis:value>cm:content</cmis:value>
+			</cmis:propertyId>
+			<cmis:propertyInteger propertyDefinitionId="cmis:contentStreamLength">
+				<cmis:value>8</cmis:value>
+			</cmis:propertyInteger>
+			<cmis:propertyString propertyDefinitionId="cmis:versionSeriesCheckedOutBy" />
+			<cmis:propertyId propertyDefinitionId="cmis:objectTypeId">
+				<cmis:value>cmis:document</cmis:value>
+			</cmis:propertyId>
+			<cmis:propertyId propertyDefinitionId="cmis:versionSeriesCheckedOutId" />
+			<cmis:propertyString propertyDefinitionId="cmis:name">
+				<cmis:value>test1</cmis:value>
+			</cmis:propertyString>
+			<cmis:propertyString propertyDefinitionId="cmis:contentStreamMimeType">
+				<cmis:value>text/plain</cmis:value>
+			</cmis:propertyString>
+			<cmis:propertyId propertyDefinitionId="cmis:versionSeriesId">
+				<cmis:value>workspace://SpacesStore/1871bb0d-632e-4f21-ace7-8eb87a8b0308
+				</cmis:value>
+			</cmis:propertyId>
+			<cmis:propertyDateTime propertyDefinitionId="cmis:creationDate">
+				<cmis:value>2010-01-06T15:12:49.245Z</cmis:value>
+			</cmis:propertyDateTime>
+			<cmis:propertyString propertyDefinitionId="cmis:changeToken" />
+			<cmis:propertyBoolean propertyDefinitionId="cmis:isLatestVersion">
+				<cmis:value>true</cmis:value>
+			</cmis:propertyBoolean>
+			<cmis:propertyString propertyDefinitionId="cmis:versionLabel" />
+			<cmis:propertyBoolean propertyDefinitionId="cmis:isVersionSeriesCheckedOut">
+				<cmis:value>false</cmis:value>
+			</cmis:propertyBoolean>
+			<cmis:propertyString propertyDefinitionId="cmis:lastModifiedBy">
+				<cmis:value>admin</cmis:value>
+			</cmis:propertyString>
+			<cmis:propertyString propertyDefinitionId="cmis:createdBy">
+				<cmis:value>admin</cmis:value>
+			</cmis:propertyString>
+			<cmis:propertyString propertyDefinitionId="cmis:checkinComment" />
+			<cmis:propertyId propertyDefinitionId="cmis:objectId">
+				<cmis:value>workspace://SpacesStore/1871bb0d-632e-4f21-ace7-8eb87a8b0308
+				</cmis:value>
+			</cmis:propertyId>
+			<cmis:propertyBoolean propertyDefinitionId="cmis:isMajorVersion">
+				<cmis:value>false</cmis:value>
+			</cmis:propertyBoolean>
+			<cmis:propertyBoolean propertyDefinitionId="cmis:isImmutable">
+				<cmis:value>false</cmis:value>
+			</cmis:propertyBoolean>
+			<cmis:propertyId propertyDefinitionId="cmis:baseTypeId">
+				<cmis:value>cmis:document</cmis:value>
+			</cmis:propertyId>
+			<cmis:propertyString propertyDefinitionId="cmis:contentStreamFileName">
+				<cmis:value>test1</cmis:value>
+			</cmis:propertyString>
+			<cmis:propertyDateTime propertyDefinitionId="cmis:lastModificationDate">
+				<cmis:value>2010-01-06T15:12:54.823Z</cmis:value>
+			</cmis:propertyDateTime>
+		</cmis:properties>
+	</cmisra:object>
+	<cmisra:pathSegment>test1</cmisra:pathSegment>
+</entry>

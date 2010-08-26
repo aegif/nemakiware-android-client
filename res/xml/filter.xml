@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"  android:key="mainPreferences">
+	<PreferenceCategory android:title="@string/cmis_repo_filter_pref">
+		<CheckBoxPreference 
+			android:key="@string/cmis_repo_params"
+			android:title="@string/cmis_repo_params_title" 
+			android:summary="@string/cmis_repo_params_desc"
+			android:defaultValue="false"
+			 />
+		<CheckBoxPreference 
+			android:key="@string/cmis_repo_paging"
+			android:title="@string/cmis_repo_paging_title" 
+			android:summary="@string/cmis_repo_paging_desc"
+			android:dependency="@string/cmis_repo_params"
+			android:defaultValue="false"
+			 />
+		<EditTextPreference 
+			android:key="@string/cmis_repo_maxitems"
+			android:title="@string/cmis_repo_maxitems_title" 
+			android:summary="@string/cmis_repo_maxitems_desc"
+			android:defaultValue=""
+			android:dependency="@string/cmis_repo_params"
+			 />
+		<EditTextPreference 
+			android:key="@string/cmis_repo_filter"
+			android:title="@string/cmis_repo_filter_title" 
+			android:summary="@string/cmis_repo_filter_desc"
+			android:defaultValue=""
+			android:dependency="@string/cmis_repo_params"
+			android:enabled="false"
+			 />
+		<EditTextPreference 
+			android:key="@string/cmis_repo_types"
+			android:title="@string/cmis_repo_types_title" 
+			android:summary="@string/cmis_repo_types_desc"
+			android:defaultValue=""
+			android:dependency="@string/cmis_repo_params"
+			 />
+		<EditTextPreference 
+			android:key="@string/cmis_repo_orderby"
+			android:title="@string/cmis_repo_orderby_title" 
+			android:summary="@string/cmis_repo_orderby_desc"
+			android:defaultValue=""
+			android:dependency="@string/cmis_repo_params"
+			 />
+	</PreferenceCategory>
+</PreferenceScreen>
