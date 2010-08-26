@@ -249,6 +249,8 @@
 	<!-- DOWNLOAD MANAGER -->
 	<string name="delete_list">Remove from list</string>
 	<string name="cancel_download">Cancel download</string>
+	<string name="cancel_progress">Cancel in progress...</string>
+	<string name="cancel_complete">Download has been canceled</string>
 	
 	<!-- SCANNER  -->
 	<string name="scan_error_url">This barecode is not valid for this application</string>

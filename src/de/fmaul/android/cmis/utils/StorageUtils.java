@@ -42,6 +42,7 @@ public class StorageUtils {
 	public static final String TYPE_FEEDS = "cache";
 	public static final String TYPE_CONTENT = "files";
 	public static final String TYPE_DOWNLOAD = "download";
+	public static final String ROOT_FOLDER_APP = "android-cmis-browser";
 
 	public static boolean isFeedInCache(Application app, String url, String workspace) throws StorageException {
 		File cacheFile = getFeedFile(app, workspace, md5(url));
@@ -106,6 +107,8 @@ public class StorageUtils {
 		if (Environment.MEDIA_MOUNTED.equals(state)) {
 			StringBuilder builder = new StringBuilder();
 			builder.append(((CmisApp) app).getPrefs().getDownloadFolder());
+			builder.append("/");
+			builder.append(ROOT_FOLDER_APP);
 			return new File(builder.toString());
 		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
 			throw new StorageException("Storage in Read Only Mode");
@@ -120,7 +123,7 @@ public class StorageUtils {
 			StringBuilder builder = new StringBuilder();
 			builder.append(saveFolder);
 			builder.append("/");
-			builder.append("android-cmis-browser");
+			builder.append(ROOT_FOLDER_APP);
 			builder.append("/");
 			builder.append(((CmisApp) app).getRepository().getServer().getName());
 			if (filename != null) {

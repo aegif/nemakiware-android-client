@@ -15,6 +15,9 @@
  */
 package de.fmaul.android.cmis.repo;
 
+import android.app.Activity;
+import android.os.AsyncTask.Status;
+import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.asynctask.AbstractDownloadTask;
 
 
@@ -39,6 +42,20 @@ public class DownloadItem {
 	}
 	public void setTask(AbstractDownloadTask task) {
 		this.task = task;
+	}
+	public String getStatut(Activity activity) {
+		String statutValue = " ";
+		Status statuts = getTask().getStatus();
+		if (Status.RUNNING.equals(statuts) && AbstractDownloadTask.CANCELLED != getTask().getState()){
+			statutValue += getTask().getPercent() + " % " +  activity.getText(R.string.download_progress).toString();
+		} else if (Status.RUNNING.equals(statuts) && AbstractDownloadTask.CANCELLED == getTask().getState()){
+			statutValue += activity.getText(R.string.cancel_progress).toString();
+		} else if (Status.FINISHED.equals(statuts) && AbstractDownloadTask.COMPLETE == getTask().getState()){
+			statutValue += activity.getText(R.string.notif_download_finish).toString();
+		} else {
+			statutValue += activity.getText(R.string.cancel_complete).toString();
+		}
+		return statutValue;
 	}
 	
 
