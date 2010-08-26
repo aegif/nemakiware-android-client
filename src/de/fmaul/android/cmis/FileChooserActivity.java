@@ -58,6 +58,8 @@ public class FileChooserActivity extends ListActivity {
 	private static final int DIALOG_ABOUT = 4;
 	private static final int DIALOG_ORDER = 5;
 	
+	private static final String SDCARD = "sdcard";
+	
 	private int sort = SORT_ALPHA;
 
 	private ArrayList<String> sortingValueLabel = new ArrayList<String>(3);
@@ -106,6 +108,8 @@ public class FileChooserActivity extends ListActivity {
 		if (getLastNonConfigurationInstance() != null ){
 			file = (File) getLastNonConfigurationInstance();
 		}
+		
+		parent = new File(file.getParent());
 		
 		initialize("Download", file);
     }
@@ -350,6 +354,13 @@ public class FileChooserActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
 
     	file = (File) l.getItemAtPosition(position);
+    	
+    	if (SDCARD.equals(file.getName())){
+    		up.setVisibility(View.GONE);
+    	} else {
+    		up.setVisibility(View.VISIBLE);
+    	}
+    	
     	int c;
     	if (multipleMode){
         	if (selectionFiles.contains(file)){
@@ -463,8 +474,12 @@ public class FileChooserActivity extends ListActivity {
     }
     
     
-    public void goUp(Boolean exit){
-    	if (file.getParent() != null){
+    private void goUp(Boolean exit){
+    	if (SDCARD.equals(parent.getName())){
+    		up.setVisibility(View.GONE);
+    	}
+    	
+    	if (file.getParent() != null && SDCARD.equals(file.getName()) == false){
 			file = new File(file.getParent());
 			if (file.getParent() != null){
 				parent = new File(file.getParent());
