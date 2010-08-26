@@ -17,6 +17,7 @@ package de.fmaul.android.cmis.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -161,7 +162,12 @@ public class FeedUtils {
 	}
 
 	public static String getSearchQueryFeedCmisQuery(String urlTemplate, String cmisQuery) {
-		final String encodedCmisQuery = URLEncoder.encode(cmisQuery);
+		String encodedCmisQuery="";
+		try {
+			encodedCmisQuery = URLEncoder.encode(cmisQuery,"iso-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			encodedCmisQuery = URLEncoder.encode(cmisQuery);
+		}
 
 		final CharSequence feedUrl = TextUtils.replace(urlTemplate, new String[] { "{q}", "{searchAllVersions}", "{maxItems}", "{skipCount}",
 				"{includeAllowableActions}", "{includeRelationships}" }, new String[] { encodedCmisQuery, "false", "50", "0", "false", "false" });
