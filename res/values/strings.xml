@@ -65,7 +65,7 @@
 	<string name="menu_item_refresh">Refresh</string>
 	<string name="menu_item_scanner">Scanner</string>
 	<string name="menu_item_view">View</string>
-	<string name="menu_item_filter">Filtre</string>
+	<string name="menu_item_filter">Filter</string>
 	<string name="menu_item_tools">Tools</string>
 	<string name="menu_item_download_manager">Download</string>
 	
@@ -234,7 +234,6 @@
 	<string name="action_rename_desc">Enter a new name for this item</string>
 	<string name="action_delete_desc">Are you sure you want to delete this item : </string>
 	<string name="action_create_folder_des">Enter the name of your new folder </string>
-	
 	
 	<string name="action_sorting_title">Choose your sorting...</string>
 	<string name="action_sorting_name">Name</string>

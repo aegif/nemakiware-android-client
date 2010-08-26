@@ -118,6 +118,14 @@
     <string name="view">Anzeigen</string>
     <string name="open">Öffnen</string>
     <string name="open_with">Öffnen mit</string>
+    <string name="progress">Fortschritt</string>
+    <string name="rename">Umbenennen</string>
+    <string name="copy">Kopieren</string>
+	<string name="paste">Einfügen</string>
+	<string name="cut">Ausschneiden</string>
+	<string name="move">Verschieben</string>
+	<string name="create_folder">Ordner erstellen</string>
+	<string name="sorting">Sortieren</string>
     	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Developers</string>
@@ -165,6 +173,7 @@
 	<string name="cmis_repo_paging_title">Paging</string>
 	<string name="cmis_repo_paging_desc">Schaltet die seitenweise Navigation ein.</string>
 	
+	<string name="item_filter_title">Wählen sie den Metadaten filter...</string>
 	<string name="item_filter_object">Objekt</string>
 	<string name="item_filter_folder">Ordner</string>
 	<string name="item_filter_document">Dokument</string>
@@ -196,5 +205,31 @@
 	<string name="cmis_download_size">CmisDownloadSizeConfirm</string>
 	<string name="cmis_download_size_title">File Size</string>
 	<string name="cmis_download_size_desc">File size (in KB) from which we need confirmation</string>
+
+	<!-- FILE SYSTEM ACTIVITY -->
+	<string name="action_rename_desc">Geben sie einen neuen Namen ein:</string>
+	<string name="action_delete_desc">Sind sie sicher, dass sie die Datei löschen wollen?</string>
+	<string name="action_create_folder_des">Geben Sie den neuen Ordnernamen ein</string>
+	
+	<string name="action_sorting_title">Wählen sie die Sortierung...</string>
+	<string name="action_sorting_name">Name</string>
+	<string name="action_sorting_size">Größe</string>
+	<string name="action_sorting_date">Datum</string>
+	
+	<string name="action_clipboard_add">Die Datei wurde zur Zwischenablage hinzugefügt.</string>
+	<string name="copied_file_name">copy_</string>
+	<string name="action_clear_clipboard">Zwischeablage löschen</string>
+	<string name="action_clear_success">Die Zwischenablage wurde gelöscht.</string>
+	<string name="action_paste_success">Einfügen : Ok</string>
+	
+	<!-- DOWNLOAD MANAGER -->
+	<string name="delete_list">Aus der Liste löschen</string>
+	<string name="cancel_download">Download abbrechen</string>
+	<string name="cancel_progress">es wird abgerochen...</string>
+	<string name="cancel_complete">Der Download wurde abgebrochen.</string>
+	
+	<!-- SCANNER  -->
+	<string name="scan_error_url">Dieser barecode ist für diese Anwendung nicht gültig.</string>
+	<string name="scan_error_repo">Die URL gehört nicht zu diesem Repository.</string>
 
 </resources>
