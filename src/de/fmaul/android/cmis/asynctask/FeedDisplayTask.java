@@ -44,7 +44,6 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 	
 	private final ListActivity activity;
 	private final CmisRepository repository;
-	private final String title;
 	private String feedParams = "";
 	private View layout;
 	private CmisItemLazy item;
@@ -79,7 +78,6 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 		super();
 		this.activity = activity;
 		this.repository = repository;
-		this.title = title;
 		this.item = item;
 		this.items = items;
 		this.isSearch = false;
@@ -138,13 +136,6 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 
 	@Override
 	protected void onPostExecute(CmisItemCollection itemCollection) {
-		if (items == null){
-			if (title != null){
-				itemCollection.setTitle(title);
-			} else {
-				itemCollection.setTitle(item.getTitle());
-			}
-		}
 		
 		((CmisApp) activity.getApplication()).setItems(itemCollection);
 		
@@ -169,24 +160,24 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 			next.setVisibility(View.GONE);
 		} else {
 			//First Case
-			if (repository.getSkipCount() == 0 && (repository.getSkipCount() + repository.getMaxItems()) >= repository.getNumItems()){
+			if (repository.getSkipCount() == 0 && (repository.getSkipCount() + repository.getMaxItems()) >= itemCollection.getNumItems()){
 				Log.d(TAG, "PAGING : UNIQUE");
 				back.setVisibility(View.GONE);
 				next.setVisibility(View.GONE);
-			} else if (repository.getSkipCount() == 0 && (repository.getSkipCount() + repository.getMaxItems()) < repository.getNumItems()){
+			} else if (repository.getSkipCount() == 0 && (repository.getSkipCount() + repository.getMaxItems()) < itemCollection.getNumItems()){
 				Log.d(TAG, "PAGING : FIRST");
-				int nb_page = repository.getNumItems() > 0 ? ((int) Math.ceil((double) repository.getNumItems()/ (double) repository.getMaxItems())) : 0;
+				int nb_page = itemCollection.getNumItems() > 0 ? ((int) Math.ceil((double) itemCollection.getNumItems()/ (double) repository.getMaxItems())) : 0;
 				title_paging =  " [1/" + nb_page + "]";  
 				next.setVisibility(View.VISIBLE);
 				back.setVisibility(View.GONE);
-			} else if (repository.getSkipCount() != 0 && (repository.getSkipCount() + repository.getMaxItems())  >= repository.getNumItems()){
-				int nb_page = repository.getNumItems() > 0 ? ((int) Math.ceil((double) repository.getNumItems()/ (double) repository.getMaxItems())) : 0;
+			} else if (repository.getSkipCount() != 0 && (repository.getSkipCount() + repository.getMaxItems())  >= itemCollection.getNumItems()){
+				int nb_page = itemCollection.getNumItems() > 0 ? ((int) Math.ceil((double) itemCollection.getNumItems()/ (double) repository.getMaxItems())) : 0;
 				title_paging =  " [" + nb_page + "/" + nb_page + "]";
 				Log.d(TAG, "PAGING : END");
 				next.setVisibility(View.GONE);
 				back.setVisibility(View.VISIBLE);
 			} else {
-				int nb_page = repository.getNumItems() > 0 ? ((int) Math.ceil((double) repository.getNumItems()/ (double) repository.getMaxItems())) : 0;
+				int nb_page = itemCollection.getNumItems() > 0 ? ((int) Math.ceil((double) itemCollection.getNumItems()/ (double) repository.getMaxItems())) : 0;
 				int currentPage = repository.getSkipCount() > 0 ? ((int) Math.floor((double) repository.getSkipCount()/ (double) repository.getMaxItems())) + 1 : 0;
 				
 				title_paging =  " [" + currentPage + "/" + nb_page + "]";  

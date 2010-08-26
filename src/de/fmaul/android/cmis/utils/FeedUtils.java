@@ -35,6 +35,7 @@ import android.text.TextUtils;
 import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.CmisProperty;
 
+
 public class FeedUtils {
 
 	private static final Namespace CMISRA = Namespace.get("http://docs.oasis-open.org/ns/cmis/restatom/200908/");
@@ -54,6 +55,7 @@ public class FeedUtils {
 	private static final QName CMIS_VALUE = QName.get("value", CMIS);
 
 	public static Document readAtomFeed(final String feed, final String user, final String password) throws FeedLoadException {
+		// TODO FM remove this generic method, after sax parser is implemented
 		Document document = null;
 		try {
 			InputStream is = HttpUtils.getWebRessourceAsStream(feed, user, password);
@@ -71,6 +73,7 @@ public class FeedUtils {
 	}
 	
 	public static List<String> getRootFeedsFromRepo(String url, String user, String password) throws Exception {
+		// TODO FM return workspaces, read these in CMISRepository 
 		try {
 			Document doc = readAtomFeed(url, user, password);
 			return getWorkspacesFromRepoFeed(doc);
@@ -80,6 +83,7 @@ public class FeedUtils {
 	}
 	
 	public static List<String> getWorkspacesFromRepoFeed(Document doc) {
+		// TODO FM return workspaces, read these in CMISRepository, see method above 
 		List<String> listWorkspace = new ArrayList<String>(2);
 		if (doc != null) {
 			List<Element> workspaces = doc.getRootElement().elements("workspace");
@@ -95,6 +99,7 @@ public class FeedUtils {
 	}
 	
 	public static String getCollectionUrlFromRepoFeed(String type, Element workspace) {
+		// TODO FM move to CMISRepository 
 		if (workspace != null) {
 			
 			List<Element> collections = workspace.elements("collection");
@@ -109,17 +114,8 @@ public class FeedUtils {
 		return "";
 	}
 	
-	public static int getNumItemsFeed(Document doc) {
-		if (doc != null) {
-			Element numItems = doc.getRootElement().element(CMISRA_NUMITEMS);
-			if (numItems != null){
-				return Integer.parseInt(numItems.getText());
-			}
-		}
-		return 0;
-	}
-	
 	public static Element getWorkspace(Document doc, String workspaceName){
+		// TODO FM move to CMISRepository 
 		List<Element> workspaces = doc.getRootElement().elements("workspace");
 		Element workspace = null;
 		if (workspaces.size() > 0){
@@ -137,6 +133,7 @@ public class FeedUtils {
 	}
 	
 	public static Element getWorkspace(String workspace, String url, String user, String password) throws Exception {
+		// TODO FM move to CMISRepository 
 		return getWorkspace(readAtomFeed(url, user, password), workspace);
 	}
 
@@ -167,6 +164,7 @@ public class FeedUtils {
 	}
 	
 	public static String getUriTemplateFromRepoFeed(String type, Element workspace) {
+		// TODO FM move to CMISRepository 
 
 		List<Element> templates = workspace.elements(CMISRA_URI_TEMPLATE);
 
@@ -180,6 +178,7 @@ public class FeedUtils {
 	}
 
 	public static Map<String, CmisProperty> getCmisPropertiesForEntry(Element feedEntry) {
+		// TODO FM move to CMISRepository 
 		Map<String, CmisProperty> props = new HashMap<String, CmisProperty>();
 
 		Element objectElement = feedEntry.element(CMISRA_OBJECT);
@@ -205,6 +204,7 @@ public class FeedUtils {
 	}
 	
 	public static Map<String, ArrayList<CmisProperty>> getCmisRepositoryProperties(Element feedEntry) {
+		// TODO FM move to CMISRepository 
 		Map<String, ArrayList<CmisProperty>> infoServerList = new HashMap<String, ArrayList<CmisProperty>>();
 		ArrayList<CmisProperty> propsList = new ArrayList<CmisProperty>();
 		ArrayList<CmisProperty> propsCapabilities = new ArrayList<CmisProperty>();

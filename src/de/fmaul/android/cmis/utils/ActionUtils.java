@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 import de.fmaul.android.cmis.CmisApp;
 import de.fmaul.android.cmis.DocumentDetailsActivity;
@@ -352,8 +353,8 @@ public class ActionUtils {
 			intent.putParcelableArrayListExtra("properties", propList);
 			
 			intent.putExtra("workspace", server.getWorkspace());
-			intent.putExtra("objectTypeId", doc.getProperties().get("cmis:objectTypeId").getValue());
-			intent.putExtra("baseTypeId", doc.getProperties().get("cmis:baseTypeId").getValue());
+			intent.putExtra("objectTypeId", doc.getPropertyValue("cmis:objectTypeId"));
+			intent.putExtra("baseTypeId", doc.getPropertyValue("cmis:baseTypeId"));
 			intent.putExtra("item", new CmisItemLazy(doc));
 			
 			return intent;
