@@ -232,6 +232,7 @@
 	<!-- FILE SYSTEM ACTIVITY -->
 	<string name="action_rename_desc">Veuillez taper le nouveau nom de l\'élément.</string>
 	<string name="action_delete_desc">Etes vous sur de vouloir supprimer cet élément : </string>
+	<string name="action_create_folder_des">Taper le nom du nouveau répertoire</string>
 	
 	<string name="action_sorting_title">Choisissez votre tri...</string>
 	<string name="action_sorting_name">Nom</string>
