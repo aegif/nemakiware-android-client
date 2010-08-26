@@ -141,8 +141,11 @@ public class FeedUtils {
 	}
 
 	public static String getSearchQueryFeedTitle(String urlTemplate, String query) {
-
 		return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:document WHERE cmis:name LIKE '%" + query + "%'");
+	}
+	
+	public static String getSearchQueryFeedFolderTitle(String urlTemplate, String query) {
+		return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:folder WHERE cmis:name LIKE '%" + query + "%'");
 	}
 
 	public static String getSearchQueryFeedFullText(String urlTemplate, String query) {

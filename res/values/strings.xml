@@ -50,6 +50,7 @@
 	<string name="menu_item_search_cmis">CMIS query</string>
     <string name="menu_item_search_fulltext">Fulltext search</string>
     <string name="menu_item_search_title">Search by title</string>
+     <string name="menu_item_search_folder_title">Search by Folder title</string>
     
     <string name="menu_item_details">Display details</string>
 	<string name="menu_item_share">Share...</string>
