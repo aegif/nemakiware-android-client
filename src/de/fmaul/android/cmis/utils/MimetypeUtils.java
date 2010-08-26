@@ -38,7 +38,7 @@ public class MimetypeUtils {
 		return filters.toArray(new CharSequence[filters.size()]);
 	}
 	
-	public static Integer getIcon(Activity activity, CmisItem item) {
+	public static Integer getIcon(Activity activity, CmisItemLazy item) {
 		if (item.hasChildren()) {
 			return R.drawable.mt_folderopen;
 		} else {

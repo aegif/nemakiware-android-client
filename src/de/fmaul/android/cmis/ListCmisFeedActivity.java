@@ -493,13 +493,9 @@ public class ListCmisFeedActivity extends ListActivity {
 		item.setIcon(R.drawable.favorites);
 		createRepoMenu(menu);
 		createSearchMenu(menu);
+		createToolsMenu(menu);
 		item = menu.add(Menu.NONE, 3, 0, R.string.menu_item_about);
 		item.setIcon(R.drawable.cmisexplorer);
-		
-		if (getCmisPrefs().isEnableScan()){
-			item = menu.add(Menu.NONE, 10, 0, R.string.menu_item_scanner);
-			item.setIcon(R.drawable.scanner);
-		}
 		
 		item = menu.add(Menu.NONE, 11, 0, R.string.menu_item_view);
 		
@@ -530,6 +526,17 @@ public class ListCmisFeedActivity extends ListActivity {
 		searchMenu.add(Menu.NONE, 4, 0, R.string.menu_item_search_title);
 		searchMenu.add(Menu.NONE, 5, 0, R.string.menu_item_search_fulltext);
 		searchMenu.add(Menu.NONE, 6, 0, R.string.menu_item_search_cmis);
+	}
+	
+	private void createToolsMenu(Menu menu) {
+		SubMenu toolsMenu = menu.addSubMenu(R.string.menu_item_tools);
+		toolsMenu.setIcon(R.drawable.tools);
+		toolsMenu.setHeaderIcon(android.R.drawable.ic_menu_info_details);
+		
+		if (getCmisPrefs().isEnableScan()){
+			toolsMenu.add(Menu.NONE, 10, 0, R.string.menu_item_scanner);
+		}
+		toolsMenu.add(Menu.NONE, 12, 0, R.string.menu_item_download_manager);
 	}
 
 	@Override
@@ -573,6 +580,9 @@ public class ListCmisFeedActivity extends ListActivity {
 			}
 			refresh();
 			return true;
+		case 12:
+			startActivity(new Intent(this, DownloadProgressActivity.class));
+			return true;
 		}
 		return false;
 	}
@@ -612,10 +622,17 @@ public class ListCmisFeedActivity extends ListActivity {
 		 
 		 
 	    	IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-		    if (scanResult != null) {
-		    	new FeedItemDisplayTask(activity, getRepository().getServer(), scanResult.getContents()).execute();
+		    if (scanResult != null && scanResult.getContents() != null)
+		    	if (scanResult.getContents().length() > 0 && scanResult.getContents().contains("http://")) {
+		    		if ( scanResult.getContents().contains(getRepository().getHostname())){
+			    		new FeedItemDisplayTask(activity, getRepository().getServer(), scanResult.getContents()).execute();
+			    	} else {
+			    		ActionUtils.displayMessage(this, R.string.scan_error_repo);	
+			    	}
+		    	}else {
+		    		ActionUtils.displayMessage(this, R.string.scan_error_url);
+		    	}
 		    }
-		}
 
 	 public void goUP(boolean isBack){
 		 if (item != null && item.getPath() != null && item.getPath().equals("/") == false){
@@ -633,7 +650,7 @@ public class ListCmisFeedActivity extends ListActivity {
 						itemParent = currentStack.get(0);
 					}
 				} else {
-					new FeedItemDisplayTask(activity, getRepository().getServer(), item.getParentUrl(), 1).execute();
+					new FeedItemDisplayTask(activity, getRepository().getServer(), item.getParentUrl(), FeedItemDisplayTask.DISPLAY_FOLDER).execute();
 				}
 			} else if (isBack) {
 				Intent intent = new Intent(activity, ServerActivity.class);

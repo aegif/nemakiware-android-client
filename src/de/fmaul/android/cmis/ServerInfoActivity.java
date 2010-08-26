@@ -57,8 +57,8 @@ public class ServerInfoActivity extends TabActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		
-		MenuItem settingsItem = menu.add(Menu.NONE, 1, 0, "Home");
-		settingsItem.setIcon(R.drawable.cmisexplorer);
+		MenuItem settingsItem = menu.add(Menu.NONE, 1, 0, R.string.menu_item_home);
+		settingsItem.setIcon(R.drawable.home);
 		
 		return true;
 

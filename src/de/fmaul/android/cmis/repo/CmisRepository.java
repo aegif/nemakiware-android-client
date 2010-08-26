@@ -107,6 +107,10 @@ public class CmisRepository {
 		this.feedParams = feedParams;
 	}
 
+	public String getHostname() {
+		return repositoryUrl.split("/")[2];
+	}
+	
 	public String getRepositoryUrl() {
 		return repositoryUrl;
 	}

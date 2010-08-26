@@ -22,9 +22,12 @@ public class FeedItemDisplayTask extends AsyncTask<String, Void, CmisItem> {
 	private Server server;
 	private String url;
 	private int action;
+	
+	public static final int DISPLAY_DETAILS = 0;
+	public static final int DISPLAY_FOLDER = 1;
 
 	public FeedItemDisplayTask(Activity activity, final Server server, String url) {
-		this(activity, server, url, 0);
+		this(activity, server, url, -1);
 	}
 
 	public FeedItemDisplayTask(Activity activity, final Server server, String url, int action) {
@@ -53,12 +56,20 @@ public class FeedItemDisplayTask extends AsyncTask<String, Void, CmisItem> {
 	@Override
 	protected void onPostExecute(CmisItem item) {
 		if (item != null){
-			Log.d(TAG, "Action : " + action);
+			
+			if (action == -1){
+				if (item.getBaseType() == null){
+					action = DISPLAY_FOLDER;
+				} else {
+					action = DISPLAY_DETAILS;
+				}
+			}
+			
 			switch (action) {
-			case 0:
+			case DISPLAY_DETAILS:
 				ActionUtils.displayDocumentDetails(activity, server, item);
 			break;
-			case 1:
+			case DISPLAY_FOLDER:
 				ActionUtils.openNewListViewActivity(activity, item);
 			break;
 			default:

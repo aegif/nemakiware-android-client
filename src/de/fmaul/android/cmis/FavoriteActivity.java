@@ -82,12 +82,12 @@ public class FavoriteActivity extends ListActivity {
 				builder.setMessage(FavoriteActivity.this.getText(R.string.favorite_open)).setCancelable(true)
 						.setPositiveButton(FavoriteActivity.this.getText(R.string.favorite_open_details), new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								new FeedItemDisplayTask(activity, currentServer, f.getUrl()).execute();
+								new FeedItemDisplayTask(activity, currentServer, f.getUrl(), FeedItemDisplayTask.DISPLAY_DETAILS).execute();
 							}
 
 						}).setNegativeButton(FavoriteActivity.this.getText(R.string.favorite_open_folder), new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-								new FeedItemDisplayTask(activity, currentServer, f.getUrl(), 1).execute();
+								new FeedItemDisplayTask(activity, currentServer, f.getUrl(), FeedItemDisplayTask.DISPLAY_FOLDER).execute();
 							}
 						});
 				AlertDialog alert = builder.create();
