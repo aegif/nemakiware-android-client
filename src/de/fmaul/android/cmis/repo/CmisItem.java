@@ -18,6 +18,7 @@ package de.fmaul.android.cmis.repo;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class CmisItem extends CmisItemLazy {
 		super(item);
 	}
 	
-	private CmisItem() {
+	public CmisItem() {
 	}
 
 	/**
@@ -41,12 +42,21 @@ public class CmisItem extends CmisItemLazy {
 	private static final long serialVersionUID = 1L;
 	
 
-	private Map<String, CmisProperty> properties;
+	private Map<String, CmisProperty> properties = new HashMap<String, CmisProperty>();
 
 	public Map<String, CmisProperty> getProperties() {
 		return properties;
 	}
 
+	public String getPropertyValue(final String propName) {
+		if (getProperties().containsKey(propName)) {
+			return getProperties().get(propName).getValue();
+		}
+		else {
+			return null;
+		}
+	}
+	
 	public static CmisItem createFromFeed(Element entry) {
 		CmisItem cmi = new CmisItem();
 		cmi.parseEntry(entry);

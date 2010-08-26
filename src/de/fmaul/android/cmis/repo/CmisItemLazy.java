@@ -125,5 +125,53 @@ public class CmisItemLazy implements Serializable {
 	public File getContentDownload(Application application, String saveFolder) throws StorageException {
 		return StorageUtils.getStorageFile(application, saveFolder, getTitle());
 	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public void setDownLink(String downLink) {
+		this.downLink = downLink;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public void setContentUrl(String contentUrl) {
+		this.contentUrl = contentUrl;
+	}
+
+	public void setSelfUrl(String selfUrl) {
+		this.selfUrl = selfUrl;
+	}
+
+	public void setParentUrl(String parentUrl) {
+		this.parentUrl = parentUrl;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setMimeType(String mimeType) {
+		this.mimeType = mimeType;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public void setBaseType(String baseType) {
+		this.baseType = baseType;
+	}
+
+	public void setModificationDate(Date modificationDate) {
+		this.modificationDate = modificationDate;
+	}
 	
 }

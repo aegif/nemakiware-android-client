@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 import org.dom4j.Document;
@@ -35,10 +36,10 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import de.fmaul.android.cmis.FilterPrefs;
-import de.fmaul.android.cmis.Prefs;
 import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.utils.FeedLoadException;
 import de.fmaul.android.cmis.utils.FeedUtils;
+import de.fmaul.android.cmis.utils.FeedUtils2;
 import de.fmaul.android.cmis.utils.HttpUtils;
 import de.fmaul.android.cmis.utils.StorageException;
 import de.fmaul.android.cmis.utils.StorageUtils;
@@ -89,6 +90,7 @@ public class CmisRepository {
 		this.repositoryUrl = server.getUrl();
 		this.server = server;
 
+		// TODO FM replace with sax parser
 		Document doc = FeedUtils.readAtomFeed(repositoryUrl, repositoryUser, repositoryPassword);
 		
 		Element wsElement = FeedUtils.getWorkspace(doc, repositoryWorkspace);
@@ -168,6 +170,7 @@ public class CmisRepository {
 	 * @throws FeedLoadException 
 	 */
 	public CmisItemCollection getCollectionFromFeed(final String feedUrl) throws FeedLoadException, StorageException {
+		/*
 		Document doc;
 		Log.d(TAG, "feedUrl : " + feedUrl);
 		if (StorageUtils.isFeedInCache(application, feedUrl, repositoryWorkspace)) {
@@ -184,9 +187,12 @@ public class CmisRepository {
 		Log.d(TAG, "NumItems : " + numItems);
 		
 		return CmisItemCollection.createFromFeed(doc);
+		*/
+		return FeedUtils2.getCollectionFromFeed(feedUrl, repositoryUser, repositoryPassword);
 	}
 
 	public CmisTypeDefinition getTypeDefinition(String documentTypeId) {
+		// TODO FM replace with sax parser
 		String url = uriTemplateTypeById.replace("{id}", documentTypeId);
 		Document doc = FeedUtils.readAtomFeed(url, repositoryUser, repositoryPassword);
 		return CmisTypeDefinition.createFromFeed(doc);
@@ -344,14 +350,6 @@ public class CmisRepository {
 			paging = false;
 		}
 		return paging;
-	}
-
-	public void setNumItems(int numItems) {
-		this.numItems = numItems;
-	}
-
-	public int getNumItems() {
-		return numItems;
 	}
 
 	public void setMaxItems(int maxItems) {
