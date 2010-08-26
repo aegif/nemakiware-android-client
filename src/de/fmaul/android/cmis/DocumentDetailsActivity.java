@@ -22,7 +22,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -174,6 +177,35 @@ public class DocumentDetailsActivity extends ListActivity {
 		}
 		
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		
+		MenuItem settingsItem = menu.add(Menu.NONE, 1, 0, R.string.menu_item_home);
+		settingsItem.setIcon(R.drawable.home);
+		
+		settingsItem = menu.add(Menu.NONE, 2, 0, R.string.menu_item_home);
+		settingsItem.setIcon(R.drawable.download_manager);
+		
+		return true;
+
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch (item.getItemId()) {
+		case 1:
+			startActivity(new Intent(this, HomeActivity.class));
+			return true;
+		case 2:
+			startActivity(new Intent(this, DownloadProgressActivity.class));
+			return true;
+		}
+
+		return false;
+	}
+	
 
 	CmisRepository getRepository() {
 		return ((CmisApp) getApplication()).getRepository();

@@ -65,6 +65,8 @@
 	<string name="menu_item_scanner">Scanner</string>
 	<string name="menu_item_view">View</string>
 	<string name="menu_item_filter">Filtre</string>
+	<string name="menu_item_tools">Tools</string>
+	<string name="menu_item_download_manager">Download</string>
 	
 	<string name="loading_data">Please wait a few moment... Loading data...</string>
 	
@@ -138,13 +140,13 @@
 	<string name="about_share_app">Share Android CMIS Browser</string>
 	
 	<!-- FAVORITE ACTIVITY -->
-    <string name="favorite_create">Favorite added : OK</string>
-    <string name="favorite_present">Favorite already present</string>
+    <string name="favorite_create">Favorite has been added sucessfully</string>
+    <string name="favorite_present">This favorite is already present</string>
     <string name="favorite_create_error">A problem occured during creation action. Please try again...</string>
 	
-	<string name="favorite_delete">Favorite removed : OK</string>
+	<string name="favorite_delete">Favorite has been removed sucessfully</string>
     <string name="favorite_delete_error">A problem occured during delete action. Please try again...</string>
-	<string name="favorite_error">Favorite is not availale.</string>
+	<string name="favorite_error">Favorite is not available or has been deleted.</string>
 	<string name="favorite_error_loading">A problem occured during loading action. Please try again...</string>
 	
 	<string name="favorite_open">Choose your view...</string>
@@ -243,5 +245,13 @@
 	<string name="action_clear_clipboard">Clear clipboard</string>
 	<string name="action_clear_success">Clipboard has been cleared.</string>
 	<string name="action_paste_success">Paste action : ok</string>
+	
+	<!-- DOWNLOAD MANAGER -->
+	<string name="delete_list">Remove from list</string>
+	<string name="cancel_download">Cancel download</string>
+	
+	<!-- SCANNER  -->
+	<string name="scan_error_url">This barecode is not valid for this application</string>
+	<string name="scan_error_repo">This URL is not from this repository.</string>
 
 </resources>

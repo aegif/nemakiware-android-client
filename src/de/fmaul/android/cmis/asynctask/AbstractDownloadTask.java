@@ -5,16 +5,20 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
+import android.os.Message;
 import de.fmaul.android.cmis.CmisApp;
 import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.repo.CmisItemLazy;
 import de.fmaul.android.cmis.repo.CmisRepository;
+import de.fmaul.android.cmis.repo.DownloadItem;
 import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.HttpUtils;
 import de.fmaul.android.cmis.utils.NotificationUtils;
@@ -32,19 +36,20 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 	private static final int MAX_BUFFER_SIZE = 1024;
 	private static final int NB_NOTIF = 10;
 	
-    public static final String STATUSES[] = {"Downloading",
+	private static final String STATUSES[] = {"Downloading",
     "Paused", "Complete", "Cancelled", "Error"};
     
-    public static final int DOWNLOADING = 0;
-    public static final int PAUSED = 1;
-    public static final int COMPLETE = 2;
+    private static final int DOWNLOADING = 0;
+    private static final int PAUSED = 1;
+    private static final int COMPLETE = 2;
     public static final int CANCELLED = 3;
-    public static final int ERROR = 4;
+    private static final int ERROR = 4;
     
-    private int status;
-    private int downloaded;
+    public int state;
+	private int downloaded;
 	private int size;
 	private int notifCount = 0;
+	private int percent;
 	
 	
 
@@ -65,7 +70,7 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 		
 		if (isDownload == false){
 			
-			status = DOWNLOADING;
+			state = DOWNLOADING;
 			downloaded = 0;
 			
 			progressDialog = new ProgressDialog(activity);
@@ -75,7 +80,7 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 						@Override
 						public void onCancel(DialogInterface dialog) {
 							AbstractDownloadTask.this.cancel(true);
-							status = CANCELLED;
+							state = CANCELLED;
 							//NotificationUtils.cancelDownloadNotification(activity);
 							dialog.dismiss();
 						}
@@ -95,6 +100,13 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 	@Override
 	protected File doInBackground(CmisItemLazy... params) {
 		item = params[0];
+		
+		List<DownloadItem> dl = ((CmisApp) activity.getApplication()).getDownloadedFiles();
+		if (dl == null) {
+			dl = new ArrayList<DownloadItem>();
+		}
+		dl.add(new DownloadItem(item, this));
+		
 		if (item != null) {
 			//progressDialog.setMax(Integer.parseInt(item.getSize()));
 			size = Integer.parseInt(item.getSize());
@@ -113,15 +125,21 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 	}
 
 	protected void onPostExecute(File result) {
+		if (state == CANCELLED){
+			result.delete();
+			result = null;
+		}
+		
 		if (progressDialog != null && progressDialog.isShowing()){
 			progressDialog.dismiss();
 		}
+		
 		onDownloadFinished(result);
 	}
 
 	@Override
 	protected void onCancelled() {
-		status = CANCELLED;
+		state = CANCELLED;
 		if (progressDialog.isShowing()){
 			progressDialog.dismiss();
 		}
@@ -130,7 +148,7 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 	@Override
 	protected void onProgressUpdate(Integer... values) {
 		super.onProgressUpdate(values);
-		int percent = Math.round(((float) values[0] / Float.parseFloat(item.getSize())) * 100);
+		percent = Math.round(((float) values[0] / Float.parseFloat(item.getSize())) * 100);
 		if (isDownload == false){
 			progressDialog.setProgress(percent);
 		} else {
@@ -142,18 +160,23 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 				notifCount++;
 			}
 		}
+		
+		/* Creating a message 
+		Message progressMsg = new Message();
+		progressMsg.arg1 = progress();
+		pbHandle.sendMessage(progressMsg);*/
 	}
 	
 
 	public abstract void onDownloadFinished(File result);
 	
 	
-	public File retreiveContent(CmisItemLazy item) throws StorageException {
+	private File retreiveContent(CmisItemLazy item) throws StorageException {
 		File contentFile = StorageUtils.getStorageFile(activity.getApplication(), repository.getServer().getWorkspace(), StorageUtils.TYPE_CONTENT, item.getId(), item.getTitle());
 		return retreiveContent(item, contentFile);
 	}
 	
-	public File retreiveContent(CmisItemLazy item, String downloadFolder) throws StorageException {
+	private File retreiveContent(CmisItemLazy item, String downloadFolder) throws StorageException {
 		File contentFile = item.getContentDownload(activity.getApplication(), downloadFolder);
 		return retreiveContent(item, contentFile);
 	}
@@ -170,7 +193,7 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 			in = HttpUtils.getWebRessourceAsStream(item.getContentUrl(), repository.getServer().getUsername(), repository.getServer().getPassword());
 			byte[] buffer = new byte[MAX_BUFFER_SIZE];
 			
-			 while (status == DOWNLOADING) {
+			 while (state == DOWNLOADING) {
                 if (size - downloaded < MAX_BUFFER_SIZE) {
                 	buffer = new byte[size - downloaded];
                 }
@@ -184,8 +207,8 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
                 stateChanged();
             }
 			 
-			if (status == DOWNLOADING) {
-                status = COMPLETE;
+			if (state == DOWNLOADING) {
+                state = COMPLETE;
                 stateChanged();
             }
 			
@@ -214,4 +237,13 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 		publishProgress(downloaded);
     }
 
+	public int getPercent() {
+		return percent;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
+
+	
 }

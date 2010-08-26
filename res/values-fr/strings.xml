@@ -64,6 +64,8 @@
 	<string name="menu_item_scanner">Scanner</string>
 	<string name="menu_item_view">Voir</string>
 	<string name="menu_item_filter">Filtrer</string>
+		<string name="menu_item_tools">Outils</string>
+	<string name="menu_item_download_manager">Téléchargements</string>
 	
 	<string name="loading_data">Un instant... Chargement des données...</string>
 	
@@ -138,11 +140,12 @@
 	
 	<!-- FAVORITE ACTIVITY -->
     <string name="favorite_create">Le favori a été ajouté.</string>
+    <string name="favorite_present">Ce favori est déjà présent</string>
     <string name="favorite_create_error">Une erreur s\'est produite lors de la création du favori.. Veuillez recommencer...</string>
 	
-	<string name="favorite_delete">Favorite removed : OK</string>
+	<string name="favorite_delete">Le favori a été supprimé.</string>
     <string name="favorite_delete_error">Une erreur s\'est produite lors de la suppression du favori.. Veuillez recommencer...</string>
-	<string name="favorite_error">Favorite is not availale.</string>
+	<string name="favorite_error">Le favori n\'est pas accessible ou n\'existe plus.</string>
 	<string name="favorite_error_loading">Une erreur s\'est produite lors de la chargement du favori.. Veuillez recommencer...</string>
     
     <string name="favorite_open">Veuillez choisir une vue...</string>
@@ -241,4 +244,11 @@
 	<string name="action_clear_success">Le presse-papier a été éffacé.</string>
 	<string name="action_paste_success">La copie s\'est bien passée</string>
 
+	<!-- DOWNLOAD MANAGER -->
+	<string name="delete_list">Remove from list</string>
+	<string name="cancel_download">Cancel download</string>
+	
+	<!-- SCANNER  -->
+	<string name="scan_error_url">Ce code barre est invalide pour cette application.</string>
+	<string name="scan_error_repo">Cette URL ne provient pas de cet entrepôt de données.</string>
 </resources>

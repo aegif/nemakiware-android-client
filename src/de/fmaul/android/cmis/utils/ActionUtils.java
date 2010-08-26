@@ -145,7 +145,8 @@ public class ActionUtils {
 				if (contentFile != null && contentFile.exists()) {
 					NotificationUtils.downloadNotification(contextActivity, contentFile, item.getMimeType());	
 				} else {
-					displayMessage(contextActivity, R.string.error_file_does_not_exists);
+					NotificationUtils.cancelDownloadNotification(contextActivity);	
+					//displayMessage(contextActivity, R.string.error_file_does_not_exists);
 				}
 			}
 		}.execute(item);

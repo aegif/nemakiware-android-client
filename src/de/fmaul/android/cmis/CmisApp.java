@@ -15,12 +15,15 @@
  */
 package de.fmaul.android.cmis;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import android.app.Application;
 import de.fmaul.android.cmis.repo.CmisItemCollection;
 import de.fmaul.android.cmis.repo.CmisPropertyFilter;
 import de.fmaul.android.cmis.repo.CmisRepository;
+import de.fmaul.android.cmis.repo.DownloadItem;
 import de.fmaul.android.cmis.utils.MimetypeUtils;
 
 public class CmisApp extends Application {
@@ -33,6 +36,7 @@ public class CmisApp extends Application {
 	private ListCmisFeedActivitySave savedContextItems;
 	private CmisPropertyFilter cmisPropertyFilter;
 	private Map<String,Integer> mimetypesMap;
+	private List<DownloadItem> downloadedFiles = new ArrayList<DownloadItem>(5);
 	
 	
 	@Override
@@ -87,6 +91,14 @@ public class CmisApp extends Application {
 
 	public ListCmisFeedActivitySave getSavedContextItems() {
 		return savedContextItems;
+	}
+
+	public void setDownloadedFiles(List<DownloadItem> downloadedFiles) {
+		this.downloadedFiles = downloadedFiles;
+	}
+
+	public List<DownloadItem> getDownloadedFiles() {
+		return downloadedFiles;
 	}
 	
 }
