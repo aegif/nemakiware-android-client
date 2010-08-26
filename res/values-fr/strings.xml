@@ -245,8 +245,10 @@
 	<string name="action_paste_success">La copie s\'est bien passée</string>
 
 	<!-- DOWNLOAD MANAGER -->
-	<string name="delete_list">Remove from list</string>
-	<string name="cancel_download">Cancel download</string>
+	<string name="delete_list">Supprimer de la liste</string>
+	<string name="cancel_download">Annuler le téléchargement</string>
+	<string name="cancel_progress">Annulation en cours..</string>
+	<string name="cancel_complete">Le téléchargement a été annulé</string>
 	
 	<!-- SCANNER  -->
 	<string name="scan_error_url">Ce code barre est invalide pour cette application.</string>

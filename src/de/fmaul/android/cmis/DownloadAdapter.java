@@ -102,8 +102,8 @@ public class DownloadAdapter extends ArrayAdapter<DownloadItem> {
 	private CharSequence buildBottomText(DownloadItem doc) {
 		List<String> infos = new LinkedList<String>();
 		appendInfoDocumentSize(doc, infos);
-		appendStatus(doc, infos);
 		appendState(doc, infos);
+		//appendStatus(doc, infos);
 		return TextUtils.join(" | ", infos);
 	}
 
@@ -113,15 +113,15 @@ public class DownloadAdapter extends ArrayAdapter<DownloadItem> {
 		}
 	}
 	
-	private void appendStatus(DownloadItem doc, List<String> infos) {
+	/*private void appendStatus(DownloadItem doc, List<String> infos) {
 		if (doc.getTask().getStatus() != null) {
 			infos.add("Status : " + doc.getTask().getStatus());
 		}
-	}
+	}*/
 	
 	private void appendState(DownloadItem doc, List<String> infos) {
 		if (doc.getTask().getStatus() != null) {
-			infos.add("State : " + doc.getTask().getPercent());
+			infos.add(doc.getStatut((Activity) context));
 		}
 	}
 

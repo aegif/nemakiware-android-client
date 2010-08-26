@@ -185,7 +185,7 @@ public class DocumentDetailsActivity extends ListActivity {
 		MenuItem settingsItem = menu.add(Menu.NONE, 1, 0, R.string.menu_item_home);
 		settingsItem.setIcon(R.drawable.home);
 		
-		settingsItem = menu.add(Menu.NONE, 2, 0, R.string.menu_item_home);
+		settingsItem = menu.add(Menu.NONE, 2, 0, R.string.menu_item_download_manager);
 		settingsItem.setIcon(R.drawable.download_manager);
 		
 		return true;

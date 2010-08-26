@@ -32,17 +32,21 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 import de.fmaul.android.cmis.asynctask.FeedItemDisplayTask;
+import de.fmaul.android.cmis.asynctask.ServerInitTask;
 import de.fmaul.android.cmis.database.Database;
 import de.fmaul.android.cmis.database.FavoriteDAO;
 import de.fmaul.android.cmis.model.Favorite;
 import de.fmaul.android.cmis.model.Server;
+import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.utils.ActionUtils;
+import de.fmaul.android.cmis.utils.FeedLoadException;
 
 public class FavoriteActivity extends ListActivity {
 
 	private ArrayList<Favorite> listFavorite;
 	private Server currentServer;
 	private Activity activity;
+	private boolean firstStart = true;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -52,7 +56,8 @@ public class FavoriteActivity extends ListActivity {
 		activity = this;
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null){
-			currentServer = (Server) getIntent().getExtras().getSerializable("server");
+			currentServer = (Server) bundle.getSerializable("server");
+			firstStart = bundle.getBoolean("isFirstStart");
 		}
 		
 		setContentView(R.layout.server);
@@ -60,6 +65,7 @@ public class FavoriteActivity extends ListActivity {
 
 		createFavoriteList();
 		registerForContextMenu(getListView());
+		initRepository();
 	}
 	
 	public void createFavoriteList(){
@@ -139,6 +145,29 @@ public class FavoriteActivity extends ListActivity {
 			Toast.makeText(this, this.getString(R.string.favorite_delete_error), Toast.LENGTH_LONG).show();
 		}
 		db.close();
+	}
+	
+	private boolean initRepository() {
+		boolean init = true;
+		try {
+			if (getRepository() == null) {
+				new ServerInitTask(this, getApplication(), (Server) getIntent().getExtras().getSerializable("server")).execute();
+			} else {
+				// Case if we change repository.
+				if (firstStart) {
+					new ServerInitTask(this, getApplication(), (Server) getIntent().getExtras().getSerializable("server")).execute();
+				} else {
+					init = false;
+				}
+			}
+		} catch (FeedLoadException fle) {
+			ActionUtils.displayMessage(activity, R.string.generic_error);
+		}
+		return init;
+	}
+	
+	CmisRepository getRepository() {
+		return ((CmisApp) getApplication()).getRepository();
 	}
 	
 }

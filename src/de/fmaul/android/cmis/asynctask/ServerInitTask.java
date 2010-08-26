@@ -1,5 +1,6 @@
 package de.fmaul.android.cmis.asynctask;
 
+import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -20,26 +21,39 @@ import de.fmaul.android.cmis.utils.StorageException;
 
 public class ServerInitTask extends AsyncTask<String, Void, CmisRepository> {
 
-	private final ListCmisFeedActivity activity;
+	private final Activity currentActivity;
+	private final ListCmisFeedActivity ListActivity;
+	private final Activity activity;
 	private ProgressDialog pg;
 	private Server server;
 	private Application app;
 
 	public ServerInitTask(ListCmisFeedActivity activity, Application app, final Server server) {
 		super();
+		this.currentActivity = activity;
+		this.ListActivity = activity;
+		this.app = app;
+		this.server = server;
+		this.activity = null;
+		
+	}
+	
+	public ServerInitTask(Activity activity, Application app, final Server server) {
+		super();
+		this.currentActivity = activity;
+		this.ListActivity = null;
 		this.activity = activity;
 		this.app = app;
 		this.server = server;
-		
 	}
 
 	@Override
 	protected void onPreExecute() {
-		pg = ProgressDialog.show(activity, "", activity.getText(R.string.loading), true, true, new OnCancelListener() {
+		pg = ProgressDialog.show(currentActivity, "", currentActivity.getText(R.string.loading), true, true, new OnCancelListener() {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				ServerInitTask.this.cancel(true);
-				activity.finish();
+				currentActivity.finish();
 				dialog.dismiss();
 			}
 		});
@@ -59,30 +73,32 @@ public class ServerInitTask extends AsyncTask<String, Void, CmisRepository> {
 	@Override
 	protected void onPostExecute(CmisRepository repo) {
 		try {
-			repo.generateParams(activity);
-			((CmisApp) activity.getApplication()).setRepository(repo);
-			activity.setItem(repo.getRootItem());
+			repo.generateParams(currentActivity);
+			((CmisApp) currentActivity.getApplication()).setRepository(repo);
 			repo.clearCache(repo.getServer().getWorkspace());
-			new FeedDisplayTask(activity, repo, getTitleFromIntent()).execute(getFeedFromIntent());
+			if (ListActivity != null){
+				ListActivity.setItem(repo.getRootItem());
+				new FeedDisplayTask(ListActivity, repo, getTitleFromIntent()).execute(getFeedFromIntent());
+			}
 			pg.dismiss();
 		} catch (StorageException e) {
-			ActionUtils.displayMessage(activity, R.string.generic_error);
+			ActionUtils.displayMessage(currentActivity, R.string.generic_error);
 			pg.dismiss();
 		} catch (Exception e) {
-			ActionUtils.displayMessage(activity, R.string.generic_error);
-			activity.finish();
+			ActionUtils.displayMessage(currentActivity, R.string.generic_error);
+			currentActivity.finish();
 			pg.dismiss();
 		}
 	}
 
 	@Override
 	protected void onCancelled() {
-		activity.finish();
+		currentActivity.finish();
 		pg.dismiss();
 	}
 	
 	private String getFeedFromIntent() {
-		Bundle extras = activity.getIntent().getExtras();
+		Bundle extras = currentActivity.getIntent().getExtras();
 		if (extras != null) {
 			if (extras.get("feed") != null) {
 				return extras.get("feed").toString();
@@ -92,7 +108,7 @@ public class ServerInitTask extends AsyncTask<String, Void, CmisRepository> {
 	}
 	
 	private String getTitleFromIntent() {
-		Bundle extras = activity.getIntent().getExtras();
+		Bundle extras = currentActivity.getIntent().getExtras();
 		if (extras != null) {
 			if (extras.get("title") != null) {
 				return extras.get("title").toString();

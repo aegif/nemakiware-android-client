@@ -128,6 +128,7 @@ public class ServerActivity extends ListActivity {
 		menu.add(0, 1, Menu.NONE, getString(R.string.server_info));
 		menu.add(0, 2, Menu.NONE, getString(R.string.edit));
 		menu.add(0, 3, Menu.NONE, getString(R.string.delete));
+		menu.add(0, 4, Menu.NONE, getString(R.string.menu_item_favorites));
 	}
 	
 	@Override
@@ -170,6 +171,14 @@ public class ServerActivity extends ListActivity {
 					}
 				}).create();
 				builder.show();
+			}
+			return true;
+		case 4:
+			if (server != null) {
+				Intent intent = new Intent(this, FavoriteActivity.class);
+				intent.putExtra("server", server);
+				intent.putExtra("isFirstStart", true);
+				startActivity(intent);
 			}
 			return true;
 		default:

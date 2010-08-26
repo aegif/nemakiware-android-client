@@ -95,9 +95,9 @@ public class DownloadProgressActivity extends ListActivity {
 			menu.add(0, 3, Menu.NONE, getString(R.string.delete_list));
 		} else {
 			if (isCancellable(downloadItem)){
-				menu.add(0, 3, Menu.NONE, getString(R.string.delete_list));	
-			} else {
 				menu.add(0, 1, Menu.NONE, getString(R.string.cancel_download));
+			} else {
+				menu.add(0, 3, Menu.NONE, getString(R.string.delete_list));	
 			}
 		}
 	}
@@ -149,7 +149,7 @@ public class DownloadProgressActivity extends ListActivity {
 	}
 	
 	private boolean isCancellable(DownloadItem downloadItem){
-		if (Status.RUNNING.equals(downloadItem.getTask().getStatus()) && downloadItem.getTask().getPercent() == 100){
+		if (Status.RUNNING.equals(downloadItem.getTask().getStatus()) && downloadItem.getTask().getPercent() != 100){
 			return true;
 		} else {
 			return false;

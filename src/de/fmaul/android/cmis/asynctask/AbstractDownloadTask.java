@@ -13,7 +13,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
-import android.os.Message;
 import de.fmaul.android.cmis.CmisApp;
 import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.repo.CmisItemLazy;
@@ -36,12 +35,9 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 	private static final int MAX_BUFFER_SIZE = 1024;
 	private static final int NB_NOTIF = 10;
 	
-	private static final String STATUSES[] = {"Downloading",
-    "Paused", "Complete", "Cancelled", "Error"};
-    
-    private static final int DOWNLOADING = 0;
+	public static final int DOWNLOADING = 0;
     private static final int PAUSED = 1;
-    private static final int COMPLETE = 2;
+    public static final int COMPLETE = 2;
     public static final int CANCELLED = 3;
     private static final int ERROR = 4;
     
@@ -93,7 +89,7 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 			progressDialog.show();
 			
 		} else {
-			ActionUtils.displayMessage(activity, "Downloading in progress...");
+			ActionUtils.displayMessage(activity, R.string.download_progress);
 		}
 	}
 
@@ -160,11 +156,6 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 				notifCount++;
 			}
 		}
-		
-		/* Creating a message 
-		Message progressMsg = new Message();
-		progressMsg.arg1 = progress();
-		pbHandle.sendMessage(progressMsg);*/
 	}
 	
 
@@ -243,6 +234,10 @@ public abstract class AbstractDownloadTask extends AsyncTask<CmisItemLazy, Integ
 
 	public void setState(int state) {
 		this.state = state;
+	}
+	
+	public int getState(){
+		return state;
 	}
 
 	
