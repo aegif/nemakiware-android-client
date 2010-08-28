@@ -2,91 +2,81 @@
 <resources>
 
 	<!-- APP STRING -->
-	<string name="app_name">CMIS Browser</string>
+	<string name="app_name">CMIS Navegador</string>
 	
 	<!-- HOME ACTIVITY -->
-	<string name="home_menu_repository">CMIS Repositories</string>
-	<string name="home_menu_favorites">Favorites</string>
+	<string name="home_menu_repository">CMIS Repositorios</string>
+	<string name="home_menu_favorites">Favoritos</string>
 	<string name="home_menu_about">About</string>
-	<string name="home_menu_explorer">File Explorer</string>
 	
 	<!-- SERVER ACTIVITY -->
-	<string name="menu_item_server_add">Add Server</string>
+	<string name="menu_item_server_add">Añadir Servidor</string>
 	
-	<string name="context_menu_title">Server Option</string>
+	<string name="context_menu_title">Opciones del servidor</string>
 	
-	<string name="server_delete">Server removed : OK</string>
-    <string name="server_delete_error">A problem occured during delete action. Please try again...</string>
+	<string name="server_delete">Este servidor se ha eliminado</string>
+    <string name="server_delete_error">Ha ocurrido un problema durante la acción de eliminación. Por favor, inténtelo de nuevo ...</string>
 	
 	
 	<!-- SERVER EDIT ACTIVITY -->
-	<string name="cmis_repo_server_name">Server Name</string>
+	<string name="cmis_repo_server_name">Alias del servidor</string>
 	<string name="cmis_repo_server_url">URL</string>
-	<string name="cmis_repo_user">User</string>
-	<string name="cmis_repo_password">Password</string>
-	<string name="cmis_repo_workspace">Default Workspace</string>
+	<string name="cmis_repo_user">Usuarido</string>
+	<string name="cmis_repo_password">Constraseña</string>
+	<string name="cmis_repo_workspace">Área de trabajo por defecto</string>
 	
-	<string name="cmis_repo_choose_workspace">Choose Default Workspace</string>
+	<string name="cmis_repo_choose_workspace">Escoger del área de trabajo por defecto</string>
 	
 	<string name="error_repo_connexion">Repository not set up correctly. Please check the repository settings.</string>
 	<string name="cmis_repo_fields">Some fiels are required : NAME, URL, WORKSPACE</string>
 	
 	<!-- SERVER INFO -->
-	<string name="server_info">Info</string>
+	<string name="server_info">Información</string>
 	<string name="server_info_general">General</string>
 	<string name="server_info_acl">ACL</string>
 	<string name="server_info_capabilites">Capabilities</string>
 	
 	
 	<!-- LIST CMIS FEED ACTIVITY -->
-	<string name="feed_menu_title">File Option</string>
+	<string name="feed_menu_title">Opciones del archivo</string>
 	
-	<string name="menu_item_settings">Servers</string>
-    <string name="menu_item_settings_reload">Reload</string>
-    <string name="menu_item_settings_repo">Change repository</string>
-    <string name="menu_item_settings_ws">Change workspace</string>
-    <string name="menu_item_about">About</string>
-	<string name="menu_item_search">Search</string>
+	<string name="menu_item_settings">Servidores</string>
+    <string name="menu_item_settings_reload">Recargar</string>
+    <string name="menu_item_settings_repo">Cambiar el servidor</string>
+    <string name="menu_item_settings_ws">Cambiar el área de trabajo</string>
+    <string name="menu_item_about">Acerca</string>
+	<string name="menu_item_search">Buscar</string>
 	<string name="menu_item_search_cmis">CMIS query</string>
-    <string name="menu_item_search_fulltext">Fulltext search</string>
-    <string name="menu_item_search_title">Document title</string>
-    <string name="menu_item_search_folder_title">Folder title</string>
-    <string name="menu_item_search_saved_search">Saved search</string>
+    <string name="menu_item_search_fulltext">Búsqueda completa</string>
+    <string name="menu_item_search_title">Búsqueda por título</string>
     
-    <string name="menu_item_details">Display details</string>
-	<string name="menu_item_share">Share...</string>
+    <string name="menu_item_details">Mostrar detalles</string>
+	<string name="menu_item_share">Compartir...</string>
 	
-	<string name="menu_item_favorites">Favorites</string>
+	<string name="menu_item_favorites">Favoritos</string>
 	
-	<string name="menu_item_home">Home</string>
-	<string name="menu_item_up">Up</string>
-	<string name="menu_item_back">Back</string>
-	<string name="menu_item_next">Next</string>
-	<string name="menu_item_prefs">Prefs</string>
-	<string name="menu_item_refresh">Refresh</string>
-	<string name="menu_item_scanner">Scanner</string>
-	<string name="menu_item_view">View</string>
-	<string name="menu_item_filter">Filtre</string>
-	<string name="menu_item_tools">Tools</string>
-	<string name="menu_item_download_manager">Download</string>
+	<string name="menu_item_home">Bienvenida</string>
+	<string name="menu_item_up">Alto</string>
+	<string name="menu_item_back">Precedente</string>
+	<string name="menu_item_next">Siguiente</string>
+	<string name="menu_item_prefs">Pref</string>
+	<string name="menu_item_refresh">Refrescar</string>
+	<string name="menu_item_scanner">Escanear</string>
+	<string name="menu_item_view">Ver</string>
+	<string name="menu_item_filter">Filtrar</string>
 	
-	<string name="loading_data">Please wait a few moment... Loading data...</string>
+	<string name="loading_data">Por favor espere unos momentos... Cargando...</string>
 	
-	<string name="notif_download_finish">Download finished</string>
+	<string name="notif_download_finish">Descarga finalizada</string>
 	<string name="notif_download_title">Download file : Done.</string>
-	<string name="notif_download_texte">Open File : </string>
-	<string name="notif_open">Open...</string>
-
+	<string name="notif_download_texte">Visualizando : </string>
+	<string name="notif_open">Visualizando...</string>
+	
 	
 	<!-- SEARCH RESULT -->
-	<string name="search_label">CMIS Repository</string>
+	<string name="search_label">CMIS Repositorios</string>
 	<string name="search_results_for">results for</string>
-	<string name="search_save">Saved search</string>
-	<string name="saved_search_title">Saved search for</string>
-	<string name="saved_search_option">Option for saved search</string>
-	<string name="saved_search_present">Saved search already present</string>
-	<string name="saved_search_create_error">A problem occured during creation action. Please try again...</string>
-	<string name="saved_search_create">Save search has been added sucessfully</string>
+	
 	
 	<!-- DOCUMENT DETAILS ACTIVITY -->
 	<string name="title_details">Details for</string>
@@ -129,14 +119,6 @@
     <string name="view">View</string>
     <string name="open">Open</string>
     <string name="open_with">Open with</string>
-    <string name="progress">Progress</string>
-    <string name="rename">Rename</string>
-    <string name="copy">Copy</string>
-	<string name="paste">Paste</string>
-	<string name="cut">Cut</string>
-	<string name="move">Move</string>
-	<string name="create_folder">Create folder</string>
-	<string name="sorting">Sorting</string>
 	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Developers</string>
@@ -147,13 +129,13 @@
 	<string name="about_share_app">Share Android CMIS Browser</string>
 	
 	<!-- FAVORITE ACTIVITY -->
-    <string name="favorite_create">Favorite has been added sucessfully</string>
-    <string name="favorite_present">This favorite is already present</string>
+    <string name="favorite_create">Favorite added : OK</string>
+    <string name="favorite_present">Favorite already present</string>
     <string name="favorite_create_error">A problem occured during creation action. Please try again...</string>
 	
-	<string name="favorite_delete">Favorite has been removed sucessfully</string>
+	<string name="favorite_delete">Favorite removed : OK</string>
     <string name="favorite_delete_error">A problem occured during delete action. Please try again...</string>
-	<string name="favorite_error">Favorite is not available or has been deleted.</string>
+	<string name="favorite_error">Favorite is not availale.</string>
 	<string name="favorite_error_loading">A problem occured during loading action. Please try again...</string>
 	
 	<string name="favorite_open">Choose your view...</string>
@@ -223,8 +205,8 @@
 	<string name="cmis_scan_desc">Enable QRCode scan and generator.</string>
 	
 	<string name="cmis_download">CmisDownloadConfirm</string>
-	<string name="cmis_download_title">Download confirmation</string>
-	<string name="cmis_download_desc">Ask for a confirmation before downloading.</string>
+	<string name="cmis_download_title">Téléchargement</string>
+	<string name="cmis_download_desc">Demander une confirmation avant téléchargement.</string>
 	
 	<string name="cmis_download_size">CmisDownloadSizeConfirm</string>
 	<string name="cmis_download_size_title">File Size</string>
@@ -235,32 +217,5 @@
 	<string name="file_size_kilobytes">KB</string>
 	<string name="file_size_megabytes">MB</string>
 	<string name="file_size_gigabytes">GB</string>
-	
-	<!-- FILE SYSTEM ACTIVITY -->
-	<string name="action_rename_desc">Enter a new name for this item</string>
-	<string name="action_delete_desc">Are you sure you want to delete this item : </string>
-	<string name="action_create_folder_des">Enter the name of your new folder </string>
-	
-	
-	<string name="action_sorting_title">Choose your sorting...</string>
-	<string name="action_sorting_name">Name</string>
-	<string name="action_sorting_size">Size</string>
-	<string name="action_sorting_date">Date</string>
-	
-	<string name="action_clipboard_add">This item has been added to clipboard.</string>
-	<string name="copied_file_name">copy_</string>
-	<string name="action_clear_clipboard">Clear clipboard</string>
-	<string name="action_clear_success">Clipboard has been cleared.</string>
-	<string name="action_paste_success">Paste action : ok</string>
-	
-	<!-- DOWNLOAD MANAGER -->
-	<string name="delete_list">Remove from list</string>
-	<string name="cancel_download">Cancel download</string>
-	<string name="cancel_progress">Cancel in progress...</string>
-	<string name="cancel_complete">Download has been canceled</string>
-	
-	<!-- SCANNER  -->
-	<string name="scan_error_url">This barecode is not valid for this application</string>
-	<string name="scan_error_repo">This URL is not from this repository.</string>
-	
+
 </resources>

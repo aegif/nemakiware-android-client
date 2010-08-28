@@ -36,6 +36,7 @@ import de.fmaul.android.cmis.asynctask.AbstractDownloadTask;
 import de.fmaul.android.cmis.asynctask.ItemPropertiesDisplayTask;
 import de.fmaul.android.cmis.database.Database;
 import de.fmaul.android.cmis.database.FavoriteDAO;
+import de.fmaul.android.cmis.database.SearchDAO;
 import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.CmisItem;
 import de.fmaul.android.cmis.repo.CmisItemLazy;
@@ -330,6 +331,30 @@ public class ActionUtils {
 		}
 	}
 	
+	public static void createSaveSearch(Activity activity, Server server, String name, String url){
+		try {
+			Database database = Database.create(activity);
+			SearchDAO searchDao = new SearchDAO(database.open());
+			long result = 1L;
+			
+			if (searchDao.isPresentByURL(url) == false){
+				result = searchDao.insert(name, url, server.getId());
+				if (result == -1){
+					Toast.makeText(activity, R.string.saved_search_create_error, Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(activity, R.string.saved_search_create, Toast.LENGTH_LONG).show();
+				}
+			} else {
+				Toast.makeText(activity, R.string.saved_search_present, Toast.LENGTH_LONG).show();
+			}
+			
+			database.close();
+			
+		} catch (Exception e) {
+			displayMessage(activity, R.string.generic_error);
+		}
+	}
+	
 	public static void displayDocumentDetails(Activity activity, CmisItem doc) {
 		displayDocumentDetails(activity, getRepository(activity).getServer(), doc);
 	}
@@ -435,6 +460,7 @@ public class ActionUtils {
 		i.setType(MimetypeUtils.getMimetype(contextActivity, contentFile));
 		contextActivity.startActivity(Intent.createChooser(i, contextActivity.getText(R.string.share)));
 	}
+	
 	
 	private static CmisRepository getRepository(Activity activity) {
 		return ((CmisApp) activity.getApplication()).getRepository();

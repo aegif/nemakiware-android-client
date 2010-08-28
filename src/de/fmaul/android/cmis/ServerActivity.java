@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -35,7 +37,9 @@ import de.fmaul.android.cmis.asynctask.ServerInfoLoadingTask;
 import de.fmaul.android.cmis.database.Database;
 import de.fmaul.android.cmis.database.ServerDAO;
 import de.fmaul.android.cmis.model.Server;
+import de.fmaul.android.cmis.repo.QueryType;
 import de.fmaul.android.cmis.utils.FileSystemUtils;
+import de.fmaul.android.cmis.utils.UIUtils;
 
 public class ServerActivity extends ListActivity {
 
@@ -52,11 +56,23 @@ public class ServerActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.server);
+		if (activityIsCalledWithSearchAction()){
+			Intent intent = new Intent(this, SearchActivity.class);
+			intent.putExtras(getIntent());
+			this.finish();
+			startActivity(intent);
+		} else {
+			setContentView(R.layout.server);
 
-		createServerList();
-		
-		registerForContextMenu(getListView());
+			createServerList();
+			
+			registerForContextMenu(getListView());
+		}
+	}
+	
+	private boolean activityIsCalledWithSearchAction() {
+		final String queryAction = getIntent().getAction();
+		return Intent.ACTION_SEARCH.equals(queryAction);
 	}
 	
 	public void createServerList(){
@@ -129,8 +145,9 @@ public class ServerActivity extends ListActivity {
 		menu.add(0, 2, Menu.NONE, getString(R.string.edit));
 		menu.add(0, 3, Menu.NONE, getString(R.string.delete));
 		menu.add(0, 4, Menu.NONE, getString(R.string.menu_item_favorites));
+		UIUtils.createSearchMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onContextItemSelected(MenuItem menuItem) {
 
@@ -141,7 +158,9 @@ public class ServerActivity extends ListActivity {
 			return false;
 		}
 
-		server = (Server) getListView().getItemAtPosition(menuInfo.position);
+		if (menuInfo != null){
+			server = (Server) getListView().getItemAtPosition(menuInfo.position);
+		}
 
 		switch (menuItem.getItemId()) {
 		case 1:
@@ -181,9 +200,36 @@ public class ServerActivity extends ListActivity {
 				startActivity(intent);
 			}
 			return true;
+		
+		case 20:
+			onSearchRequested(QueryType.TITLE);
+			return true;
+		case 21:
+			onSearchRequested(QueryType.FOLDER);
+			return true;
+		case 22:
+			onSearchRequested(QueryType.FULLTEXT);
+			return true;
+		case 23:
+			onSearchRequested(QueryType.CMISQUERY);
+			return true;
+		case 24:
+			Intent intent = new Intent(this, SavedSearchActivity.class);
+			intent.putExtra("server", server);
+			intent.putExtra("isFirstStart", true);
+			startActivity(intent);
+			return true;
 		default:
 			return super.onContextItemSelected(menuItem);
 		}
+	}
+	
+	public boolean onSearchRequested(QueryType queryType) {
+		Bundle appData = new Bundle();
+		appData.putString(QueryType.class.getName(), queryType.name());
+		appData.putSerializable("server", server);
+		startSearch("", false, appData, false);
+		return true;
 	}
 	
 	public void deleteServer(long id){
