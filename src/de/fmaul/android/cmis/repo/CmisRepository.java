@@ -159,8 +159,9 @@ public class CmisRepository {
 		case CMISQUERY:
 			return FeedUtils.getSearchQueryFeedCmisQuery(uriTemplateQuery, query);
 		case FULLTEXT:
-		default:
 			return FeedUtils.getSearchQueryFeedFullText(uriTemplateQuery, query);
+		default:
+			return FeedUtils.getSearchQueryFeed(uriTemplateQuery, query);
 		}
 	}
 

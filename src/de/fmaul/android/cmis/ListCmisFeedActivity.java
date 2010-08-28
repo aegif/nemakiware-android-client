@@ -60,6 +60,7 @@ import de.fmaul.android.cmis.utils.FeedUtils;
 import de.fmaul.android.cmis.utils.IntentIntegrator;
 import de.fmaul.android.cmis.utils.IntentResult;
 import de.fmaul.android.cmis.utils.StorageUtils;
+import de.fmaul.android.cmis.utils.UIUtils;
 
 public class ListCmisFeedActivity extends ListActivity {
 
@@ -93,71 +94,82 @@ public class ListCmisFeedActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		initWindow();
-		initActionIcon();
-		
-		Bundle extra = this.getIntent().getExtras();
-		if (extra != null && extra.getBoolean("isFirstStart")) {
-			firstStart = true;
-		}
-		
-		
-		//Restart
-		if (getLastNonConfigurationInstance() != null ){
-			save = (ListCmisFeedActivitySave) getLastNonConfigurationInstance();
-			this.item = save.getItem();
-			this.itemParent = save.getItemParent();
-			this.items = save.getItems();
-			this.currentStack = save.getCurrentStack();
-			firstStart = false;
-			new FeedDisplayTask(this, getRepository(), null, item, items).execute();
-		}
-		
-		//Search Context
-		if (activityIsCalledWithSearchAction() == false && getSaveContext() != null){
-			save = getSaveContext();
-			this.item = save.getItem();
-			this.itemParent = save.getItemParent();
-			this.items = save.getItems();
-			this.currentStack = save.getCurrentStack();
-			firstStart = false;
-			setSaveContext(null);
-			new FeedDisplayTask(this, getRepository(), null, item, items).execute();
-		}
-		
-		if (initRepository() == false){
-			processSearchOrDisplayIntent();
-		}
-		
-		//Filter Management
-		listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-			  public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-				  if (prefs.getBoolean(activity.getString(R.string.cmis_repo_params), false)){
-					  getRepository().generateParams(activity);
+		if (activityIsCalledWithSearchAction()){
+			Intent intent = new Intent(this, SearchActivity.class);
+			
+			intent.putExtras(getIntent());
+			
+			Server s = getRepository().getServer();
+			intent.putExtra("server", s);
+			intent.putExtra("title", s.getName());
+			this.finish();
+			startActivity(intent);
+		} else {
+			initWindow();
+			initActionIcon();
+			
+			Bundle extra = this.getIntent().getExtras();
+			if (extra != null && extra.getBoolean("isFirstStart")) {
+				firstStart = true;
+			}
+			
+			
+			//Restart
+			if (getLastNonConfigurationInstance() != null ){
+				save = (ListCmisFeedActivitySave) getLastNonConfigurationInstance();
+				this.item = save.getItem();
+				this.itemParent = save.getItemParent();
+				this.items = save.getItems();
+				this.currentStack = save.getCurrentStack();
+				firstStart = false;
+				new FeedDisplayTask(this, getRepository(), null, item, items).execute();
+			}
+			
+			//Search Context
+			/*if (activityIsCalledWithSearchAction() == false && getSaveContext() != null){
+				save = getSaveContext();
+				this.item = save.getItem();
+				this.itemParent = save.getItemParent();
+				this.items = save.getItems();
+				this.currentStack = save.getCurrentStack();
+				firstStart = false;
+				setSaveContext(null);
+				new FeedDisplayTask(this, getRepository(), null, item, items).execute();
+			}*/
+			
+			if (initRepository() == false){
+				processSearchOrDisplayIntent();
+			}
+			
+			//Filter Management
+			listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+				  public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+					  if (prefs.getBoolean(activity.getString(R.string.cmis_repo_params), false)){
+						  getRepository().generateParams(activity);
+					  }
 				  }
-			  }
-			};
-		PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(listener);
-
-		//Set Default Breadcrumbs
-		((TextView) activity.findViewById(R.id.path)).setText("/");
+				};
+			PreferenceManager.getDefaultSharedPreferences(context).registerOnSharedPreferenceChangeListener(listener);
+	
+			//Set Default Breadcrumbs
+			((TextView) activity.findViewById(R.id.path)).setText("/");
+		
+		}
 	}
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if (keyCode == KeyEvent.KEYCODE_BACK){
-	    	if (activityIsCalledWithSearchAction()){
-	    		activity.finish();
-	    		ActionUtils.openNewListViewActivity(activity, item);
-	    		return true;
-	    	} else if (getRepository().isPaging()) {
+	    	this.finish();
+	    	return true;
+	    	/*if (getRepository().isPaging()) {
 	    		getRepository().generateParams(activity, false);
 		    	goUP(true);
 		        return true;
 	    	} else {
 	    		goUP(true);
 		    	return true;
-	    	}
+	    	}*/
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
@@ -263,9 +275,9 @@ public class ListCmisFeedActivity extends ListActivity {
 	
 	public void processSearchOrDisplayIntent() {
 		if (getRepository() != null) {
-			if (activityIsCalledWithSearchAction()) {
-				doSearchWithIntent(getIntent());
-			} else {
+			//if (activityIsCalledWithSearchAction()) {
+			//	doSearchWithIntent(getIntent());
+			//} else {
 				// Start this activity from favorite
 				Bundle extras = getIntent().getExtras();
 				if (extras != null) {
@@ -274,7 +286,7 @@ public class ListCmisFeedActivity extends ListActivity {
 					}
 				}
 				new FeedDisplayTask(this, getRepository(), item).execute(item.getDownLink());
-			}
+			//}
 		} else {
 			Toast.makeText(this, getText(R.string.error_repo_connexion), 5);
 		}
@@ -287,14 +299,14 @@ public class ListCmisFeedActivity extends ListActivity {
 	 * @param intent
 	 * @return
 	 */
-	private QueryType getQueryTypeFromIntent(Intent intent) {
+	/*private QueryType getQueryTypeFromIntent(Intent intent) {
 		Bundle appData = intent.getBundleExtra(SearchManager.APP_DATA);
 		if (appData != null) {
 			String queryType = appData.getString(QueryType.class.getName());
 			return QueryType.valueOf(queryType);
 		}
 		return QueryType.FULLTEXT;
-	}
+	}*/
 
 	/**
 	 * Tests if this activity is called with a Search intent.
@@ -335,81 +347,12 @@ public class ListCmisFeedActivity extends ListActivity {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.setHeaderIcon(android.R.drawable.ic_menu_more);
-		menu.setHeaderTitle(this.getString(R.string.feed_menu_title));
-		
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-
-		CmisItem doc = (CmisItem) getListView().getItemAtPosition(info.position);
-		
-		menu.add(0, 2, Menu.NONE, getString(R.string.menu_item_details));
-		menu.add(0, 3, Menu.NONE, getString(R.string.menu_item_share));
-
-		if (doc != null && doc.getProperties().get("cmis:contentStreamLength") != null){
-			menu.add(0, 1, Menu.NONE, getString(R.string.download));
-		}
-		
-		menu.add(0, 4, Menu.NONE, getString(R.string.menu_item_favorites));
+		UIUtils.createContextMenu(activity, menu, menuInfo);
 	}
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem menuItem) {
-
-		AdapterView.AdapterContextMenuInfo menuInfo;
-		try {
-			menuInfo = (AdapterView.AdapterContextMenuInfo) menuItem.getMenuInfo();
-		} catch (ClassCastException e) {
-			return false;
-		}
-
-		CmisItem item = (CmisItem) getListView().getItemAtPosition(menuInfo.position);
-		if(prefs != null && prefs.getDataView() == Prefs.GRIDVIEW){
-			item = (CmisItem) gridview.getItemAtPosition(menuInfo.position);
-		} else {
-			item = (CmisItem) listView.getItemAtPosition(menuInfo.position);
-		}
-		
-		switch (menuItem.getItemId()) {
-		case 1:
-			if (item != null && item.hasChildren() == false) {
-				ActionUtils.openDocument(activity, item);
-			}
-			return true;
-		case 2:
-			if (item != null) {
-				ActionUtils.displayDocumentDetails(activity, item);
-			}
-			return true;
-		case 3:
-			if (item != null) {
-				ActionUtils.shareDocument(activity, getRepository().getServer().getWorkspace(), item);
-			}
-			return true;
-		case 4:
-			if (item != null) {
-				ActionUtils.createFavorite(activity, getRepository().getServer(), item);
-			}
-			return true;
-		default:
-			return super.onContextItemSelected(menuItem);
-		}
-	}
-
-	/**
-	 * Process the current intent as search intent, build a query url and
-	 * display the feed.
-	 * 
-	 * @param queryIntent
-	 */
-	private void doSearchWithIntent(final Intent queryIntent) {
-		final String queryString = queryIntent.getStringExtra(SearchManager.QUERY);
-
-		QueryType queryType = getQueryTypeFromIntent(queryIntent);
-		String searchFeed = getRepository().getSearchFeed(queryType, queryString);
-		
-		Log.d(TAG, "SearchFeed : " + searchFeed);
-		
-		new FeedDisplayTask(this, getRepository(), getString(R.string.search_results_for) + " '" + queryString + "'", true).execute(searchFeed);
+		return UIUtils.onContextItemSelected(this, menuItem, prefs);
 	}
 
 	protected void reload(String workspace) {
@@ -510,7 +453,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		MenuItem item = menu.add(Menu.NONE, 1, 0, R.string.menu_item_favorites);
 		item.setIcon(R.drawable.favorites);
 		createRepoMenu(menu);
-		createSearchMenu(menu);
+		UIUtils.createSearchMenu(menu);
 		createToolsMenu(menu);
 		item = menu.add(Menu.NONE, 3, 0, R.string.menu_item_about);
 		item.setIcon(R.drawable.cmisexplorer);
@@ -533,18 +476,6 @@ public class ListCmisFeedActivity extends ListActivity {
 		settingsMenu.add(Menu.NONE, 7, 0, R.string.menu_item_settings_reload);
 		settingsMenu.add(Menu.NONE, 8, 0, R.string.menu_item_settings_repo);
 		settingsMenu.add(Menu.NONE, 9, 0, R.string.menu_item_settings_ws);
-	}
-	
-	private void createSearchMenu(Menu menu) {
-		SubMenu searchMenu = menu.addSubMenu(R.string.menu_item_search);
-		searchMenu.setIcon(R.drawable.search);
-		searchMenu.getItem().setAlphabeticShortcut(SearchManager.MENU_KEY);
-		searchMenu.setHeaderIcon(android.R.drawable.ic_menu_info_details);
-
-		searchMenu.add(Menu.NONE, 4, 0, R.string.menu_item_search_title);
-		//searchMenu.add(Menu.NONE, 13, 0, R.string.menu_item_search_folder_title);
-		searchMenu.add(Menu.NONE, 5, 0, R.string.menu_item_search_fulltext);
-		searchMenu.add(Menu.NONE, 6, 0, R.string.menu_item_search_cmis);
 	}
 	
 	private void createToolsMenu(Menu menu) {
@@ -570,17 +501,22 @@ public class ListCmisFeedActivity extends ListActivity {
 		case 3:
 			startActivity(new Intent(this, AboutActivity.class));
 			return true;
-		case 4:
+		case 20:
 			onSearchRequested(QueryType.TITLE);
 			return true;
-		case 5:
+		case 21:
+			onSearchRequested(QueryType.FOLDER);
+			return true;
+		case 22:
 			onSearchRequested(QueryType.FULLTEXT);
 			return true;
-		case 6:
+		case 23:
 			onSearchRequested(QueryType.CMISQUERY);
 			return true;
-		case 13:
-			onSearchRequested(QueryType.FOLDER);
+		case 24:
+			Intent intents = new Intent(this, SavedSearchActivity.class);
+			intents.putExtra("server", getRepository().getServer());
+			startActivity(intents);
 			return true;
 		case 7:
 			restart();
@@ -698,13 +634,6 @@ public class ListCmisFeedActivity extends ListActivity {
 		Bundle appData = new Bundle();
 		appData.putString(QueryType.class.getName(), queryType.name());
 		startSearch("", false, appData, false);
-		
-		if (item == null){
-			item = getRepository().getRootItem();
-			itemParent = item;
-			currentStack.add(item);
-		}
-		((CmisApp) getApplication()).setSavedContextItems(new ListCmisFeedActivitySave(item, itemParent, getItems(), currentStack));
 		return true;
 	}
 	

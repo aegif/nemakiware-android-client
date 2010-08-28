@@ -67,6 +67,8 @@ public class FeedUtils {
 			throw new FeedLoadException(e);
 		} catch (DocumentException e) {
 			throw new FeedLoadException(e);
+		} catch (Exception e) {
+			throw new FeedLoadException(e);
 		}
 		return document;
 	}
@@ -147,6 +149,13 @@ public class FeedUtils {
 	
 	public static String getSearchQueryFeedFolderTitle(String urlTemplate, String query) {
 		return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:folder WHERE cmis:name LIKE '%" + query + "%'");
+	}
+	
+	public static String getSearchQueryFeed(String urlTemplate, String query) {
+		final CharSequence feedUrl = TextUtils.replace(urlTemplate, new String[] { "{q}", "{searchAllVersions}", "{maxItems}", "{skipCount}",
+				"{includeAllowableActions}", "{includeRelationships}" }, new String[] { query, "false", "50", "0", "false", "false" });
+
+		return feedUrl.toString();
 	}
 
 	public static String getSearchQueryFeedFullText(String urlTemplate, String query) {

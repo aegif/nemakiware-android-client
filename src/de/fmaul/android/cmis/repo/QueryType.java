@@ -16,5 +16,5 @@
 package de.fmaul.android.cmis.repo;
 
 public enum QueryType {
-	FULLTEXT, TITLE, CMISQUERY, FOLDER
+	FULLTEXT, TITLE, CMISQUERY, FOLDER, SAVEDSEARCH
 }

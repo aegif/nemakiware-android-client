@@ -35,15 +35,17 @@ import de.fmaul.android.cmis.asynctask.FeedItemDisplayTask;
 import de.fmaul.android.cmis.asynctask.ServerInitTask;
 import de.fmaul.android.cmis.database.Database;
 import de.fmaul.android.cmis.database.FavoriteDAO;
+import de.fmaul.android.cmis.database.SearchDAO;
 import de.fmaul.android.cmis.model.Favorite;
+import de.fmaul.android.cmis.model.Search;
 import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.FeedLoadException;
 
-public class FavoriteActivity extends ListActivity {
+public class SavedSearchActivity extends ListActivity {
 
-	private ArrayList<Favorite> listFavorite;
+	private ArrayList<Search> listSearch;
 	private Server currentServer;
 	private Activity activity;
 	private boolean firstStart = true;
@@ -61,44 +63,34 @@ public class FavoriteActivity extends ListActivity {
 		}
 		
 		setContentView(R.layout.server);
-		setTitle(this.getText(R.string.favorite_title) + " " + currentServer.getName());
+		setTitle(this.getText(R.string.saved_search_title) + " : " +  currentServer.getName());
 
-		createFavoriteList();
+		createSearchList();
 		registerForContextMenu(getListView());
 		initRepository();
 	}
 	
-	public void createFavoriteList(){
-		Database db = Database.create(this);
-		FavoriteDAO favoriteDao = new FavoriteDAO(db.open());
-		listFavorite = new ArrayList<Favorite>(favoriteDao.findAll(currentServer.getId()));
-		db.close();
-		setListAdapter(new FavoriteAdapter(this, R.layout.feed_list_row, listFavorite));
+	public void createSearchList(){
+		try {
+			Database db = Database.create(this);
+			SearchDAO searchDao = new SearchDAO(db.open());
+			listSearch = new ArrayList<Search>(searchDao.findAll(currentServer.getId()));
+			db.close();
+			setListAdapter(new SavedSearchAdapter(this, R.layout.feed_list_row, listSearch));
+		} catch (Exception e) {
+			ActionUtils.displayMessage(this, e.getMessage());
+		}
+		
 	}
 
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 
-		final Favorite f = listFavorite.get(position);
-		if (f != null){
-			if (f.getMimetype() != null && f.getMimetype().length() != 0 && f.getMimetype().equals("cmis:folder") == false){
-				new FeedItemDisplayTask(activity, currentServer, f.getUrl()).execute();
-			} else {
-				
-				AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-				builder.setMessage(FavoriteActivity.this.getText(R.string.favorite_open)).setCancelable(true)
-						.setPositiveButton(FavoriteActivity.this.getText(R.string.favorite_open_details), new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								new FeedItemDisplayTask(activity, currentServer, f.getUrl(), FeedItemDisplayTask.DISPLAY_DETAILS).execute();
-							}
-
-						}).setNegativeButton(FavoriteActivity.this.getText(R.string.favorite_open_folder), new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								new FeedItemDisplayTask(activity, currentServer, f.getUrl(), FeedItemDisplayTask.DISPLAY_FOLDER).execute();
-							}
-						});
-				AlertDialog alert = builder.create();
-				alert.show();
-			}
+		final Search s = listSearch.get(position);
+		if (s != null){
+			Intent intents = new Intent(this, SearchActivity.class);
+			intents.putExtra("savedSearch", s);
+			startActivity(intents);
+			this.finish();
 		} else {
 			ActionUtils.displayMessage(this, R.string.favorite_error);
 		}
@@ -107,7 +99,7 @@ public class FavoriteActivity extends ListActivity {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.setHeaderIcon(android.R.drawable.ic_menu_more);
-		menu.setHeaderTitle(this.getString(R.string.favorite_option));
+		menu.setHeaderTitle(this.getString(R.string.saved_search_option));
 		menu.add(0, 1, Menu.NONE, getString(R.string.delete));
 	}
 	
@@ -121,12 +113,12 @@ public class FavoriteActivity extends ListActivity {
 			return false;
 		}
 
-		Favorite favorite = (Favorite) getListView().getItemAtPosition(menuInfo.position);
+		Search search = (Search) getListView().getItemAtPosition(menuInfo.position);
 
 		switch (menuItem.getItemId()) {
 		case 1:
-			if (favorite != null) {
-				delete(favorite.getId());
+			if (search != null) {
+				delete(search.getId());
 			}
 			return true;
 		default:
@@ -136,11 +128,11 @@ public class FavoriteActivity extends ListActivity {
 	
 	public void delete(long id){
 		Database db = Database.create(this);
-		FavoriteDAO favoriteDao = new FavoriteDAO(db.open());
+		SearchDAO searchDao = new SearchDAO(db.open());
 
-		if (favoriteDao.delete(id)) {
+		if (searchDao.delete(id)) {
 			Toast.makeText(this, this.getString(R.string.favorite_delete), Toast.LENGTH_LONG).show();
-			createFavoriteList();
+			createSearchList();
 		} else {
 			Toast.makeText(this, this.getString(R.string.favorite_delete_error), Toast.LENGTH_LONG).show();
 		}
