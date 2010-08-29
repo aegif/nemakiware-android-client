@@ -125,18 +125,6 @@ public class ListCmisFeedActivity extends ListActivity {
 				new FeedDisplayTask(this, getRepository(), null, item, items).execute();
 			}
 			
-			//Search Context
-			/*if (activityIsCalledWithSearchAction() == false && getSaveContext() != null){
-				save = getSaveContext();
-				this.item = save.getItem();
-				this.itemParent = save.getItemParent();
-				this.items = save.getItems();
-				this.currentStack = save.getCurrentStack();
-				firstStart = false;
-				setSaveContext(null);
-				new FeedDisplayTask(this, getRepository(), null, item, items).execute();
-			}*/
-			
 			if (initRepository() == false){
 				processSearchOrDisplayIntent();
 			}
@@ -162,14 +150,6 @@ public class ListCmisFeedActivity extends ListActivity {
 	    if (keyCode == KeyEvent.KEYCODE_BACK){
 	    	this.finish();
 	    	return true;
-	    	/*if (getRepository().isPaging()) {
-	    		getRepository().generateParams(activity, false);
-		    	goUP(true);
-		        return true;
-	    	} else {
-	    		goUP(true);
-		    	return true;
-	    	}*/
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}

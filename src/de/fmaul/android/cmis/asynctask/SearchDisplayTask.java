@@ -71,6 +71,12 @@ public class SearchDisplayTask extends AsyncTask<String, Void, CmisItemCollectio
 		layoutListing.setVisibility(View.GONE);
 		activity.findViewById(R.id.empty).setVisibility(View.GONE);
 		
+		//Setting TITLE
+		activity.getWindow().setTitle(repository.getServer().getName() + " > " + activity.getString(R.string.search_progress));
+		
+		//Setting Breadcrumb
+		((TextView) activity.findViewById(R.id.path)).setText(">");
+		
 		//Loading Animation
 		layout = activity.findViewById(R.id.animation);
 		layout.setVisibility(View.VISIBLE);

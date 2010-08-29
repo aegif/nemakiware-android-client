@@ -19,11 +19,7 @@ import java.io.Serializable;
 
 public class Search implements Serializable{
 	
-	private static final long serialVersionUID = 1L;
-	
-	public static final String INFO_GENERAL = "serverInfoGeneral";
-	public static final String INFO_CAPABILITIES = "serverInfoCapabilites";
-	public static final String INFO_ACL_CAPABILITIES = "serverInfoACL";
+	private static final long serialVersionUID = 2L;
 	
 	private long id;
     private String name;

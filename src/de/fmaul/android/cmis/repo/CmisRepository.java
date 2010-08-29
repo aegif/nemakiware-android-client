@@ -36,6 +36,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import de.fmaul.android.cmis.FilterPrefs;
 import de.fmaul.android.cmis.Prefs;
+import de.fmaul.android.cmis.SearchPrefs;
 import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.utils.FeedLoadException;
 import de.fmaul.android.cmis.utils.FeedUtils;
@@ -150,12 +151,13 @@ public class CmisRepository {
 	 *            A query that will be run against the repository.
 	 * @return
 	 */
-	public String getSearchFeed(QueryType queryType, String query) {
+	public String getSearchFeed(Activity activity, QueryType queryType, String query) {
+		SearchPrefs pref = new SearchPrefs(activity);
 		switch (queryType) {
 		case TITLE:
-			return FeedUtils.getSearchQueryFeedTitle(uriTemplateQuery, query);
+			return FeedUtils.getSearchQueryFeedTitle(uriTemplateQuery, query, pref.getExactSearch());
 		case FOLDER:
-			return FeedUtils.getSearchQueryFeedFolderTitle(uriTemplateQuery, query);
+			return FeedUtils.getSearchQueryFeedFolderTitle(uriTemplateQuery, query, pref.getExactSearch());
 		case CMISQUERY:
 			return FeedUtils.getSearchQueryFeedCmisQuery(uriTemplateQuery, query);
 		case FULLTEXT:

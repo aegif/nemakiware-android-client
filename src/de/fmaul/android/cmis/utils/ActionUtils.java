@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 import de.fmaul.android.cmis.CmisApp;
 import de.fmaul.android.cmis.DocumentDetailsActivity;
@@ -300,8 +301,9 @@ public class ActionUtils {
 	}
 	
 	public static void createFavorite(Activity activity, Server server, CmisItemLazy item){
+		Database database = null;
 		try {
-			Database database = Database.create(activity);
+			database = Database.create(activity);
 			FavoriteDAO favDao = new FavoriteDAO(database.open());
 			long result = 1L;
 			
@@ -323,21 +325,28 @@ public class ActionUtils {
 			} else {
 				Toast.makeText(activity, R.string.favorite_present, Toast.LENGTH_LONG).show();
 			}
-			
-			database.close();
-			
 		} catch (Exception e) {
 			displayMessage(activity, R.string.generic_error);
+			for (int i = 0; i < e.getStackTrace().length; i++) {
+				Log.d("CmisRepository", e.getStackTrace()[i].toString());
+			}
+			
+		} finally {
+			if (database != null){
+				database.close();
+			}
 		}
 	}
 	
 	public static void createSaveSearch(Activity activity, Server server, String name, String url){
+		Database database = null;
 		try {
-			Database database = Database.create(activity);
+			database = Database.create(activity);
 			SearchDAO searchDao = new SearchDAO(database.open());
 			long result = 1L;
 			
 			if (searchDao.isPresentByURL(url) == false){
+				Log.d("CmisRepository", name + " - " + url + " - " + server.getId());
 				result = searchDao.insert(name, url, server.getId());
 				if (result == -1){
 					Toast.makeText(activity, R.string.saved_search_create_error, Toast.LENGTH_LONG).show();
@@ -348,10 +357,15 @@ public class ActionUtils {
 				Toast.makeText(activity, R.string.saved_search_present, Toast.LENGTH_LONG).show();
 			}
 			
-			database.close();
-			
 		} catch (Exception e) {
 			displayMessage(activity, R.string.generic_error);
+			for (int i = 0; i < e.getStackTrace().length; i++) {
+				Log.d("CmisRepository", e.getStackTrace()[i].toString());
+			}
+		} finally {
+			if (database != null){
+				database.close();
+			}
 		}
 	}
 	

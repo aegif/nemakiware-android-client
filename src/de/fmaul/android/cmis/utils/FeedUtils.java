@@ -143,12 +143,20 @@ public class FeedUtils {
 		return getWorkspace(readAtomFeed(url, user, password), workspace);
 	}
 
-	public static String getSearchQueryFeedTitle(String urlTemplate, String query) {
-		return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:document WHERE cmis:name LIKE '%" + query + "%'");
+	public static String getSearchQueryFeedTitle(String urlTemplate, String query, boolean isExact) {
+		if (isExact){
+			return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:document WHERE cmis:name LIKE '" + query + "'");
+		} else {
+			return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:document WHERE cmis:name LIKE '%" + query + "%'");
+		}
 	}
 	
-	public static String getSearchQueryFeedFolderTitle(String urlTemplate, String query) {
-		return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:folder WHERE cmis:name LIKE '%" + query + "%'");
+	public static String getSearchQueryFeedFolderTitle(String urlTemplate, String query, boolean isExact) {
+		if (isExact){
+			return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:folder WHERE cmis:name LIKE '" + query + "'");
+		} else {
+			return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:folder WHERE cmis:name LIKE '%" + query + "%'");
+		}
 	}
 	
 	public static String getSearchQueryFeed(String urlTemplate, String query) {
