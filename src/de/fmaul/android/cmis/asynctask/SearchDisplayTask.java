@@ -22,7 +22,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,40 +31,33 @@ import de.fmaul.android.cmis.GridAdapter;
 import de.fmaul.android.cmis.Prefs;
 import de.fmaul.android.cmis.R;
 import de.fmaul.android.cmis.repo.CmisItemCollection;
-import de.fmaul.android.cmis.repo.CmisItemLazy;
 import de.fmaul.android.cmis.repo.CmisRepository;
 import de.fmaul.android.cmis.utils.ActionUtils;
 import de.fmaul.android.cmis.utils.FeedLoadException;
 import de.fmaul.android.cmis.utils.StorageException;
 
-public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection> {
+public class SearchDisplayTask extends AsyncTask<String, Void, CmisItemCollection> {
 
-	private static final String TAG = "FeedDisplayTask";
+	private static final String TAG = "SearchDisplayTask";
 	
 	private final ListActivity activity;
 	private final CmisRepository repository;
-	private final String title;
-	private String feedParams = "";
+	private final String queryString;
 	private View layout;
-	private CmisItemLazy item;
 	private CmisItemCollection items;
 	private ListView layoutListing;
 	private GridView layoutGrid;
+	private Boolean errorOnExit = false;
 
-	public FeedDisplayTask(ListActivity activity, CmisRepository repository, String title) {
-		this(activity, repository, title, null, null);
+	public SearchDisplayTask(ListActivity activity, CmisRepository repository, String queryString) {
+		this(activity, repository, queryString, null);
 	}
 	
-	public FeedDisplayTask(ListActivity activity, CmisRepository repository, CmisItemLazy item) {
-		this(activity, repository, item.getTitle(), item, null);
-	}
-	
-	public FeedDisplayTask(ListActivity activity, CmisRepository repository, String title, CmisItemLazy item,  CmisItemCollection items) {
+	public SearchDisplayTask(ListActivity activity, CmisRepository repository, String queryString,  CmisItemCollection items) {
 		super();
 		this.activity = activity;
 		this.repository = repository;
-		this.title = title;
-		this.item = item;
+		this.queryString = queryString;
 		this.items = items;
 	}
 
@@ -73,17 +65,17 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 	protected void onPreExecute() {
 		activity.setProgressBarIndeterminateVisibility(true);
 		
-		if (items == null && repository != null && repository.getUseFeedParams()){
-				feedParams = repository.getFeedParams();
-		}
-		
 		//Hide Data during Animation
-		layoutGrid = (GridView) activity.findViewById(R.id.gridview);
 		layoutListing = activity.getListView();
 		
 		layoutListing.setVisibility(View.GONE);
-		layoutGrid.setVisibility(View.GONE);
 		activity.findViewById(R.id.empty).setVisibility(View.GONE);
+		
+		//Setting TITLE
+		activity.getWindow().setTitle(repository.getServer().getName() + " > " + activity.getString(R.string.search_progress));
+		
+		//Setting Breadcrumb
+		((TextView) activity.findViewById(R.id.path)).setText(">");
 		
 		//Loading Animation
 		layout = activity.findViewById(R.id.animation);
@@ -101,31 +93,25 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 				return items;
 			} else {
 				String feed = params[0];
-				if (feed == null || feed.length() == 0) {
-					return repository.getRootCollection(feedParams);
-				} else {
-					return repository.getCollectionFromFeed(feed + feedParams);
-				}
+				return repository.getCollectionFromFeed(feed);
 			}
 		} catch (FeedLoadException fle) {
 			Log.d(TAG, fle.getMessage());
-			//ActionUtils.displayMessage(activity, R.string.generic_error);
+			errorOnExit = true;
 			return CmisItemCollection.emptyCollection();
 		} catch (StorageException e) {
 			Log.d(TAG, e.getMessage());
-			//ActionUtils.displayMessage(activity, R.string.generic_error);
+			errorOnExit = true;
 			return CmisItemCollection.emptyCollection();
 		}
 	}
 
 	@Override
 	protected void onPostExecute(CmisItemCollection itemCollection) {
-		if (items == null){
-			if (title != null){
-				itemCollection.setTitle(title);
-			} else {
-				itemCollection.setTitle(item.getTitle());
-			}
+		itemCollection.setTitle(queryString);
+		
+		if (errorOnExit){
+			ActionUtils.displayMessage(activity, R.string.generic_error);
 		}
 		
 		((CmisApp) activity.getApplication()).setItems(itemCollection);
@@ -138,57 +124,14 @@ public class FeedDisplayTask extends AsyncTask<String, Void, CmisItemCollection>
 			layoutListing.setAdapter(new CmisItemCollectionAdapter(activity, R.layout.feed_list_row, itemCollection));
 		}
 		
-		
-		//No Case
-		Button back = ((Button)  activity.findViewById(R.id.back));
-		Button next = ((Button)  activity.findViewById(R.id.next));
-		
-		String title_paging = "";
-		
-			
-		if (repository.isPaging() == false){
-			Log.d(TAG, "PAGING : NO");
-			back.setVisibility(View.GONE);
-			next.setVisibility(View.GONE);
-		} else {
-			//First Case
-			if (repository.getSkipCount() == 0 && (repository.getSkipCount() + repository.getMaxItems()) >= repository.getNumItems()){
-				Log.d(TAG, "PAGING : UNIQUE");
-				back.setVisibility(View.GONE);
-				next.setVisibility(View.GONE);
-			} else if (repository.getSkipCount() == 0 && (repository.getSkipCount() + repository.getMaxItems()) < repository.getNumItems()){
-				Log.d(TAG, "PAGING : FIRST");
-				int nb_page = repository.getNumItems() > 0 ? ((int) Math.ceil((double) repository.getNumItems()/ (double) repository.getMaxItems())) : 0;
-				title_paging =  " [1/" + nb_page + "]";  
-				next.setVisibility(View.VISIBLE);
-				back.setVisibility(View.GONE);
-			} else if (repository.getSkipCount() != 0 && (repository.getSkipCount() + repository.getMaxItems())  >= repository.getNumItems()){
-				int nb_page = repository.getNumItems() > 0 ? ((int) Math.ceil((double) repository.getNumItems()/ (double) repository.getMaxItems())) : 0;
-				title_paging =  " [" + nb_page + "/" + nb_page + "]";
-				Log.d(TAG, "PAGING : END");
-				next.setVisibility(View.GONE);
-				back.setVisibility(View.VISIBLE);
-			} else {
-				int nb_page = repository.getNumItems() > 0 ? ((int) Math.ceil((double) repository.getNumItems()/ (double) repository.getMaxItems())) : 0;
-				int currentPage = repository.getSkipCount() > 0 ? ((int) Math.floor((double) repository.getSkipCount()/ (double) repository.getMaxItems())) + 1 : 0;
-				
-				title_paging =  " [" + currentPage + "/" + nb_page + "]";  
-				
-				Log.d(TAG, "PAGING : MIDDLE");
-				back.setVisibility(View.VISIBLE);
-				next.setVisibility(View.VISIBLE);
-			}
-		}
-		
 		//Setting TITLE
-		activity.getWindow().setTitle(itemCollection.getTitle() + title_paging);
+		activity.getWindow().setTitle(repository.getServer().getName() + " > " + activity.getString(R.string.menu_item_search));
 		
 		//Setting BreadCrumb
-		if (item != null && item.getPath() != null){
-			((TextView) activity.findViewById(R.id.path)).setText(item.getPath());
-		} else {
-			((TextView) activity.findViewById(R.id.path)).setText("/");
-		}
+		((TextView) activity.findViewById(R.id.path)).setText(
+				itemCollection.getItems().size() + " " 
+				+ activity.getString(R.string.search_results_for) + " "
+				+ queryString);
 		
 		//Show Data & Hide  Animation
 		prefs = ((CmisApp) activity.getApplication()).getPrefs();

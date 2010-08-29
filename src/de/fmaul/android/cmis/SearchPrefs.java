@@ -13,8 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.fmaul.android.cmis.repo;
+package de.fmaul.android.cmis;
 
-public enum QueryType {
-	FULLTEXT, TITLE, CMISQUERY, FOLDER, SAVEDSEARCH
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+public class SearchPrefs {
+
+	private final Activity activity;
+
+	public SearchPrefs(Activity activity) {
+		this.activity = activity;
+	}
+	
+	public boolean getExactSearch() {
+		return getPrefs().getBoolean(activity.getString(R.string.cmis_repo_exact_search), false);
+	}
+
+	private SharedPreferences getPrefs() {
+		return PreferenceManager.getDefaultSharedPreferences(activity);
+	}
 }

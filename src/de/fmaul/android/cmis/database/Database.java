@@ -57,6 +57,7 @@ public class Database {
 		public void onCreate(SQLiteDatabase db) {
 			ServerSchema.onCreate(db);
 			FavoriteSchema.onCreate(db);
+			SearchSchema.onCreate(db);
 			
 		}
 
@@ -64,6 +65,7 @@ public class Database {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			ServerSchema.onUpgrade(db, oldVersion, newVersion);
 			FavoriteSchema.onUpgrade(db, oldVersion, newVersion);
+			SearchSchema.onUpgrade(db, oldVersion, newVersion);
 		}
 	}
     
