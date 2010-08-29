@@ -49,10 +49,10 @@ public class SearchSchema {
 		db.execSQL(SearchSchema.QUERY_TABLE_CREATE);
 
 		SearchDAO searchDao = new SearchDAO(db); 
-		searchDao.insert("Query Document Test", "SELECT+*+FROM+cmis%3Adocument+WHERE+cmis%3Aname+LIKE+%27%25test%25%27", 0);
 		searchDao.insert("Query Document Test", "SELECT+*+FROM+cmis%3Adocument+WHERE+cmis%3Aname+LIKE+%27%25test%25%27", 1);
 		searchDao.insert("Query Document Test", "SELECT+*+FROM+cmis%3Adocument+WHERE+cmis%3Aname+LIKE+%27%25test%25%27", 2);
 		searchDao.insert("Query Document Test", "SELECT+*+FROM+cmis%3Adocument+WHERE+cmis%3Aname+LIKE+%27%25test%25%27", 3);
+		searchDao.insert("Query Document Test", "SELECT+*+FROM+cmis%3Adocument+WHERE+cmis%3Aname+LIKE+%27%25test%25%27", 4);
 		//searchDao.insert();
 	}
 

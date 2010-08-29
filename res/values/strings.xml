@@ -87,6 +87,14 @@
 	<string name="saved_search_present">Saved search already present</string>
 	<string name="saved_search_create_error">A problem occured during creation action. Please try again...</string>
 	<string name="saved_search_create">Save search has been added sucessfully</string>
+	<string name="search_create_title">Save your search</string>
+	<string name="search_create_desc">Enter the name of your saved search</string>
+	<string name="search_progress">Searhing in progress...</string>
+	
+	<string name="cmis_repo_search_pref">Search Preferences</string>
+	<string name="cmis_repo_exact_search">exactSearching</string>
+	<string name="cmis_repo_exact_search_title">Exact Search</string>
+	<string name="cmis_repo_exact_search_desc">No search approximate if enable</string>
 	
 	<!-- DOCUMENT DETAILS ACTIVITY -->
 	<string name="title_details">Details for</string>

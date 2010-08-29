@@ -114,6 +114,7 @@ public class SearchActivity extends ListActivity {
 		Button home = (Button) findViewById(R.id.home);
 		Button refresh = (Button) findViewById(R.id.refresh);
 		Button save = (Button) findViewById(R.id.save);
+		Button pref = (Button) findViewById(R.id.preference);
 		
 		home.setOnClickListener(new OnClickListener() {
 			@Override
@@ -132,7 +133,13 @@ public class SearchActivity extends ListActivity {
 				try {
 					if (StorageUtils.deleteFeedFile(getApplication(), getRepository().getServer().getWorkspace(), searchFeed)){
 						Log.d(TAG, "SearchFeed : " + searchFeed);
-						new SearchDisplayTask(SearchActivity.this, getRepository(), getString(R.string.search_results_for) + " '" + queryString + "'").execute(searchFeed);
+						if (savedSearch != null){
+							queryString = savedSearch.getName();
+						}
+						if (new SearchPrefs(activity).getExactSearch()){
+							searchFeed = searchFeed.replaceAll("%25", "");
+						}
+						new SearchDisplayTask(SearchActivity.this, getRepository(), queryString).execute(searchFeed);
 					}
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -145,10 +152,21 @@ public class SearchActivity extends ListActivity {
 			public void onClick(View v) {
 				DialogInterface.OnClickListener createFolder = new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
-						ActionUtils.createSaveSearch(activity, server, input.getText().toString(), searchFeed.substring( searchFeed.indexOf("=")+1, searchFeed.indexOf("&")));
+						if (server == null){
+							server = getRepository().getServer();
+						}
+						Log.d(TAG, "SearchFeed : " + server + " - " + searchFeed.substring( searchFeed.indexOf("=")+1, searchFeed.indexOf("&")) + " - " + input.getText().toString());
+						ActionUtils.createSaveSearch(SearchActivity.this, server, input.getText().toString(), searchFeed.substring( searchFeed.indexOf("=")+1, searchFeed.indexOf("&")));
 					}
 				};
 				createDialog(R.string.create_folder, R.string.action_create_folder_des, "", createFolder).show();
+			}
+		});
+		
+		pref.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(activity, SearchPreferencesActivity.class));
 			}
 		});
 		
@@ -221,14 +239,14 @@ public class SearchActivity extends ListActivity {
 	 */
 	private void doSearchWithIntent() {
 		if (savedSearch != null){
-			searchFeed = getRepository().getSearchFeed(QueryType.SAVEDSEARCH, savedSearch.getUrl());
+			searchFeed = getRepository().getSearchFeed(this, QueryType.SAVEDSEARCH, savedSearch.getUrl());
 			Log.d(TAG, "SearchFeed : " + searchFeed);
 			Log.d(TAG, "SearchFeed : " + searchFeed.substring(0, searchFeed.indexOf("&")));
 			new SearchDisplayTask(this, getRepository(), savedSearch.getName()).execute(searchFeed);
 		} else {
 			queryString = getIntent().getStringExtra(SearchManager.QUERY);
 			QueryType queryType = getQueryTypeFromIntent(getIntent());
-			searchFeed = getRepository().getSearchFeed(queryType, queryString);
+			searchFeed = getRepository().getSearchFeed(this, queryType, queryString);
 			Log.d(TAG, "SearchFeed : " + searchFeed);
 			Log.d(TAG, "SearchFeed : " + searchFeed.substring(0, searchFeed.indexOf("&")));
 			new SearchDisplayTask(this, getRepository(), queryString).execute(searchFeed);

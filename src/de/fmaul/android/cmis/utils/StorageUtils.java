@@ -36,6 +36,7 @@ import de.fmaul.android.cmis.CmisApp;
 
 import android.app.Application;
 import android.os.Environment;
+import android.util.Log;
 
 public class StorageUtils {
 
@@ -51,6 +52,7 @@ public class StorageUtils {
 
 	public static Document getFeedFromCache(Application app, String url, String workspace) throws StorageException {
 		File cacheFile = getFeedFile(app, workspace, md5(url));
+		Log.d("CmisRepository", cacheFile.getAbsolutePath());
 		Document document = null;
 		SAXReader reader = new SAXReader(); // dom4j SAXReader
 		try {
@@ -239,11 +241,12 @@ public class StorageUtils {
 	}
 	
 	public static boolean deleteFeedFile(Application app, String repoId, String url) throws StorageException {
-		File feedFile = getStorageFile(app, repoId, TYPE_FEEDS, null,  md5(url));
-		try {
-			FileUtils.deleteDirectory(feedFile);
+		File feedFile = getFeedFile(app, repoId, md5(url));
+		Log.d("CmisRepository", feedFile.getAbsolutePath());
+		if (feedFile.exists()){
+			feedFile.delete();
 			return true;
-		} catch (IOException e) {
+		} else {
 			return false;
 		}
 	}

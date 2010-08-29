@@ -86,6 +86,14 @@
 	<string name="saved_search_present">Cette recherche est déjà présente</string>
 	<string name="saved_search_create_error">Une erreur s\'est produite lors de la création de la recherche.. Veuillez recommencer...</string>
 	<string name="saved_search_create">La recherche a été sauvegardée.</string>
+	<string name="search_create_title">Sauvegarder votre recherche</string>
+	<string name="search_create_desc">Entrer le nom de la sauvegarde</string>
+	<string name="search_progress">Recherche en cours...</string>
+	
+	<string name="cmis_repo_search_pref">Préférences de recherche</string>
+	<string name="cmis_repo_exact_search">exactSearching</string>
+	<string name="cmis_repo_exact_search_title">Recherche Exacte</string>
+	<string name="cmis_repo_exact_search_desc">Aucune recherche approximative si coché</string>
 	
 	
 	<!-- DOCUMENT DETAILS ACTIVITY -->
