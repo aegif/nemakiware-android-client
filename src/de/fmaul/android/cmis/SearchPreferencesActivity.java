@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Florian Maul
+ * Copyright (C) 2010 Jean Marie PASCAL
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.fmaul.android.cmis.repo;
+package de.fmaul.android.cmis;
 
-public enum QueryType {
-	FULLTEXT, TITLE, CMISQUERY, FOLDER, SAVEDSEARCH
+import android.os.Bundle;
+import android.preference.PreferenceActivity;
+
+public class SearchPreferencesActivity extends PreferenceActivity {
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		addPreferencesFromResource(R.xml.search);
+	}
 }

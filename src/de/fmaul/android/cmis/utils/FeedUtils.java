@@ -67,6 +67,8 @@ public class FeedUtils {
 			throw new FeedLoadException(e);
 		} catch (DocumentException e) {
 			throw new FeedLoadException(e);
+		} catch (Exception e) {
+			throw new FeedLoadException(e);
 		}
 		return document;
 	}
@@ -141,12 +143,27 @@ public class FeedUtils {
 		return getWorkspace(readAtomFeed(url, user, password), workspace);
 	}
 
-	public static String getSearchQueryFeedTitle(String urlTemplate, String query) {
-		return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:document WHERE cmis:name LIKE '%" + query + "%'");
+	public static String getSearchQueryFeedTitle(String urlTemplate, String query, boolean isExact) {
+		if (isExact){
+			return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:document WHERE cmis:name LIKE '" + query + "'");
+		} else {
+			return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:document WHERE cmis:name LIKE '%" + query + "%'");
+		}
 	}
 	
-	public static String getSearchQueryFeedFolderTitle(String urlTemplate, String query) {
-		return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:folder WHERE cmis:name LIKE '%" + query + "%'");
+	public static String getSearchQueryFeedFolderTitle(String urlTemplate, String query, boolean isExact) {
+		if (isExact){
+			return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:folder WHERE cmis:name LIKE '" + query + "'");
+		} else {
+			return getSearchQueryFeedCmisQuery(urlTemplate, "SELECT * FROM cmis:folder WHERE cmis:name LIKE '%" + query + "%'");
+		}
+	}
+	
+	public static String getSearchQueryFeed(String urlTemplate, String query) {
+		final CharSequence feedUrl = TextUtils.replace(urlTemplate, new String[] { "{q}", "{searchAllVersions}", "{maxItems}", "{skipCount}",
+				"{includeAllowableActions}", "{includeRelationships}" }, new String[] { query, "false", "50", "0", "false", "false" });
+
+		return feedUrl.toString();
 	}
 
 	public static String getSearchQueryFeedFullText(String urlTemplate, String query) {
