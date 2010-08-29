@@ -1,4 +1,15 @@
 ===========================================================
+V 0.95
+
+New Feature :
+Search from server Screen
+Search Activity
+Saved search
+
+Bug Fix :
+Download Manager
+
+===========================================================
 V 0.94
 
 New Feature :
