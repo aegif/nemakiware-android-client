@@ -150,7 +150,7 @@ public class SearchActivity extends ListActivity {
 		save.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				DialogInterface.OnClickListener createFolder = new DialogInterface.OnClickListener() {
+				DialogInterface.OnClickListener saveSearch = new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						if (server == null){
 							server = getRepository().getServer();
@@ -159,7 +159,7 @@ public class SearchActivity extends ListActivity {
 						ActionUtils.createSaveSearch(SearchActivity.this, server, input.getText().toString(), searchFeed.substring( searchFeed.indexOf("=")+1, searchFeed.indexOf("&")));
 					}
 				};
-				createDialog(R.string.create_folder, R.string.action_create_folder_des, "", createFolder).show();
+				createDialog(R.string.search_create_title, R.string.search_create_desc, "", saveSearch).show();
 			}
 		});
 		
@@ -241,14 +241,12 @@ public class SearchActivity extends ListActivity {
 		if (savedSearch != null){
 			searchFeed = getRepository().getSearchFeed(this, QueryType.SAVEDSEARCH, savedSearch.getUrl());
 			Log.d(TAG, "SearchFeed : " + searchFeed);
-			Log.d(TAG, "SearchFeed : " + searchFeed.substring(0, searchFeed.indexOf("&")));
 			new SearchDisplayTask(this, getRepository(), savedSearch.getName()).execute(searchFeed);
 		} else {
 			queryString = getIntent().getStringExtra(SearchManager.QUERY);
 			QueryType queryType = getQueryTypeFromIntent(getIntent());
 			searchFeed = getRepository().getSearchFeed(this, queryType, queryString);
 			Log.d(TAG, "SearchFeed : " + searchFeed);
-			Log.d(TAG, "SearchFeed : " + searchFeed.substring(0, searchFeed.indexOf("&")));
 			new SearchDisplayTask(this, getRepository(), queryString).execute(searchFeed);
 		}
 	}
