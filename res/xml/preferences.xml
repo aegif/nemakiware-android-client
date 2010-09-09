@@ -43,4 +43,46 @@
 			android:defaultValue="100"
 			android:dependency="@string/cmis_download" />  
     </PreferenceCategory>
+    
+    <PreferenceCategory android:title="Quick Actions Prefs">
+	    <PreferenceScreen 
+	    	xmlns:android="http://schemas.android.com/apk/res/android"  
+	   	 	android:key="quickActionsPrefs"
+			android:title="Server" 
+			android:summary="Quick Actions Preferences"
+	   	 	>
+			<PreferenceCategory android:title="QuickActions">
+				<CheckBoxPreference 
+					android:key="@string/action_server_pref_open"
+					android:title="open" 
+					android:defaultValue="false"
+					 />
+				<CheckBoxPreference 
+					android:key="@string/action_server_pref_info"
+					android:title="info" 
+					android:defaultValue="false"
+					 />
+				 <CheckBoxPreference 
+					android:key="@string/action_server_pref_edit"
+					android:title="edit" 
+					android:defaultValue="false"
+					 />
+				<CheckBoxPreference 
+					android:key="@string/action_server_pref_favorite"
+					android:title="favorite" 
+					android:defaultValue="false"
+					 />
+				<CheckBoxPreference 
+					android:key="@string/action_server_pref_search"
+					android:title="search" 
+					android:defaultValue="false"
+					 />
+				<CheckBoxPreference 
+					android:key="@string/action_server_pref_delete"
+					android:title="delete" 
+					android:defaultValue="false"
+					 />
+			</PreferenceCategory>
+		</PreferenceScreen>
+    </PreferenceCategory>
 </PreferenceScreen>

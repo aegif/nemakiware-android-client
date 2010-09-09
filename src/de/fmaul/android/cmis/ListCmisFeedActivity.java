@@ -431,7 +431,7 @@ public class ListCmisFeedActivity extends ListActivity {
 		super.onCreateOptionsMenu(menu);
 		
 		MenuItem item = menu.add(Menu.NONE, 1, 0, R.string.menu_item_add_favorite);
-		item.setIcon(R.drawable.favorites);
+		item.setIcon(R.drawable.favorite);
 		createRepoMenu(menu);
 		UIUtils.createSearchMenu(menu);
 		createToolsMenu(menu);

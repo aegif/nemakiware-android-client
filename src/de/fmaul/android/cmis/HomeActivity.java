@@ -15,6 +15,10 @@
  */
 package de.fmaul.android.cmis;
 
+import java.util.ArrayList;
+
+import de.fmaul.android.cmis.utils.ActionUtils;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,9 +41,7 @@ public class HomeActivity extends Activity {
         }
         
         setContentView(R.layout.main);
-        
-        
-        initPrefs();
+        ActionUtils.initPrefs(this);
         
         ((Button) findViewById(R.id.about)).setOnClickListener(new OnClickListener() {
 			
@@ -84,19 +86,6 @@ public class HomeActivity extends Activity {
 			}
 		});
     }
-    
-    private void initPrefs() {
-    	SharedPreferences sharePrefs = PreferenceManager.getDefaultSharedPreferences(this);
-    	((CmisApp) getApplication()).setPrefs(
-    			new Prefs(
-    				Integer.parseInt(sharePrefs.getString("default_view", "1")),
-	    			sharePrefs.getString(getText(R.string.cmis_dlfolder).toString(), "/sdcard/Download"),
-	    			sharePrefs.getBoolean(getText(R.string.cmis_scan).toString(), true),
-    				sharePrefs.getBoolean(getText(R.string.cmis_download).toString(), true),
-    				sharePrefs.getString(getText(R.string.cmis_download_size).toString(), "100")
-	    			)
-    			);
-	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
        if (requestCode == 0) {

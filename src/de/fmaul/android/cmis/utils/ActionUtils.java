@@ -24,8 +24,10 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnCancelListener;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 import de.fmaul.android.cmis.CmisApp;
@@ -473,6 +475,28 @@ public class ActionUtils {
 		i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(contentFile));
 		i.setType(MimetypeUtils.getMimetype(contextActivity, contentFile));
 		contextActivity.startActivity(Intent.createChooser(i, contextActivity.getText(R.string.share)));
+	}
+	
+    public static void initPrefs(Activity activity) {
+    	SharedPreferences sharePrefs = PreferenceManager.getDefaultSharedPreferences(activity);
+    	ArrayList<Boolean> quickActionsServer = new ArrayList<Boolean>(6);
+    	quickActionsServer.add(sharePrefs.getBoolean(activity.getText(R.string.action_server_pref_open).toString(), true));
+    	quickActionsServer.add(sharePrefs.getBoolean(activity.getText(R.string.action_server_pref_info).toString(), true));
+    	quickActionsServer.add(sharePrefs.getBoolean(activity.getText(R.string.action_server_pref_edit).toString(), true));
+    	quickActionsServer.add(sharePrefs.getBoolean(activity.getText(R.string.action_server_pref_favorite).toString(), true));
+    	quickActionsServer.add(sharePrefs.getBoolean(activity.getText(R.string.action_server_pref_search).toString(), true));
+    	quickActionsServer.add(sharePrefs.getBoolean(activity.getText(R.string.action_server_pref_delete).toString(), true));
+
+    	((CmisApp) activity.getApplication()).setPrefs(
+    			new Prefs(
+    				Integer.parseInt(sharePrefs.getString("default_view", "1")),
+	    			sharePrefs.getString(activity.getText(R.string.cmis_dlfolder).toString(), "/sdcard/Download"),
+	    			sharePrefs.getBoolean(activity.getText(R.string.cmis_scan).toString(), true),
+    				sharePrefs.getBoolean(activity.getText(R.string.cmis_download).toString(), true),
+    				sharePrefs.getString(activity.getText(R.string.cmis_download_size).toString(), "100"),
+    				quickActionsServer
+	    			)
+    			);
 	}
 	
 	

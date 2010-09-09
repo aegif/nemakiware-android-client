@@ -17,9 +17,7 @@ package de.fmaul.android.cmis;
 
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import de.fmaul.android.cmis.utils.ActionUtils;
@@ -48,49 +46,14 @@ public class CmisPreferences extends PreferenceActivity {
 		    	return true;
 		    }
 		});
-		
-		
-		getPreferenceManager().findPreference("cmis_defaultview").setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			@Override
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
-		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setDataView(Integer.parseInt((String) newValue));
-		    	((ListPreference) preference).setValue((String) newValue);
-				return false;
-			}
-		});
-		
-		getPreferenceManager().findPreference(this.getText(R.string.cmis_dlfolder)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-		    @Override
-		    public boolean onPreferenceChange(Preference preference, Object newValue) {
-		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setDownloadFolder((String) newValue);
-		    	return true;
-		    }
-		});
-		
-		getPreferenceManager().findPreference(this.getText(R.string.cmis_scan)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-		    @Override
-		    public boolean onPreferenceChange(Preference preference, Object newValue) {
-		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setEnableScan((Boolean) newValue);
-		    	return true;
-		    }
-		});
-		
-		getPreferenceManager().findPreference(this.getText(R.string.cmis_download)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-		    @Override
-		    public boolean onPreferenceChange(Preference preference, Object newValue) {
-		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setConfirmDownload((Boolean) newValue);
-		    	return true;
-		    }
-		});
-		
-		getPreferenceManager().findPreference(this.getText(R.string.cmis_download_size)).setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-		    @Override
-		    public boolean onPreferenceChange(Preference preference, Object newValue) {
-		    	((CmisApp) CmisPreferences.this.getApplication()).getPrefs().setDownloadFileSize((String) newValue);
-		    	return true;
-		    }
-		});
-		
 	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		ActionUtils.initPrefs(this);
+	}
+	
 	
 }
