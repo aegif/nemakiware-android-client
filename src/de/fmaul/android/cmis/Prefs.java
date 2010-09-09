@@ -15,6 +15,8 @@
  */
 package de.fmaul.android.cmis;
 
+import java.util.ArrayList;
+
 public class Prefs {
 
 	public static  final int LISTVIEW = 1;
@@ -25,7 +27,7 @@ public class Prefs {
 	private boolean enableScan;
 	private boolean confirmDownload;
 	private String downloadFileSize;
-	
+	private ArrayList<Boolean> quickActionServer;
 	
 	public Prefs(int dataView) {
 		super();
@@ -33,13 +35,20 @@ public class Prefs {
 	}
 
 	
-	public Prefs(int dataView, String downloadFolder, boolean enableScan, boolean confirmDownload, String downloadFileSize) {
+	public Prefs(
+			int dataView, 
+			String downloadFolder, 
+			boolean enableScan, 
+			boolean confirmDownload, 
+			String downloadFileSize,
+			ArrayList<Boolean> quickActionServer) {
 		super();
 		this.dataView = dataView;
 		this.downloadFolder = downloadFolder;
 		this.enableScan = enableScan;
 		this.confirmDownload = confirmDownload;
 		this.downloadFileSize = downloadFileSize;
+		this.quickActionServer = quickActionServer;
 	}
 
 
@@ -88,5 +97,15 @@ public class Prefs {
 
 	public String getDownloadFileSize() {
 		return downloadFileSize;
+	}
+
+
+	public void setQuickActionServer(ArrayList<Boolean> quickActionServer) {
+		this.quickActionServer = quickActionServer;
+	}
+
+
+	public ArrayList<Boolean> getQuickActionServer() {
+		return quickActionServer;
 	}
 }

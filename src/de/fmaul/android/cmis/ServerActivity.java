@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,9 +27,10 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 import de.fmaul.android.cmis.asynctask.ServerInfoLoadingTask;
@@ -38,7 +38,8 @@ import de.fmaul.android.cmis.database.Database;
 import de.fmaul.android.cmis.database.ServerDAO;
 import de.fmaul.android.cmis.model.Server;
 import de.fmaul.android.cmis.repo.QueryType;
-import de.fmaul.android.cmis.utils.FileSystemUtils;
+import de.fmaul.android.cmis.utils.ActionItem;
+import de.fmaul.android.cmis.utils.QuickAction;
 import de.fmaul.android.cmis.utils.UIUtils;
 
 public class ServerActivity extends ListActivity {
@@ -120,7 +121,6 @@ public class ServerActivity extends ListActivity {
 	}
 	
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-
 		Server s = listServer.get(position);
 		if (s != null){
 			
@@ -134,7 +134,6 @@ public class ServerActivity extends ListActivity {
 		} else {
 			Toast.makeText(this, R.string.generic_error, Toast.LENGTH_LONG);
 		}
-		
 	}
 	
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
@@ -256,6 +255,59 @@ public class ServerActivity extends ListActivity {
 	
 	public void getInfoServer(Server server){
 		new ServerInfoLoadingTask(this, server).execute();
+	}
+	
+	private static ArrayList<String> getSearchItems(Activity activity) {
+		ArrayList<String> filters = new ArrayList<String>(5);
+		filters.add(activity.getText(R.string.menu_item_search_title).toString());
+		filters.add(activity.getText(R.string.menu_item_search_folder_title).toString());
+		filters.add(activity.getText(R.string.menu_item_search_fulltext).toString());
+		filters.add(activity.getText(R.string.menu_item_search_cmis).toString());
+		filters.add(activity.getText(R.string.menu_item_search_saved_search).toString());
+		return filters;
+	}
+	
+	private ArrayList<QueryType> getQueryType() {
+		ArrayList<QueryType> filters = new ArrayList<QueryType>(5);
+		filters.add(QueryType.TITLE);
+		filters.add(QueryType.FOLDER);
+		filters.add(QueryType.FULLTEXT);
+		filters.add(QueryType.CMISQUERY);
+		filters.add(null);
+		return filters;
+	}
+	
+	private CharSequence[] getSearchItemsLabel() {
+		ArrayList<String> filters = getSearchItems(this);
+		return filters.toArray(new CharSequence[filters.size()]);
+	}
+	
+	void startSearch(){
+		CharSequence[] cs = getSearchItemsLabel(); 
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setIcon(R.drawable.search);
+		builder.setTitle(R.string.menu_item_search);
+		builder.setSingleChoiceItems(cs, -1, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (getQueryType().get(which) != null){
+					onSearchRequested(getQueryType().get(which));
+				} else {
+					Intent intent = new Intent(ServerActivity.this, SavedSearchActivity.class);
+					intent.putExtra("server", server);
+					intent.putExtra("isFirstStart", true);
+					startActivity(intent);
+				}
+				 dialog.dismiss();
+			}
+		});
+		builder.setNegativeButton(this.getText(R.string.cancel), new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	        	   dialog.cancel();
+	           }
+	       });
+		AlertDialog alert = builder.create();
+		alert.show();
 	}
 	
 }

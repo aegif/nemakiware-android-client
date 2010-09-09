@@ -271,4 +271,12 @@
 	<string name="scan_error_url">This barecode is not valid for this application</string>
 	<string name="scan_error_repo">This URL is not from this repository.</string>
 	
+	<!-- QUICK ACTIONS -->
+	<string name="action_server_pref_favorite">actionPrefFavorite</string>
+	<string name="action_server_pref_edit">actionPrefEdit</string>
+	<string name="action_server_pref_open">actionPrefOpen</string>
+	<string name="action_server_pref_search">actionPrefSearch</string>
+	<string name="action_server_pref_delete">actionPrefDelete</string>
+	<string name="action_server_pref_info">actionPrefInfo</string>
+	
 </resources>
