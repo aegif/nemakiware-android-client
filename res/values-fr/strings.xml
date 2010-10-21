@@ -16,7 +16,7 @@
 	<string name="context_menu_title">Options de l\'entrepôt</string>
 	
 	<string name="server_delete">La suppression de l\'entrepôt est effectuée</string>
-    <string name="server_delete_error">Un problème a été rencontré durant la suppression. Veuillez réessayer.</string>
+	<string name="server_delete_error">Un problème a été rencontré durant la suppression. Veuillez réessayer.</string>
 	
 	
 	<!-- SERVER EDIT ACTIVITY -->
@@ -37,24 +37,25 @@
 	<string name="server_info_acl">ACL</string>
 	<string name="server_info_capabilites">Capabilities</string>
 	
+
 	<!-- LIST CMIS FEED ACTIVITY -->
 	<string name="feed_menu_title">Option de l\'élément</string>
 	
 	<string name="menu_item_settings">Paramètres</string>
-    <string name="menu_item_settings_reload">Recharger le contexte</string>
-    <string name="menu_item_settings_repo">Changer d\'entrepôt</string>
-    <string name="menu_item_settings_ws">Changer d\'espace de travail</string>
-    <string name="menu_item_about">A Propos</string>
+	<string name="menu_item_settings_reload">Recharger le contexte</string>
+	<string name="menu_item_settings_repo">Changer d\'entrepôt</string>
+	<string name="menu_item_settings_ws">Changer d\'espace de travail</string>
+	<string name="menu_item_about">A Propos</string>
 	<string name="menu_item_search">Recherche</string>
 	<string name="menu_item_search_cmis">Requête CMIS</string>
-    <string name="menu_item_search_fulltext">Recherche plein texte</string>
-    <string name="menu_item_search_title">Par titre du document</string>
-    <string name="menu_item_search_folder_title">Par titre du répertoire</string>
-    <string name="menu_item_search_saved_search">Recherche sauvegardée</string>
-    
-    <string name="menu_item_details">Afficher les details</string>
-	<string name="menu_item_share">Partager...</string>
+	<string name="menu_item_search_fulltext">Recherche plein texte</string>
+	<string name="menu_item_search_title">Par titre du document</string>
+	<string name="menu_item_search_folder_title">Par titre du répertoire</string>
+	<string name="menu_item_search_saved_search">Recherche sauvegardée</string>
 	
+	<string name="menu_item_details">Afficher les details</string>
+	<string name="menu_item_share">Partager...</string>
+	<string name="menu_item_add_favorite">Favoris</string>
 	<string name="menu_item_favorites">Favoris</string>
 	
 	<string name="menu_item_home">Home</string>
@@ -95,7 +96,6 @@
 	<string name="cmis_repo_exact_search_title">Recherche Exacte</string>
 	<string name="cmis_repo_exact_search_desc">Aucune recherche approximative si coché</string>
 	
-	
 	<!-- DOCUMENT DETAILS ACTIVITY -->
 	<string name="title_details">Les détails pour</string>
 	
@@ -121,25 +121,25 @@
 	
 	<!-- GENERIC ACTION STRING -->
 	<string name="delete">Supprimer...</string>
-    <string name="edit">Editer</string>
-    <string name="validate">Valider</string>
-    <string name="download">Télécharger</string>
-    <string name="share">Partager</string>
-    <string name="quit">Quitter</string>
-    <string name="loading">Chargement...</string>
-    <string name="data_empty">Aucune donnée disponible...</string>
-    <string name="qrcode">QRCode</string>
-    <string name="generic_error">Une erreur s\'est produite lors du traitement. Veuillez réessayer..</string>
+	<string name="edit">Editer</string>
+	<string name="validate">Valider</string>
+	<string name="download">Télécharger</string>
+	<string name="share">Partager</string>
+	<string name="quit">Quitter</string>
+	<string name="loading">Chargement...</string>
+	<string name="data_empty">Aucune donnée disponible...</string>
+	<string name="qrcode">QRCode</string>
+	<string name="generic_error">Une erreur s\'est produite lors du traitement. Veuillez réessayer..</string>
 	<string name="confirm">Confirmer</string>
-    <string name="cancel">Annuler</string>
-    <string name="yes">Oui</string>
-    <string name="no">Non</string>
-    <string name="view">Voir</string>
-    <string name="open">Ouvrir</string>
-    <string name="open_with">Ouvrir avec</string>
-    <string name="progress">Progression</string>
-    <string name="rename">Renommer</string>
-    <string name="copy">Copier</string>
+	<string name="cancel">Annuler</string>
+	<string name="yes">Oui</string>
+	<string name="no">Non</string>
+	<string name="view">Voir</string>
+	<string name="open">Ouvrir</string>
+	<string name="open_with">Ouvrir avec</string>
+	<string name="progress">Progression</string>
+	<string name="rename">Renommer</string>
+	<string name="copy">Copier</string>
 	<string name="paste">Coller</string>
 	<string name="cut">Couper</string>
 	<string name="move">Déplacer</string>
@@ -155,23 +155,23 @@
 	<string name="about_share_app">Partager Android CMIS Browser via un QRCode</string>
 	
 	<!-- FAVORITE ACTIVITY -->
-    <string name="favorite_create">Le favori a été ajouté.</string>
-    <string name="favorite_present">Ce favori est déjà présent</string>
-    <string name="favorite_create_error">Une erreur s\'est produite lors de la création du favori.. Veuillez recommencer...</string>
+	<string name="favorite_create">Le favori a été ajouté.</string>
+	<string name="favorite_present">Ce favori est déjà présent</string>
+	<string name="favorite_create_error">Une erreur s\'est produite lors de la création du favori.. Veuillez recommencer...</string>
 	
 	<string name="favorite_delete">Le favori a été supprimé.</string>
-    <string name="favorite_delete_error">Une erreur s\'est produite lors de la suppression du favori.. Veuillez recommencer...</string>
+	<string name="favorite_delete_error">Une erreur s\'est produite lors de la suppression du favori.. Veuillez recommencer...</string>
 	<string name="favorite_error">Le favori n\'est pas accessible ou n\'existe plus.</string>
 	<string name="favorite_error_loading">Une erreur s\'est produite lors de la chargement du favori.. Veuillez recommencer...</string>
-    
-    <string name="favorite_open">Veuillez choisir une vue...</string>
+	
+	<string name="favorite_open">Veuillez choisir une vue...</string>
 	<string name="favorite_open_folder">Répertoire</string>
 	<string name="favorite_open_details">Détails</string>
 	
 	<string name="favorite_title">Favoris pour</string>
 	<string name="favorite_option">Option du favori</string>
-    
-    <!-- FILTER/PREFRENCE ACTIVITY -->
+	
+	<!-- FILTER/PREFRENCE ACTIVITY -->
 	<string name="cmis_repo_filter_pref">Préférence de filtre</string>
 	
 	<string name="cmis_repo_params">CmisRepoParams</string>
@@ -199,16 +199,16 @@
 	<string name="cmis_repo_paging_desc">Permettre la pagination</string>
 	
 	<string name="cmis_repo_skipcount">CmisRepoSkipCount</string>
-    
-    <string name="item_filter_title">Choisissez votre filtre...</string>
-    <string name="item_filter_object">Objet</string>
+	
+	<string name="item_filter_title">Choisissez votre filtre...</string>
+	<string name="item_filter_object">Objet</string>
 	<string name="item_filter_folder">Répertoire</string>
 	<string name="item_filter_document">Document</string>
 	<string name="item_filter_content">Contenu</string>
 	<string name="item_filter_extra">Extra</string>
 	<string name="item_filter_all">Tout</string>
-    
-    <!-- PREFRENCE ACTIVITY -->
+	
+	<!-- PREFRENCE ACTIVITY -->
 	<string name="cmis_repo_pref">Préférences</string>
 	
 	<string name="cmis_repo_data">Données</string>
@@ -238,7 +238,6 @@
 	<string name="cmis_download_size_title">Taille du fichier</string>
 	<string name="cmis_download_size_desc">Taille du fichier (en Ko) à partir duquel on demande une confirmation.</string>
 	
-
 	<!-- GENERIC STRING -->
 	<string name="file_size_bytes">octets</string>
 	<string name="file_size_kilobytes">Ko</string>
@@ -260,7 +259,7 @@
 	<string name="action_clear_clipboard">Effacer</string>
 	<string name="action_clear_success">Le presse-papier a été éffacé.</string>
 	<string name="action_paste_success">La copie s\'est bien passée</string>
-
+	
 	<!-- DOWNLOAD MANAGER -->
 	<string name="delete_list">Supprimer de la liste</string>
 	<string name="cancel_download">Annuler le téléchargement</string>
@@ -270,4 +269,5 @@
 	<!-- SCANNER  -->
 	<string name="scan_error_url">Ce code barre est invalide pour cette application.</string>
 	<string name="scan_error_repo">Cette URL ne provient pas de cet entrepôt de données.</string>
+
 </resources>
