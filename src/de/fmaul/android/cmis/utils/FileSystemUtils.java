@@ -62,15 +62,17 @@ public class FileSystemUtils {
 		// Recursively delete all contents.
 		File[] files = file.listFiles();
 		
-		for (int x=0; x<files.length; x++) {
-			File childFile = files[x];
-			if (childFile.isDirectory()) {
-				if (!recursiveDelete(childFile)) {
-					return false;
-				}
-			} else {
-				if (!childFile.delete()) {
-					return false;
+		if (files != null) {
+			for (int x=0; x<files.length; x++) {
+				File childFile = files[x];
+				if (childFile.isDirectory()) {
+					if (!recursiveDelete(childFile)) {
+						return false;
+					}
+				} else {
+					if (!childFile.delete()) {
+						return false;
+					}
 				}
 			}
 		}
