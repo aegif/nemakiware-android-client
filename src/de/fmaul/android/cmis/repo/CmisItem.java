@@ -59,8 +59,8 @@ public class CmisItem extends CmisItemLazy {
 		downLink = "";
 		contentUrl = "";
 		mimeType = "";
-		author = entry.element("author").element("name").getText();
-		modificationDate = parseXmlDate(entry.element("updated").getText());
+		author = getAuthorName(entry);
+		modificationDate = getModificationDate(entry);
 
 		Element contentElement = entry.element("content");
 		if (contentElement != null) {
@@ -99,6 +99,25 @@ public class CmisItem extends CmisItemLazy {
 			baseType = properties.get(CmisProperty.OBJECT_BASETYPEID).getValue();
 		}
 		
+	}
+
+	private Date getModificationDate(Element entry) {
+		Element updated = entry.element("updated");
+		if (updated != null) {
+			return parseXmlDate(updated.getText());
+		}
+		else return null;
+	}
+
+	private String getAuthorName(Element entry) {
+		Element author = entry.element("author");
+		if (author != null) {
+			Element name = author.element("name");
+			if (name != null) {
+				return name.getText();
+			}
+		}
+		return "";
 	}
 
 	private Date parseXmlDate(String date) {
