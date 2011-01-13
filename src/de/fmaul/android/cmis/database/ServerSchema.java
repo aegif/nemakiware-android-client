@@ -57,9 +57,9 @@ public class ServerSchema {
 		db.execSQL(ServerSchema.QUERY_TABLE_CREATE);
 
 		ServerDAO serverDao = new ServerDAO(db); 
-		serverDao.insert("CMIS Nuxeo", "http://cmis.demo.nuxeo.org/nuxeo/site/cmis/repository", "Administrator", "Administrator", "default");
+		serverDao.insert("CMIS Nuxeo", "http://cmis.demo.nuxeo.org/nuxeo/atom/cmis", "Administrator", "Administrator", "Nuxeo Repository default");
 		serverDao.insert("CMIS Alfresco", "http://cmis.alfresco.com/service/cmis", "admin", "admin", "Main Repository");
-		serverDao.insert("CMIS eXo", "http://cmis.exoplatform.org/xcmis1/rest/cmisatom", "", "", "cmis1");
+		serverDao.insert("CMIS eXo", "http://xcmis.org/xcmis1/rest/cmisatom", "", "", "cmis1");
 		serverDao.insert("CMIS Day CRX", "http://cmis.day.com/cmis/repository", "", "", "CRX");
 	}
 
