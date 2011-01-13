@@ -16,7 +16,7 @@
   <string name="context_menu_title">Propietà del Server</string>
   
   <string name="server_delete">Server Cancellato Correttamente</string>
-  <string name="server_delete_error">E' avvenuto un problema durante la cancellazione di un server. Perpiacere provaci ancora...</string>
+  <string name="server_delete_error">E\' avvenuto un problema durante la cancellazione di un server. Perpiacere provaci ancora...</string>
   
   
   <!-- SERVER EDIT ACTIVITY -->
@@ -85,7 +85,7 @@
   <string name="saved_search_title">Risultati memorizzati</string>
   <string name="saved_search_option">Opzioni della ricerca memorizzata</string>
   <string name="saved_search_present"></string>
-  <string name="saved_search_create_error">E' avvenuto un problema durante la creazione di una azione. Perpiacere provaci ancora...</string>
+  <string name="saved_search_create_error">E\' avvenuto un problema durante la creazione di una azione. Perpiacere provaci ancora...</string>
   <string name="saved_search_create">La ricerca è stata salvata correttamente</string>
   <string name="search_create_title">Salva la tua ricerca</string>
   <string name="search_create_desc">Inserisci il nome della ricerca da salvare</string>
@@ -103,7 +103,7 @@
   <string name="main_no_items">Nessun documento presente</string>
   <string name="error_file_does_not_exists">Il file scaricato non esiste</string>
   <string name="application_not_available">Nessuna applicazione è associata a questo tipo di file</string>
-  <string name="error_downloading_content">E' avvenuto un errore durante il download dal repository CMIS.</string>
+  <string name="error_downloading_content">E\' avvenuto un errore durante il download dal repository CMIS.</string>
   
   <string name="no_properties">Nessuna proprietà trovata.</string>
   <string name="confirm_donwload">Sei sicuro di voler scaricare questo</string>
@@ -129,7 +129,7 @@
   <string name="loading">Sto caricando...</string>
   <string name="data_empty">Nessun dato disponibile</string>
   <string name="qrcode">QRCode</string>
-  <string name="generic_error">E' avvenuto un errore. Prova ancora...</string>
+  <string name="generic_error">E\' avvenuto un errore. Prova ancora...</string>
   <string name="confirm">Conferma</string>
   <string name="cancel">Annulla</string>
   <string name="yes">Si</string>
@@ -156,13 +156,13 @@
   
   <!-- FAVORITE ACTIVITY -->
   <string name="favorite_create">Aggiunto correttamente ai preferiti</string>
-  <string name="favorite_present">E' già presente nei preferiti</string>
-  <string name="favorite_create_error">E' avvenuto un problema durante la creazione. Perpiacere provaci ancora...</string>
+  <string name="favorite_present">E\' già presente nei preferiti</string>
+  <string name="favorite_create_error">E\' avvenuto un problema durante la creazione. Perpiacere provaci ancora...</string>
   
   <string name="favorite_delete">Rimosso correttamente dai preferiti</string>
-  <string name="favorite_delete_error">E' avvenuto un problema durante la cancellazione. Perpiacere provaci ancora</string>
+  <string name="favorite_delete_error">E\' avvenuto un problema durante la cancellazione. Perpiacere provaci ancora</string>
   <string name="favorite_error">Questo preferito o non è disponibile o è stato cancellato</string>
-  <string name="favorite_error_loading">E' avvenuto un problema durante il caricamento. Perpiacere provaci ancora...</string>
+  <string name="favorite_error_loading">E\' avvenuto un problema durante il caricamento. Perpiacere provaci ancora...</string>
   
   <string name="favorite_open">Scegli una vista...</string>
   <string name="favorite_open_folder">Cartelle</string>
@@ -192,7 +192,7 @@
   
   <string name="cmis_repo_orderby">CmisRepoOrderBy</string>
   <string name="cmis_repo_orderby_title">Ordina per</string>
-  <string name="cmis_repo_orderby_desc">Seleziona l'ordine con cui sono mostrate le righe</string>
+  <string name="cmis_repo_orderby_desc">Seleziona l\'ordine con cui sono mostrate le righe</string>
   
   <string name="cmis_repo_paging">CmisRepoPaging</string>
   <string name="cmis_repo_paging_title">Paginazione</string>
@@ -254,14 +254,14 @@
   <string name="action_sorting_size">Dimensione</string>
   <string name="action_sorting_date">Data</string>
   
-  <string name="action_clipboard_add">L'elemento è stato aggiunto agli appunti</string>
+  <string name="action_clipboard_add">L\'elemento è stato aggiunto agli appunti</string>
   <string name="copied_file_name">copia_</string>
   <string name="action_clear_clipboard">Cancella gli appunti</string>
   <string name="action_clear_success">Gli appunti sono stati cancellati.</string>
   <string name="action_paste_success">Dati copiati correttamente.</string>
   
   <!-- DOWNLOAD MANAGER -->
-  <string name="delete_list">Rimuovi dall'elenco</string>
+  <string name="delete_list">Rimuovi dall\'elenco</string>
   <string name="cancel_download">Elimina il download</string>
   <string name="cancel_progress">Download in corso</string>
   <string name="cancel_complete">Il download è stato fermato...</string>
