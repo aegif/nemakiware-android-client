@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	<string-array name="dev">
+		<item>Florian Maul</item>
+		<item>Jean Marie PASCAL</item>
+	</string-array>
+	
+	<string-array name="view">
+        <item>list</item>
+        <item>grid</item>
+    </string-array>
+    
+    <string-array name="view_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+	
+</resources>

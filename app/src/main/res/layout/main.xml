@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+>
+
+<LinearLayout 
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="vertical"
+    >
+
+	<LinearLayout
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:gravity="center_vertical|center_horizontal" 
+	    android:layout_height="80sp">
+	    
+	    <TextView
+	    	android:id="@+id/app_name"
+	        android:text="@string/app_name"
+	        android:textSize="30sp"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/nemaki_logo" />
+
+    </LinearLayout>
+    
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:orientation="vertical"
+    	android:padding="10sp"
+    	>
+
+    <Button
+   	 	android:id="@+id/repository"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="@string/home_menu_repository" 
+        android:textSize="20sp" 
+        android:drawableLeft="@drawable/repository"
+        android:drawablePadding="10sp"
+        android:layout_marginBottom="15sp"
+        />
+        
+        
+    <Button
+    	android:id="@+id/filesystem"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="@string/home_menu_explorer" 
+        android:textSize="20sp" 
+        android:drawableLeft="@drawable/phone_l"
+        android:drawablePadding="10sp"
+        android:layout_marginBottom="15sp"
+        />
+        
+    <Button
+   	 	android:id="@+id/preferences"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="@string/menu_item_prefs" 
+        android:textSize="20sp" 
+        android:drawableLeft="@drawable/preferences"
+        android:drawablePadding="10sp"
+        android:layout_marginBottom="15sp"
+        />
+        
+    <Button
+    	android:id="@+id/about"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="@string/home_menu_about" 
+        android:textSize="20sp" 
+        android:drawableLeft="@drawable/cmisexplorer"
+        android:drawablePadding="10sp"
+        android:layout_marginBottom="15sp"
+        />
+
+	</LinearLayout>
+
+</LinearLayout>
+
+</ScrollView>

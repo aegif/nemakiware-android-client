@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- APP STRING -->
+    <string name="app_name">CMIS Browser</string>
+    
+    <!-- HOME ACTIVITY -->
+    <string name="home_menu_repository">CMIS Repositories</string>
+    <string name="home_menu_favorites">Favouriten</string>
+    <string name="home_menu_about">Über</string>
+    <string name="home_menu_explorer">Datei Explorer</string>
+    
+    <!-- SERVER ACTIVITY -->
+    <string name="menu_item_server_add">Add Server</string>
+    
+    <string name="context_menu_title">Server Optionen</string>
+    
+    <string name="server_delete">Server gelöscht.</string>
+    <string name="server_delete_error">Fehler beim Löschen</string>
+    
+    
+    <!-- SERVER EDIT ACTIVITY -->
+    <string name="cmis_repo_server_name">Server Name</string>
+    <string name="cmis_repo_server_url">URL</string>
+    <string name="cmis_repo_user">Benutzer</string>
+    <string name="cmis_repo_password">Passwort</string>
+    <string name="cmis_repo_workspace">Standard Arbeitsplatz</string>
+    
+    <string name="cmis_repo_choose_workspace">Standard Arbeitsplatz wählen</string>
+    
+    <string name="error_repo_connexion">Das Repository ist nicht korrekt eingerichtet. Prüfen Sie die Einstellungen.</string>
+    <string name="cmis_repo_fields">NAME, URL und WORKSPACE sind Pflichtangaben.</string>
+    
+    <!-- SERVER INFO -->
+    <string name="server_info">Server Info</string>
+    <string name="server_info_general">Allgemein</string>
+    <string name="server_info_acl">ACL</string>
+    <string name="server_info_capabilites">Fähigkeiten</string>
+    
+    
+    <!-- LIST CMIS FEED ACTIVITY -->
+    <string name="feed_menu_title">Datei Optionen</string>
+    
+    <string name="menu_item_settings">Servers</string>
+    <string name="menu_item_settings_reload">Neuladen</string>
+    <string name="menu_item_settings_repo">Server wechseln</string>
+    <string name="menu_item_settings_ws">Arbeitsplatz wechseln</string>
+    <string name="menu_item_about">Über</string>
+    <string name="menu_item_search">Suchen</string>
+    <string name="menu_item_search_cmis">CMIS Abfrage</string>
+    <string name="menu_item_search_fulltext">Volltextsuche</string>
+    <string name="menu_item_search_title">Suche nach Titel</string>
+    <string name="menu_item_search_folder_title">Ordner Titel</string>
+    <string name="menu_item_search_saved_search">Gespeicherte Suche</string>
+    
+    <string name="menu_item_details">Details anzeigen</string>
+    <string name="menu_item_share">Datei sharen</string>
+    <string name="menu_item_add_favorite">Favorit hinzufügen</string>
+    <string name="menu_item_favorites">Favoriten</string>
+    
+    <string name="menu_item_home">Home</string>
+    <string name="menu_item_up">Oben</string>
+    <string name="menu_item_back">Zurück</string>
+    <string name="menu_item_next">Weiter</string>
+    <string name="menu_item_prefs">Einstellungen</string>
+    <string name="menu_item_refresh">Aktualisieren</string>
+    <string name="menu_item_scanner">Scanner</string>
+    <string name="menu_item_view">Ansehen</string>
+    <string name="menu_item_filter">Filter</string>
+    <string name="menu_item_tools">Werkzeuge</string>
+    <string name="menu_item_download_manager">Download</string>
+    
+    <string name="loading_data">Bitte warten... Daten werden geladen...</string>
+    
+    <string name="notif_download_finish">Download beendet.</string>
+    <string name="notif_download_title">Download : Beendet.</string>
+    <string name="notif_download_texte">Datei öffnen: </string>
+    <string name="notif_open">Öffnen...</string>
+    
+    
+    <!-- SEARCH RESULT -->
+    <string name="search_label">CMIS Repository</string>
+    <string name="search_results_for">Ergebnisse für</string>
+    <string name="search_save">Gespeicherte Suche</string>
+    <string name="saved_search_title">Gespeicherte Suche für</string>
+    <string name="saved_search_option">Optionen für gespeicherte Suche</string>
+    <string name="saved_search_present">Suche existiert bereits</string>
+    <string name="saved_search_create_error">Bei der Erstellung ist ein Problem aufgetreten.</string>
+    <string name="saved_search_create">Die Suche wurde erfolgreich gespeichert.</string>
+    <string name="search_create_title">Suche speichern</string>
+    <string name="search_create_desc">Geben Sie einen Namen für die Suche an</string>
+    <string name="search_progress">Suche wird ausgeführt...</string>
+    
+    <string name="cmis_repo_search_pref">Sucheinstellungen</string>
+    <string name="cmis_repo_exact_search">exactSearching</string>
+    <string name="cmis_repo_exact_search_title">Genaue Suche</string>
+    <string name="cmis_repo_exact_search_desc">Ungenaue Suche ausschalten.</string>
+    
+    <!-- DOCUMENT DETAILS ACTIVITY -->
+    <string name="title_details">Details für</string>
+    
+    <string name="download_progress">Inhalte werden heruntergeladen...</string>
+    <string name="main_no_items">Keine Dokumente vorhanden.</string>
+    <string name="error_file_does_not_exists">Die heruntergeladene Datei exisitert nicht.</string>
+    <string name="application_not_available">Es gibt keine Anwendung für diesen Dateityp.</string>
+    <string name="error_downloading_content">Fehler beim Herunterladen vom CMIS Repository</string>
+    
+    <string name="no_properties">Keine Eigenschaften gefunden.</string>
+    <string name="confirm_donwload">Sind sie sicher, dass sie diese </string>
+    <string name="confirm_donwload2">Datei herunterladen wollen?</string>
+    
+    <string name="share_question">Was möchten sie sharen?</string>
+    <string name="share_link">Link</string>
+    <string name="share_content">Inhalt</string>
+    
+    <string name="open_with_title">Öffne mit...</string>
+    <string name="open_with_text">Text</string>
+    <string name="open_with_audio">Audio</string>
+    <string name="open_with_image">Image</string>
+    <string name="open_with_video">Video</string>
+    
+    <!-- GENERIC ACTION STRING -->
+    <string name="delete">Löschen...</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="validate">Speichern</string>
+    <string name="download">Download</string>
+    <string name="share">Sharen</string>
+    <string name="quit">Beenden</string>
+    <string name="loading">lade...</string>
+    <string name="data_empty">Keine Daten gefundnen.</string>
+    <string name="qrcode">QRCode</string>
+    <string name="generic_error">Bei Verarbeitung ist ein Fehler aufgetreten. Bitte versuchen sie es erneut..</string>
+    <string name="confirm">Bestätigen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="view">Anzeigen</string>
+    <string name="open">Öffnen</string>
+    <string name="open_with">Öffnen mit</string>
+    <string name="progress">Fortschritt</string>
+    <string name="rename">Umbenennen</string>
+    <string name="copy">Kopieren</string>
+    <string name="paste">Einfügen</string>
+    <string name="cut">Ausschneiden</string>
+    <string name="move">Verschieben</string>
+    <string name="create_folder">Ordner erstellen</string>
+    <string name="sorting">Sortieren</string>
+    
+    <!-- ABOUT ACTIVITY -->
+    <string name="about_dev">Entwickler</string>
+    <string name="about_resources">Quellen</string>
+    <string name="about_project_website">Besuchen sie die Android CMIS Browser Project Website</string>
+    <string name="about_openicon_website">Besuchen sie Open Icon Library Website</string>
+    <string name="about_open_market">Stimmen sie für Android CMIS Browser</string>
+    <string name="about_share_app">Sharen sie Android CMIS Browser</string>
+    
+    <!-- FAVORITE ACTIVITY -->
+    <string name="favorite_create">Favorit hinzugefügt : OK</string>
+    <string name="favorite_present">Favorit existiert bereits.</string>
+    <string name="favorite_create_error">Bei der Erstellung ist ein Problem aufgetreten. Bitte versuchen Sie es erneut...</string>
+    
+    <string name="favorite_delete">Favorite gelöscht : OK</string>
+    <string name="favorite_delete_error">Beim Löschen ist ein Problem aufgetreten. Bitte versuchen Sie es erneut...</string>
+    <string name="favorite_error">Der Favorit ist nicht verfügbar.</string>
+    <string name="favorite_error_loading">Beim Laden ist ein Problem aufgetreten. Bitte versuchen Sie es erneut...</string>
+    
+    <string name="favorite_open">Wählen sie die Ansicht...</string>
+    <string name="favorite_open_folder">Ordner</string>
+    <string name="favorite_open_details">Detailansicht</string>
+    
+    <string name="favorite_title">Favoriten für</string>
+    <string name="favorite_option">Favorit Optionen</string>
+    
+    <!-- FILTER/PREFRENCE ACTIVITY -->
+    <string name="cmis_repo_filter_pref">Filter Einstellungen</string>
+    
+    <string name="cmis_repo_params">CmisRepoParams</string>
+    <string name="cmis_repo_params_title">Filter</string>
+    <string name="cmis_repo_params_desc">Filterparameter einschalten.</string>
+    
+    <string name="cmis_repo_maxitems">cmisRepoServerMaxItems</string>
+    <string name="cmis_repo_maxitems_title">Maximale Objekte</string>
+    <string name="cmis_repo_maxitems_desc">Dies ist die maximale Anzahl von Objekten, die mit einer Abfrage geladen werden.</string>
+    
+    <string name="cmis_repo_filter">CmisRepoFilter</string>
+    <string name="cmis_repo_filter_title">Eigenschaften Filter</string>
+    <string name="cmis_repo_filter_desc">Nicht verfügbar!</string>
+    
+    <string name="cmis_repo_types">CmisRepoTypes</string>
+    <string name="cmis_repo_types_title">Kind Typen</string>
+    <string name="cmis_repo_types_desc">Einschränkung der Kindtypen, die geladen werden. (documents, folders, policies, any)</string>
+    
+    <string name="cmis_repo_orderby">CmisRepoOrderBy</string>
+    <string name="cmis_repo_orderby_title">Sortieren nach</string>
+    <string name="cmis_repo_orderby_desc">Definiert in welcher Weise die Ergebnisse sortiert werden sollen.</string>
+    
+    <string name="cmis_repo_paging">CmisRepoPaging</string>
+    <string name="cmis_repo_paging_title">Paging</string>
+    <string name="cmis_repo_paging_desc">Schaltet die seitenweise Navigation ein.</string>
+    
+    <string name="cmis_repo_skipcount">CmisRepoSkipCount</string>
+    
+    <string name="item_filter_title">Wählen sie den Metadaten filter...</string>
+    <string name="item_filter_object">Objekt</string>
+    <string name="item_filter_folder">Ordner</string>
+    <string name="item_filter_document">Dokument</string>
+    <string name="item_filter_content">Inhalt</string>
+    <string name="item_filter_extra">Extra</string>
+    <string name="item_filter_all">Alle</string>
+    
+    <!-- PREFRENCE ACTIVITY -->
+    <string name="cmis_repo_pref">Einstellungen</string>
+    
+    <string name="cmis_repo_data">Daten</string>
+    <string name="cmis_repo_view">Ansicht</string>
+    
+    <string name="cmis_cache">CmisCache</string>
+    <string name="cmis_cache_title">Cache löschen</string>
+    <string name="cmis_cache_desc">Löscht das Verzeichnis in dem Cachedaten abgelegt werden.</string>
+    
+    <string name="cmis_dlfolder">CmisDownloadFolder</string>
+    <string name="cmis_dlfolder_title">Download Ordner</string>
+    <string name="cmis_dlfolder_desc">Verzeichnis in dem heruntergeladene Dokumente abgelegt werden.</string>
+    
+    <string name="cmis_defaultview">CmisDefaultView</string>
+    <string name="cmis_defaultview_title">Standard Anzeigetyp</string>
+    <string name="cmis_defaultview_desc">Liste oder Gitter Ansicht</string>
+    
+    <string name="cmis_scan">CmisDefaultView</string>
+    <string name="cmis_scan_title">Scannen</string>
+    <string name="cmis_scan_desc">Schaltet QRCode scan and Generator an.</string>
+    
+    <string name="cmis_download">CmisDownloadConfirm</string>
+    <string name="cmis_download_title">Download Bestätigung</string>
+    <string name="cmis_download_desc">Vor dem Download eine Bestätigung erfragen.</string>
+    
+    <string name="cmis_download_size">CmisDownloadSizeConfirm</string>
+    <string name="cmis_download_size_title">File Size</string>
+    <string name="cmis_download_size_desc">File size (in KB) from which we need confirmation</string>
+    
+    <!-- GENERIC STRING -->
+    <string name="file_size_bytes">Byte</string>
+    <string name="file_size_kilobytes">KB</string>
+    <string name="file_size_megabytes">MB</string>
+    <string name="file_size_gigabytes">GB</string>
+    
+    <!-- FILE SYSTEM ACTIVITY -->
+    <string name="action_rename_desc">Geben sie einen neuen Namen ein:</string>
+    <string name="action_delete_desc">Sind sie sicher, dass sie die Datei löschen wollen?</string>
+    <string name="action_create_folder_des">Geben Sie den neuen Ordnernamen ein</string>
+    
+    <string name="action_sorting_title">Wählen sie die Sortierung...</string>
+    <string name="action_sorting_name">Name</string>
+    <string name="action_sorting_size">Größe</string>
+    <string name="action_sorting_date">Datum</string>
+    
+    <string name="action_clipboard_add">Die Datei wurde zur Zwischenablage hinzugefügt.</string>
+    <string name="copied_file_name">copy_</string>
+    <string name="action_clear_clipboard">Zwischeablage löschen</string>
+    <string name="action_clear_success">Die Zwischenablage wurde gelöscht.</string>
+    <string name="action_paste_success">Einfügen : Ok</string>
+    
+    <!-- DOWNLOAD MANAGER -->
+    <string name="delete_list">Aus der Liste löschen</string>
+    <string name="cancel_download">Download abbrechen</string>
+    <string name="cancel_progress">es wird abgerochen...</string>
+    <string name="cancel_complete">Der Download wurde abgebrochen.</string>
+    
+    <!-- SCANNER  -->
+    <string name="scan_error_url">Dieser Barcode ist für diese Anwendung nicht gültig.</string>
+    <string name="scan_error_repo">Die URL gehört nicht zu diesem Repository.</string>
+
+</resources>

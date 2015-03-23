@@ -1,0 +1,63 @@
+===========================================================
+V 0.95
+
+New Feature :
+Search from server Screen
+Search Activity
+Saved search
+
+Bug Fix :
+Download Manager
+
+===========================================================
+V 0.94
+
+New Feature :
+Local File Browser
+Favorite from Server screen
+Download "Manager" (link with Notification)
+
+
+Bug Fix :
+Title during screenRotation
+File Size download (Kb instead of bytes)
+Cancel Download works!
+Server Delete Warning
+Refactoring ListCmisFeedActivity
+Scanner results in wrong case.
+
+
+===========================================================
+V 0.93
+
+Bug Fix :
+Breadcrumb
+Favorite icon for document without content
+
+New Features : 
+Property Filter
+Open With (if mimetype detection failed)
+Open With Icon in details View
+Preference : Alert Download Size.
+Confirmation Dialog if size of file si more than ...Kb
+
+===========================================================
+V 0.92
+
+Bug Fix : 
+QRCode for folders.
+Unique Favorite.
+Up when you come from favorite.
+Ability to cancel Download process.
+
+New Features : 
+Breadcrumbs
+Improve ListCMIS behaviour during screen rotation
+GridView on ListCMIS
+Share Links or Links + Content
+Download in background
+Improve details actions. (Download, View, Share Content, Share URL...)
+Improve preferences
+Paging
+===========================================================
+
