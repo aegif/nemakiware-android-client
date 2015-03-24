@@ -2,13 +2,13 @@
 <resources>
 
 	<!-- APP STRING -->
-	<string name="app_name">CMIS Browser</string>
+	<string name="app_name">NemakiWare Android Client</string>
 	
 	<!-- HOME ACTIVITY -->
-	<string name="home_menu_repository">CMIS リポジトリ</string>
+	<string name="home_menu_repository">NemakiWareへの接続</string>
 	<string name="home_menu_favorites">お気に入り</string>
 	<string name="home_menu_about">このアプリについて</string>
-	<string name="home_menu_explorer">この端末のファイル</string>
+	<string name="home_menu_explorer">この端末のファイル管理</string>
 	
 	<!-- SERVER ACTIVITY -->
 	<string name="menu_item_server_add">CMISサーバへの接続を追加</string>
@@ -35,16 +35,16 @@
 	<string name="server_info">サーバ情報</string>
 	<string name="server_info_general">一般</string>
 	<string name="server_info_acl">権限</string>
-	<string name="server_info_capabilites">ケイパビリティ</string>
+	<string name="server_info_capabilites">Capabilites</string>
 	
 	
 	<!-- LIST CMIS FEED ACTIVITY -->
 	<string name="feed_menu_title">ファイルオプション</string>
 	
-	<string name="menu_item_settings">Servers</string>
-    <string name="menu_item_settings_reload">Reload</string>
-    <string name="menu_item_settings_repo">Change repository</string>
-    <string name="menu_item_settings_ws">Change workspace</string>
+	<string name="menu_item_settings">サーバ設定</string>
+    <string name="menu_item_settings_reload">再読込</string>
+    <string name="menu_item_settings_repo">リポジトリの変更</string>
+    <string name="menu_item_settings_ws">ワークスペースを変更</string>
     <string name="menu_item_about">詳細</string>
 	<string name="menu_item_search">検索</string>
 	<string name="menu_item_search_cmis">CMISクエリ</string>
@@ -53,11 +53,11 @@
     <string name="menu_item_search_folder_title">フォルダ名</string>
     <string name="menu_item_search_saved_search">保存済みの検索条件</string>
     
-    <string name="menu_item_details">Display details</string>
-	<string name="menu_item_share">Share...</string>
+    <string name="menu_item_details">詳細を表示</string>
+	<string name="menu_item_share">シェアする...</string>
 	
-	<string name="menu_item_add_favorite">Add favorite</string>
-	<string name="menu_item_favorites">Favorites</string>
+	<string name="menu_item_add_favorite">ブックマークする</string>
+	<string name="menu_item_favorites">ブックマーク</string>
 	
 	<string name="menu_item_home">ホーム</string>
 	<string name="menu_item_up">上へ</string>
@@ -65,18 +65,18 @@
 	<string name="menu_item_next">進む</string>
 	<string name="menu_item_prefs">設定</string>
 	<string name="menu_item_refresh">再読込</string>
-	<string name="menu_item_scanner">Scanner</string>
-	<string name="menu_item_view">View</string>
-	<string name="menu_item_filter">Filter</string>
-	<string name="menu_item_tools">Tools</string>
-	<string name="menu_item_download_manager">Download</string>
+	<string name="menu_item_scanner">QRコード</string>
+	<string name="menu_item_view">表示</string>
+	<string name="menu_item_filter">フィルタ</string>
+	<string name="menu_item_tools">ツール</string>
+	<string name="menu_item_download_manager">ダウンロード</string>
 	
-	<string name="loading_data">Please wait a few moment... Loading data...</string>
+	<string name="loading_data">読みこんでいます。しばらくお待ち下さい。.</string>
 	
-	<string name="notif_download_finish">Download finished</string>
-	<string name="notif_download_title">Download file : Done.</string>
-	<string name="notif_download_texte">Open File : </string>
-	<string name="notif_open">Open...</string>
+	<string name="notif_download_finish">ダウンロードが終了しました。</string>
+	<string name="notif_download_title">ファイルダウンロード : 完了</string>
+	<string name="notif_download_texte">ファイルを開く : </string>
+	<string name="notif_open">開く...</string>
 
 	
 	<!-- SEARCH RESULT -->
@@ -121,31 +121,31 @@
 	<string name="open_with_video">Video</string>
 	
 	<!-- GENERIC ACTION STRING -->
-	<string name="delete">Delete...</string>
-    <string name="edit">Edit</string>
-    <string name="validate">Validate</string>
-    <string name="download">Download</string>
-    <string name="share">Share</string>
-    <string name="quit">Quit</string>
-    <string name="loading">Loading...</string>
-    <string name="data_empty">No data available...</string>
-    <string name="qrcode">QRCode</string>
-    <string name="generic_error">An error occured during the treatment. Please try again...</string>
-    <string name="confirm">Confirm</string>
-    <string name="cancel">Cancel</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+	<string name="delete">削除...</string>
+    <string name="edit">編集</string>
+    <string name="validate">検証</string>
+    <string name="download">ダウンロード</string>
+    <string name="share">シェア</string>
+    <string name="quit">終了</string>
+    <string name="loading">読み込み中...</string>
+    <string name="data_empty">設定がありません</string>
+    <string name="qrcode">QRコード</string>
+    <string name="generic_error">エラーが発生しました。もう一度お試し下さい。</string>
+    <string name="confirm">確認</string>
+    <string name="cancel">キャンセル</string>
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
     <string name="view">View</string>
-    <string name="open">Open</string>
-    <string name="open_with">Open with</string>
+    <string name="open">開く</string>
+    <string name="open_with">...で開く</string>
     <string name="progress">Progress</string>
-    <string name="rename">Rename</string>
-    <string name="copy">Copy</string>
-	<string name="paste">Paste</string>
-	<string name="cut">Cut</string>
-	<string name="move">Move</string>
-	<string name="create_folder">Create folder</string>
-	<string name="sorting">Sorting</string>
+    <string name="rename">名前の変更</string>
+    <string name="copy">コピー</string>
+	<string name="paste">貼り付け</string>
+	<string name="cut">切り取り</string>
+	<string name="move">移動</string>
+	<string name="create_folder">フォルダの作成</string>
+	<string name="sorting">並び順</string>
 	
 	<!-- ABOUT ACTIVITY -->
 	<string name="about_dev">Developers</string>
@@ -165,9 +165,9 @@
 	<string name="favorite_error">Favorite is not available or has been deleted.</string>
 	<string name="favorite_error_loading">A problem occured during loading action. Please try again...</string>
 	
-	<string name="favorite_open">Choose your view...</string>
-	<string name="favorite_open_folder">Folder</string>
-	<string name="favorite_open_details">Details</string>
+	<string name="favorite_open">表示方法を選択...</string>
+	<string name="favorite_open_folder">フォルダ表示</string>
+	<string name="favorite_open_details">詳細表示</string>
 
 	<string name="favorite_title">Favorites for</string>
 	<string name="favorite_option">Favorite Option</string>

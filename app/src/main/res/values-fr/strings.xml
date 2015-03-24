@@ -2,7 +2,7 @@
 <resources>
 
 	<!-- APP STRING -->
-	<string name="app_name">CMIS Navigateur</string>
+	<string name="app_name">NemakiWare CMIS Navigateur</string>
 	
 	<!-- HOME ACTIVITY -->
 	<string name="home_menu_repository">Entrepôt de données</string>

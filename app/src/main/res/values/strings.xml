@@ -2,7 +2,7 @@
 <resources>
 
 	<!-- APP STRING -->
-	<string name="app_name">CMIS Browser</string>
+	<string name="app_name">NemakiWare CMIS Browser</string>
 	
 	<!-- HOME ACTIVITY -->
 	<string name="home_menu_repository">CMIS Repositories</string>
