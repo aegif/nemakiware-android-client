@@ -10,32 +10,9 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:scrollbars="vertical"
+
     >
 
-	<LinearLayout
-	    android:orientation="vertical"
-	    android:layout_width="fill_parent"
-	    android:gravity="center_vertical|center_horizontal" 
-	    android:layout_height="80sp">
-	    
-	    <TextView
-	    	android:id="@+id/app_name"
-	        android:text="@string/app_name"
-	        android:textSize="30sp"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:gravity="center"
-	        />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/imageView"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/nemaki_logo" />
-
-    </LinearLayout>
-    
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"

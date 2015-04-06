@@ -2,10 +2,10 @@
 <resources>
 
 	<!-- APP STRING -->
-	<string name="app_name">NemakiWare Android Client</string>
+	<string name="app_name">CMISクライアント</string>
 	
 	<!-- HOME ACTIVITY -->
-	<string name="home_menu_repository">NemakiWareへの接続</string>
+	<string name="home_menu_repository">CMIS リポジトリへの接続</string>
 	<string name="home_menu_favorites">お気に入り</string>
 	<string name="home_menu_about">このアプリについて</string>
 	<string name="home_menu_explorer">この端末のファイル管理</string>
@@ -80,8 +80,8 @@
 
 	
 	<!-- SEARCH RESULT -->
-	<string name="search_label">CMIS Repository</string>
-	<string name="search_results_for">results for</string>
+	<string name="search_label">CMIS リポジトリ</string>
+	<string name="search_results_for"> 検索結果</string>
 	<string name="search_save">Saved search</string>
 	<string name="saved_search_title">Saved search for</string>
 	<string name="saved_search_option">Option for saved search</string>

@@ -20,13 +20,14 @@ import jp.aegif.android.cmis.utils.ActionUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class HomeActivity extends Activity {
-    
+public class HomeActivity extends ActionBarActivity {
+
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

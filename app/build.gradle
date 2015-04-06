@@ -28,4 +28,6 @@ dependencies {
     compile files('libs/commons-io-1.4-sources.jar')
     compile files('libs/commons-io-1.4.jar')
     compile files('libs/dom4j.jar')
+    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.android.support:support-v4:+'
 }
