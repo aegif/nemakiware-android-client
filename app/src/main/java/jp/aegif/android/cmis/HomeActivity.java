@@ -21,6 +21,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -40,33 +42,7 @@ public class HomeActivity extends ActionBarActivity {
         setContentView(R.layout.main);
         ActionUtils.initPrefs(this);
         
-        ((Button) findViewById(R.id.about)).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(HomeActivity.this, AboutActivity.class));
-			}
-		});
-        
-        ((Button) findViewById(R.id.preferences)).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				
-				/*int PICK_REQUEST_CODE = 0;
-				Intent intent = new Intent();
-				intent.setAction(Intent.ACTION_PICK);
-				Uri startDir = Uri.fromFile(new File("/sdcard"));
-				// Files and directories !
-				intent.setDataAndType(startDir, "vnd.android.cursor.dir/*");
-				//intent.setData(startDir);
-				startActivityForResult(intent, PICK_REQUEST_CODE);*/
-				
-				startActivity(new Intent(HomeActivity.this, CmisPreferences.class));
-				//startActivity(new Intent(HomeActivity.this, FileChooserActivity.class));
-			}
-		});
-        
+
         ((Button) findViewById(R.id.filesystem)).setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -82,6 +58,27 @@ public class HomeActivity extends ActionBarActivity {
 				startActivity(new Intent(HomeActivity.this, ServerActivity.class));
 			}
 		});
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.preferences) {
+            Intent intent = new Intent(this, CmisPreferences.class);
+            startActivity(intent);
+        }else if(id == R.id.about){
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
